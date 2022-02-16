@@ -1,0 +1,35 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-comamor-dev-192703-authRole",
+      "UnauthRoleArn": "arn:aws:iam::418812455106:role/amplify-comamor-dev-192703-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::418812455106:role/amplify-comamor-dev-192703-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-comamor-dev-192703-deployment",
+      "UnauthRoleName": "amplify-comamor-dev-192703-unauthRole",
+      "StackName": "amplify-comamor-dev-192703",
+      "StackId": "arn:aws:cloudformation:us-east-1:418812455106:stack/amplify-comamor-dev-192703/0304cc00-8df6-11ec-984c-0ebce804852b",
+      "AmplifyAppId": "d32uvie3c9lfuo"
+    },
+    "categories": {
+      "function": {
+        "comamor04706108DefineAuthChallenge": {
+          "deploymentBucketName": "amplify-comamor-dev-192703-deployment",
+          "s3Key": "amplify-builds/comamor04706108DefineAuthChallenge-663467584e486833704a-build.zip"
+        },
+        "comamor04706108CreateAuthChallenge": {
+          "deploymentBucketName": "amplify-comamor-dev-192703-deployment",
+          "s3Key": "amplify-builds/comamor04706108CreateAuthChallenge-477549754d6264503831-build.zip"
+        },
+        "comamor04706108VerifyAuthChallengeResponse": {
+          "RECAPTCHASECRET": "6Lfx8HseAAAAABB0-T8ciBpJnhmRyoqSoYFBBTVh",
+          "deploymentBucketName": "amplify-comamor-dev-192703-deployment",
+          "s3Key": "amplify-builds/comamor04706108VerifyAuthChallengeResponse-692b5873366539377147-build.zip"
+        }
+      },
+      "auth": {
+        "comamor04706108": {}
+      }
+    }
+  }
+}

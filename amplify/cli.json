@@ -1,0 +1,12 @@
+{
+  "features": {
+    "graphqltransformer": {
+      "addmissingownerfields": true,
+      "securityEnhancementNotification": false,
+      "showfieldauthnotification": false
+    },
+    "project": {
+      "overrides": true
+    }
+  }
+}
