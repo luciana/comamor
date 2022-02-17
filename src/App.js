@@ -93,8 +93,8 @@ function SpeechToText(props) {
       return (
         <div className="audioRecorder">
           <div>
-            {recording && <button onClick={stopRecording} className="button round" ><FaMicrophone className="famic recording" /></button>}
-            {!recording && <button onClick={startRecording} className="button round"><FaMicrophone className='famic'/></button>}
+            {recording && <button onClick={stopRecording} className="button round white" ><FaMicrophone className="famic recording" /></button>}
+            {!recording && <button onClick={startRecording} className="button round white"><FaMicrophone className='famic'/></button>}
           </div>
         </div>
       );
@@ -116,8 +116,7 @@ function SpeechToText(props) {
   
     return (
       <div className="Text">
-        <div>
-          <h1>Como foi o dia hoje?</h1>
+        <div>         
           <AudioRecorder finishRecording={convertFromBuffer} />          
           <p>{response}</p>        
         </div>
@@ -146,9 +145,12 @@ function TextInterpretation() {
   }
 
   return (
-    <div className="Text">            
-       <div> <textarea rows="4" cols="50" defaultValue={textToInterpret} onChange={setText}></textarea>   </div>           
-        <div> 
+    <div className="text">            
+        <div className="inner white curve"> 
+          <div className="text">Como foi o dia hoje?</div>
+          <textarea rows="6" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>  
+        </div>           
+         <div className="block"> 
           <button className="button" onClick={interpretFromPredictions}>
           <div>
             <FaConfluence className="faconfluence"/>
@@ -164,7 +166,7 @@ function TextInterpretation() {
 function DateDisplay(){
     return (
       <div className="date">
-        <p> Hoje: {new Date().toLocaleString()}</p>      
+        <span> Hoje: {new Date().toLocaleString()}</span>      
       </div>
     );
 }
@@ -176,7 +178,7 @@ function AssistantNames(){
       <button className="button curve user">
             <div>
               <FaUserAlt className="fauser"/>
-              <span>Miriam</span>
+              <span>Miriam Sobrenome</span>
             </div>
       </button> 
     </div>
@@ -184,7 +186,7 @@ function AssistantNames(){
       <button className="button curve user">
             <div>
               <FaUserAlt className="fauser"/>
-              <span>Samira</span>
+              <span>Samira Sobrenome</span>
             </div>
       </button> 
       </div> 
@@ -192,12 +194,29 @@ function AssistantNames(){
   )
 }
 
+function VitalCollection(){
+  return (
+    <div className="outer">
+    <div className="inner curve white highlight">
+      <label htmlFor="name" className="block">Pressão Arterial</label>
+      <input id="pressao" placeholder="120/80" name="pressao" maxLength="10" size="6"  /> mmHg
+    </div>
+    <div className="inner curve white highlight">
+     <label htmlFor="name" className="block">Saturação</label>
+      <input id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> SpO<span className="tiny">2%</span>
+    </div>
+     <div className="inner curve white highlight">
+      <label htmlFor="name" className="block">Temperatura</label>
+      <input id="temperatura" placeholder="37" name="temperatura" maxLength="10" size="6"  /> &deg;C
+      </div> 
+    </div>  
+  )
+}
   return (
     <div className="App">
-      <header className="App-header">
-        
+      <header className="App-header">        
         <img src={logo} className="App-logo" alt="logo" /> 
-        <div> Diario do Papai </div>
+        <h1> Diario do Papai </h1>
       </header>
       <section>
       <DateDisplay />
@@ -205,11 +224,15 @@ function AssistantNames(){
       <section>
       <AssistantNames />
       </section>
-      <section>     
-      <SpeechToText />    
-      </section>
       <section>
-        {TextInterpretation()}
+      <VitalCollection />
+      </section>
+      <section>  
+
+      <div className="">
+        <div className="aligned"> {TextInterpretation()} </div> 
+        <div className="aligned"> <SpeechToText />  </div>
+        </div>
       </section>
     </div>
   );
