@@ -6,7 +6,7 @@ import Predictions, { AmazonAIPredictionsProvider } from '@aws-amplify/predictio
 import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
-import { FaMicrophone, FaConfluence} from 'react-icons/fa';
+import { FaMicrophone, FaConfluence, FaUserAlt} from 'react-icons/fa';
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
 
@@ -93,8 +93,8 @@ function SpeechToText(props) {
       return (
         <div className="audioRecorder">
           <div>
-            {recording && <button onClick={stopRecording} className="button round" ><FaMicrophone className="mic recording" /></button>}
-            {!recording && <button onClick={startRecording} className="button round"><FaMicrophone className='mic'/></button>}
+            {recording && <button onClick={stopRecording} className="button round" ><FaMicrophone className="famic recording" /></button>}
+            {!recording && <button onClick={startRecording} className="button round"><FaMicrophone className='famic'/></button>}
           </div>
         </div>
       );
@@ -151,7 +151,7 @@ function TextInterpretation() {
         <div> 
           <button className="button" onClick={interpretFromPredictions}>
           <div>
-            <FaConfluence className="confluence"/>
+            <FaConfluence className="faconfluence"/>
             <span>Interpreta o humor do dia</span>
           </div>
           </button>      
@@ -164,18 +164,46 @@ function TextInterpretation() {
 function DateDisplay(){
     return (
       <div className="date">
-        <p> {new Date().toLocaleString()}</p>      
+        <p> Hoje: {new Date().toLocaleString()}</p>      
       </div>
     );
+}
+
+function AssistantNames(){
+  return (
+    <div className="outer">
+    <div className="inner">
+      <button className="button curve user">
+            <div>
+              <FaUserAlt className="fauser"/>
+              <span>Miriam</span>
+            </div>
+      </button> 
+    </div>
+     <div className="inner">
+      <button className="button curve user">
+            <div>
+              <FaUserAlt className="fauser"/>
+              <span>Samira</span>
+            </div>
+      </button> 
+      </div> 
+    </div>  
+  )
 }
 
   return (
     <div className="App">
       <header className="App-header">
+        
         <img src={logo} className="App-logo" alt="logo" /> 
+        <div> Diario do Papai </div>
       </header>
       <section>
       <DateDisplay />
+      </section>
+      <section>
+      <AssistantNames />
       </section>
       <section>     
       <SpeechToText />    
