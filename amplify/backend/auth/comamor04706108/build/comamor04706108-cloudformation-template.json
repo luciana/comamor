@@ -1,0 +1,715 @@
+{
+  "Description": "Amplify Cognito Stack for AWS Amplify CLI",
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Parameters": {
+    "env": {
+      "Type": "String"
+    },
+    "functioncomamor04706108DefineAuthChallengeArn": {
+      "Type": "String",
+      "Default": "functioncomamor04706108DefineAuthChallengeArn"
+    },
+    "functioncomamor04706108DefineAuthChallengeName": {
+      "Type": "String",
+      "Default": "functioncomamor04706108DefineAuthChallengeName"
+    },
+    "functioncomamor04706108CreateAuthChallengeArn": {
+      "Type": "String",
+      "Default": "functioncomamor04706108CreateAuthChallengeArn"
+    },
+    "functioncomamor04706108CreateAuthChallengeName": {
+      "Type": "String",
+      "Default": "functioncomamor04706108CreateAuthChallengeName"
+    },
+    "functioncomamor04706108VerifyAuthChallengeResponseArn": {
+      "Type": "String",
+      "Default": "functioncomamor04706108VerifyAuthChallengeResponseArn"
+    },
+    "functioncomamor04706108VerifyAuthChallengeResponseName": {
+      "Type": "String",
+      "Default": "functioncomamor04706108VerifyAuthChallengeResponseName"
+    },
+    "authSelections": {
+      "Type": "String"
+    },
+    "requiredAttributes": {
+      "Type": "CommaDelimitedList"
+    },
+    "resourceName": {
+      "Type": "String"
+    },
+    "serviceName": {
+      "Type": "String"
+    },
+    "useDefault": {
+      "Type": "String"
+    },
+    "userpoolClientReadAttributes": {
+      "Type": "CommaDelimitedList"
+    },
+    "userpoolClientWriteAttributes": {
+      "Type": "CommaDelimitedList"
+    },
+    "resourceNameTruncated": {
+      "Type": "String"
+    },
+    "sharedId": {
+      "Type": "String"
+    },
+    "userPoolGroupList": {
+      "Type": "CommaDelimitedList"
+    },
+    "userPoolName": {
+      "Type": "String"
+    },
+    "usernameAttributes": {
+      "Type": "CommaDelimitedList"
+    },
+    "userpoolClientRefreshTokenValidity": {
+      "Type": "String"
+    },
+    "userpoolClientSetAttributes": {
+      "Type": "String"
+    },
+    "userpoolClientGenerateSecret": {
+      "Type": "String"
+    },
+    "userpoolClientLambdaRole": {
+      "Type": "String"
+    },
+    "passwordPolicyCharacters": {
+      "Type": "CommaDelimitedList"
+    },
+    "passwordPolicyMinLength": {
+      "Type": "String"
+    },
+    "mfaConfiguration": {
+      "Type": "String"
+    },
+    "mfaTypes": {
+      "Type": "CommaDelimitedList"
+    },
+    "smsAuthenticationMessage": {
+      "Type": "String"
+    },
+    "emailVerificationMessage": {
+      "Type": "String"
+    },
+    "emailVerificationSubject": {
+      "Type": "String"
+    },
+    "smsVerificationMessage": {
+      "Type": "String"
+    },
+    "autoVerifiedAttributes": {
+      "Type": "CommaDelimitedList"
+    },
+    "identityPoolName": {
+      "Type": "String"
+    },
+    "allowUnauthenticatedIdentities": {
+      "Type": "String"
+    },
+    "triggers": {
+      "Type": "String"
+    },
+    "authRoleArn": {
+      "Type": "String"
+    },
+    "unauthRoleArn": {
+      "Type": "String"
+    },
+    "breakCircularDependency": {
+      "Type": "String"
+    },
+    "useEnabledMfas": {
+      "Type": "String"
+    },
+    "dependsOn": {
+      "Type": "CommaDelimitedList"
+    },
+    "permissions": {
+      "Type": "CommaDelimitedList"
+    },
+    "authTriggerConnections": {
+      "Type": "CommaDelimitedList"
+    }
+  },
+  "Conditions": {
+    "ShouldNotCreateEnvResources": {
+      "Fn::Equals": [
+        {
+          "Ref": "env"
+        },
+        "NONE"
+      ]
+    },
+    "ShouldOutputAppClientSecrets": {
+      "Fn::Equals": [
+        {
+          "Ref": "userpoolClientGenerateSecret"
+        },
+        true
+      ]
+    }
+  },
+  "Resources": {
+    "SNSRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "cognito-idp.amazonaws.com"
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ],
+              "Condition": {
+                "StringEquals": {
+                  "sts:ExternalId": "comamo04706108_role_external_id"
+                }
+              }
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "sns:Publish"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            },
+            "PolicyName": "comamo04706108-sns-policy"
+          }
+        ],
+        "RoleName": {
+          "Fn::If": [
+            "ShouldNotCreateEnvResources",
+            "comamo04706108_sns-role",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "sns04706108",
+                  {
+                    "Fn::Select": [
+                      3,
+                      {
+                        "Fn::Split": [
+                          "-",
+                          {
+                            "Ref": "AWS::StackName"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "-",
+                  {
+                    "Ref": "env"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "UserPool": {
+      "Type": "AWS::Cognito::UserPool",
+      "Properties": {
+        "AutoVerifiedAttributes": [
+          "email"
+        ],
+        "EmailVerificationMessage": {
+          "Ref": "emailVerificationMessage"
+        },
+        "EmailVerificationSubject": {
+          "Ref": "emailVerificationSubject"
+        },
+        "LambdaConfig": {
+          "CreateAuthChallenge": {
+            "Ref": "functioncomamor04706108CreateAuthChallengeArn"
+          },
+          "VerifyAuthChallengeResponse": {
+            "Ref": "functioncomamor04706108VerifyAuthChallengeResponseArn"
+          }
+        },
+        "MfaConfiguration": {
+          "Ref": "mfaConfiguration"
+        },
+        "Policies": {
+          "PasswordPolicy": {
+            "MinimumLength": {
+              "Ref": "passwordPolicyMinLength"
+            },
+            "RequireLowercase": false,
+            "RequireNumbers": false,
+            "RequireSymbols": false,
+            "RequireUppercase": false
+          }
+        },
+        "Schema": [
+          {
+            "Mutable": true,
+            "Name": "email",
+            "Required": true
+          }
+        ],
+        "SmsAuthenticationMessage": {
+          "Ref": "smsAuthenticationMessage"
+        },
+        "SmsConfiguration": {
+          "ExternalId": "comamo04706108_role_external_id",
+          "SnsCallerArn": {
+            "Fn::GetAtt": [
+              "SNSRole",
+              "Arn"
+            ]
+          }
+        },
+        "SmsVerificationMessage": {
+          "Ref": "smsVerificationMessage"
+        },
+        "UsernameAttributes": {
+          "Ref": "usernameAttributes"
+        },
+        "UserPoolName": {
+          "Fn::If": [
+            "ShouldNotCreateEnvResources",
+            {
+              "Ref": "userPoolName"
+            },
+            {
+              "Fn::Join": [
+                "",
+                [
+                  {
+                    "Ref": "userPoolName"
+                  },
+                  "-",
+                  {
+                    "Ref": "env"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "UserPoolDefineAuthChallengeLambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": {
+          "Ref": "functioncomamor04706108DefineAuthChallengeName"
+        },
+        "Principal": "cognito-idp.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "UserPool",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "UserPoolCreateAuthChallengeLambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": {
+          "Ref": "functioncomamor04706108CreateAuthChallengeName"
+        },
+        "Principal": "cognito-idp.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "UserPool",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "UserPoolVerifyAuthChallengeResponseLambdaInvokePermission": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:invokeFunction",
+        "FunctionName": {
+          "Ref": "functioncomamor04706108VerifyAuthChallengeResponseName"
+        },
+        "Principal": "cognito-idp.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "UserPool",
+            "Arn"
+          ]
+        }
+      }
+    },
+    "UserPoolClientWeb": {
+      "Type": "AWS::Cognito::UserPoolClient",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "UserPool"
+        },
+        "ClientName": "comamo04706108_app_clientWeb",
+        "RefreshTokenValidity": {
+          "Ref": "userpoolClientRefreshTokenValidity"
+        }
+      },
+      "DependsOn": [
+        "UserPool"
+      ]
+    },
+    "UserPoolClient": {
+      "Type": "AWS::Cognito::UserPoolClient",
+      "Properties": {
+        "UserPoolId": {
+          "Ref": "UserPool"
+        },
+        "ClientName": "comamo04706108_app_client",
+        "GenerateSecret": {
+          "Ref": "userpoolClientGenerateSecret"
+        },
+        "RefreshTokenValidity": {
+          "Ref": "userpoolClientRefreshTokenValidity"
+        }
+      },
+      "DependsOn": [
+        "UserPool"
+      ]
+    },
+    "UserPoolClientRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "RoleName": {
+          "Fn::If": [
+            "ShouldNotCreateEnvResources",
+            {
+              "Ref": "userpoolClientLambdaRole"
+            },
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "upClientLambdaRole04706108",
+                  {
+                    "Fn::Select": [
+                      3,
+                      {
+                        "Fn::Split": [
+                          "-",
+                          {
+                            "Ref": "AWS::StackName"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "-",
+                  {
+                    "Ref": "env"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "DependsOn": [
+        "UserPoolClient"
+      ]
+    },
+    "UserPoolClientLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "ZipFile": "const response = require('cfn-response');\nconst aws = require('aws-sdk');\nconst identity = new aws.CognitoIdentityServiceProvider();\nexports.handler = (event, context, callback) => {\n  if (event.RequestType == 'Delete') {\n    response.send(event, context, response.SUCCESS, {});\n  }\n  if (event.RequestType == 'Update' || event.RequestType == 'Create') {\n    const params = {\n      ClientId: event.ResourceProperties.clientId,\n      UserPoolId: event.ResourceProperties.userpoolId,\n    };\n    identity\n      .describeUserPoolClient(params)\n      .promise()\n      .then(res => {\n        response.send(event, context, response.SUCCESS, { appSecret: res.UserPoolClient.ClientSecret });\n      })\n      .catch(err => {\n        response.send(event, context, response.FAILED, { err });\n      });\n  }\n};\n"
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "UserPoolClientRole",
+            "Arn"
+          ]
+        },
+        "Handler": "index.handler",
+        "Runtime": "nodejs12.x",
+        "Timeout": 300
+      },
+      "DependsOn": [
+        "UserPoolClientRole"
+      ]
+    },
+    "UserPoolClientLambdaPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "cognito-idp:DescribeUserPoolClient"
+              ],
+              "Resource": {
+                "Fn::GetAtt": [
+                  "UserPool",
+                  "Arn"
+                ]
+              }
+            }
+          ]
+        },
+        "PolicyName": "comamo04706108_userpoolclient_lambda_iam_policy",
+        "Roles": [
+          {
+            "Ref": "UserPoolClientRole"
+          }
+        ]
+      },
+      "DependsOn": [
+        "UserPoolClientLambda"
+      ]
+    },
+    "UserPoolClientLogPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "logs:CreateLogGroup",
+                "logs:CreateLogStream",
+                "logs:PutLogEvents"
+              ],
+              "Resource": {
+                "Fn::Sub": [
+                  "arn:aws:logs:${region}:${account}:log-group:/aws/lambda/${lambda}:log-stream:*",
+                  {
+                    "region": {
+                      "Ref": "AWS::Region"
+                    },
+                    "account": {
+                      "Ref": "AWS::AccountId"
+                    },
+                    "lambda": {
+                      "Ref": "UserPoolClientLambda"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "PolicyName": "comamo04706108_userpoolclient_lambda_log_policy",
+        "Roles": [
+          {
+            "Ref": "UserPoolClientRole"
+          }
+        ]
+      },
+      "DependsOn": [
+        "UserPoolClientLambdaPolicy"
+      ]
+    },
+    "UserPoolClientInputs": {
+      "Type": "Custom::LambdaCallout",
+      "Properties": {
+        "ServiceToken": {
+          "Fn::GetAtt": [
+            "UserPoolClientLambda",
+            "Arn"
+          ]
+        },
+        "clientId": {
+          "Ref": "UserPoolClient"
+        },
+        "userpoolId": {
+          "Ref": "UserPool"
+        }
+      },
+      "DependsOn": [
+        "UserPoolClientLogPolicy"
+      ],
+      "UpdateReplacePolicy": "Delete",
+      "DeletionPolicy": "Delete"
+    },
+    "IdentityPool": {
+      "Type": "AWS::Cognito::IdentityPool",
+      "Properties": {
+        "AllowUnauthenticatedIdentities": {
+          "Ref": "allowUnauthenticatedIdentities"
+        },
+        "CognitoIdentityProviders": [
+          {
+            "ClientId": {
+              "Ref": "UserPoolClient"
+            },
+            "ProviderName": {
+              "Fn::Sub": [
+                "cognito-idp.${region}.amazonaws.com/${client}",
+                {
+                  "region": {
+                    "Ref": "AWS::Region"
+                  },
+                  "client": {
+                    "Ref": "UserPool"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "ClientId": {
+              "Ref": "UserPoolClientWeb"
+            },
+            "ProviderName": {
+              "Fn::Sub": [
+                "cognito-idp.${region}.amazonaws.com/${client}",
+                {
+                  "region": {
+                    "Ref": "AWS::Region"
+                  },
+                  "client": {
+                    "Ref": "UserPool"
+                  }
+                }
+              ]
+            }
+          }
+        ],
+        "IdentityPoolName": {
+          "Fn::If": [
+            "ShouldNotCreateEnvResources",
+            "comamor04706108_identitypool_04706108",
+            {
+              "Fn::Join": [
+                "",
+                [
+                  "comamor04706108_identitypool_04706108__",
+                  {
+                    "Ref": "env"
+                  }
+                ]
+              ]
+            }
+          ]
+        }
+      },
+      "DependsOn": [
+        "UserPoolClientInputs"
+      ]
+    },
+    "IdentityPoolRoleMap": {
+      "Type": "AWS::Cognito::IdentityPoolRoleAttachment",
+      "Properties": {
+        "IdentityPoolId": {
+          "Ref": "IdentityPool"
+        },
+        "Roles": {
+          "unauthenticated": {
+            "Ref": "unauthRoleArn"
+          },
+          "authenticated": {
+            "Ref": "authRoleArn"
+          }
+        }
+      },
+      "DependsOn": [
+        "IdentityPool"
+      ]
+    }
+  },
+  "Outputs": {
+    "IdentityPoolId": {
+      "Description": "Id for the identity pool",
+      "Value": {
+        "Ref": "IdentityPool"
+      }
+    },
+    "IdentityPoolName": {
+      "Value": {
+        "Fn::GetAtt": [
+          "IdentityPool",
+          "Name"
+        ]
+      }
+    },
+    "UserPoolId": {
+      "Description": "Id for the user pool",
+      "Value": {
+        "Ref": "UserPool"
+      }
+    },
+    "UserPoolArn": {
+      "Description": "Arn for the user pool",
+      "Value": {
+        "Fn::GetAtt": [
+          "UserPool",
+          "Arn"
+        ]
+      }
+    },
+    "UserPoolName": {
+      "Value": {
+        "Ref": "userPoolName"
+      }
+    },
+    "AppClientIDWeb": {
+      "Description": "The user pool app client id for web",
+      "Value": {
+        "Ref": "UserPoolClientWeb"
+      }
+    },
+    "AppClientID": {
+      "Description": "The user pool app client id",
+      "Value": {
+        "Ref": "UserPoolClient"
+      }
+    },
+    "AppClientSecret": {
+      "Value": {
+        "Fn::GetAtt": [
+          "UserPoolClientInputs",
+          "appSecret"
+        ]
+      },
+      "Condition": "ShouldOutputAppClientSecrets"
+    },
+    "CreatedSNSRole": {
+      "Description": "role arn",
+      "Value": {
+        "Fn::GetAtt": [
+          "SNSRole",
+          "Arn"
+        ]
+      }
+    }
+  }
+}
