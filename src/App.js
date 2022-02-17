@@ -6,6 +6,7 @@ import Predictions, { AmazonAIPredictionsProvider } from '@aws-amplify/predictio
 import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
+import { FaMicrophone} from 'react-icons/fa';
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
 
@@ -14,12 +15,11 @@ function App() {
 const [textToInterpret, setTextToInterpret] = useState("");
 
 function SpeechToText(props) {
-    const [response, setResponse] = useState("");
-    const [sentiment, setSentiment] = useState("");
+    const [response] = useState("");
+
    
 
-    function AudioRecorder(props) {
-      console.log("Audio Recorder", props);
+    function AudioRecorder(props) {      
       const [recording, setRecording] = useState(false);
       const [micStream, setMicStream] = useState();
       const [audioBuffer] = useState(
@@ -85,8 +85,7 @@ function SpeechToText(props) {
   
         const resultBuffer = audioBuffer.getData();
   
-        if (typeof finishRecording === "function") {
-          console.log('finishRecording function', resultBuffer);
+        if (typeof finishRecording === "function") {       
           finishRecording(resultBuffer);
         }
       }
@@ -94,8 +93,8 @@ function SpeechToText(props) {
       return (
         <div className="audioRecorder">
           <div>
-            {recording && <button onClick={stopRecording}>Stop recording</button>}
-            {!recording && <button onClick={startRecording}>Start recording</button>}
+            {recording && <button onClick={stopRecording} className="button round" ><FaMicrophone className="mic recording" /></button>}
+            {!recording && <button onClick={startRecording} className="button round"><FaMicrophone className='mic'/></button>}
           </div>
         </div>
       );
@@ -103,7 +102,6 @@ function SpeechToText(props) {
   
     function convertFromBuffer(bytes) {
       console.log('converting text');
-      setResponse('Converting text...');
       setTextToInterpret('Converting text...');
   
       Predictions.convert({
@@ -120,7 +118,7 @@ function SpeechToText(props) {
     return (
       <div className="Text">
         <div>
-          <h1>Quais as novidades?</h1>
+          <h1>Como foi o dia hoje?</h1>
           <AudioRecorder finishRecording={convertFromBuffer} />          
           <p>{response}</p>        
         </div>
@@ -150,7 +148,8 @@ function TextInterpretation() {
   return (
     <div className="Text">
       <div>       
-        <textarea value={textToInterpret} onChange={setText}></textarea>
+        {/*<textarea rows="4" cols="50" value={textToInterpret} onChange={setText}></textarea> */}
+        <textarea rows="4" cols="50" defaultValue={textToInterpret} onChange={setText}></textarea>
       </div>
       <div>
         <button onClick={interpretFromPredictions}>Interpreta o dia</button>      
@@ -162,8 +161,8 @@ function TextInterpretation() {
 
 function DateDisplay(){
     return (
-      <div class="date">
-        <p> {new Date().toLocaleString()}</p>
+      <div className="date">
+        <p> {new Date().toLocaleString()}</p>      
       </div>
     );
 }
