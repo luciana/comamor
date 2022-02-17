@@ -1,12 +1,7 @@
-.App {
-  text-align: center;
-  background-color: #282c34;
-  min-height: 100vh;
-  color: #eee;
-}
 
+/* HEADER */
 .App-logo {
-  height: 30vmin;
+  height: 40vmin;
   pointer-events: none;
 }
 
@@ -17,17 +12,12 @@
 }
 
 .App-header {
- 
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
-
-.App-link {
-  color: #61dafb;
 }
 
 @keyframes App-logo-spin {
@@ -54,7 +44,6 @@
 }
 
 /* BLOCKS */
-
 .white{
   background-color: #eee;
   color: #282c34;
@@ -64,7 +53,6 @@
   display: block; 
 }
 
-
 .famic {
   font-size: 50px;
   color: #282c34;
@@ -72,7 +60,6 @@
 }
 
 .aligned{
-
   display:inline-block;
   vertical-align:middle;
   margin-right:10px
@@ -87,7 +74,6 @@
   font-size: 16px;
   padding: 10px;
 }
-
 
 .round {
   border-radius: 50%;

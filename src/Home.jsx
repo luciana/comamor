@@ -1,6 +1,6 @@
+/* eslint-disable import/first */
 import React, { useState } from 'react';
 import logo from './logo.svg';
-import './App.css';
 import Amplify from 'aws-amplify';
 import Predictions, { AmazonAIPredictionsProvider } from '@aws-amplify/predictions';
 import awsconfig from './aws-exports';
@@ -11,15 +11,11 @@ import { NavLink } from "react-router-dom";
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
 
-function App() {
+function Home() {
+  const [textToInterpret, setTextToInterpret] = useState("");
 
-const [textToInterpret, setTextToInterpret] = useState("");
-
-function SpeechToText(props) {
+  function SpeechToText(props) {
     const [response] = useState("");
-
-   
-
     function AudioRecorder(props) {      
       const [recording, setRecording] = useState(false);
       const [micStream, setMicStream] = useState();
@@ -116,17 +112,16 @@ function SpeechToText(props) {
     }
   
     return (
-      <div className="Text">
-        <div>         
-          <AudioRecorder finishRecording={convertFromBuffer} />          
-          <p>{response}</p>        
-        </div>
+     
+      <div>         
+        <AudioRecorder finishRecording={convertFromBuffer} />          
+        <p>{response}</p>        
       </div>
     );
   }
 
-function TextInterpretation() {
-  const [response, setResponse] = useState("")
+  function TextInterpretation() {
+    const [response, setResponse] = useState("")
   
   function interpretFromPredictions() {
     Predictions.interpret({
@@ -145,21 +140,23 @@ function TextInterpretation() {
     setTextToInterpret(event.target.value);
   }
 
-  return (
-    <div className="text">            
+  return (   
+    <div>  
+     <div>    
         <div className="inner white curve"> 
-          <div className="text">Como foi o dia hoje?</div>
-          <textarea rows="6" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>  
-        </div>           
-         <div className="block"> 
-          <button className="button" onClick={interpretFromPredictions}>
+          <div className="">Como foi o dia hoje?</div>
+          <textarea rows="5" cols="55" defaultValue={textToInterpret} onChange={setText}></textarea>          
           <div>
-            <FaConfluence className="faconfluence"/>
-            <span>Interpreta o humor do dia</span>
-          </div>
-          </button>      
-        </div>  
-       <div> <p>{response}</p></div>  
+            <button className="button" onClick={interpretFromPredictions}>
+            <div>
+              <FaConfluence className="faconfluence"/>
+              <span>Interpreta o humor do dia</span>
+            </div>
+          </button>     
+          </div>    
+        </div>        
+      </div>
+      <div>{response}</div> 
     </div>
   );
 }
@@ -213,30 +210,32 @@ function VitalCollection(){
     </div>  
   )
 }
-  return (
-    <div className="App">
-      <header className="App-header">        
-        <img src={logo} className="App-logo" alt="logo" /> 
-        <h1> Diario do Papai </h1>
-      </header>
-      <section>
-      <DateDisplay />
-      </section>
-      <section>
-      <AssistantNames />
-      </section>
-      <section>
-      <VitalCollection />
-      </section>
-      <section>  
 
-      <div className="">
-        <div className="aligned"> {TextInterpretation()} </div> 
-        <div className="aligned"> <SpeechToText />  </div>
+  return (
+    <div className="home">
+      <div className="container">
+        <div className="row align-items-center my-5">
+          <div className="col-lg-5">
+            <div className="App-header">        
+                <img src={logo} className="App-logo" alt="logo" /> 
+                <h1> Diario do Papai </h1>
+                 <p> <DateDisplay /></p>
+            </div>
+
+          </div>
+          <div className="col-lg-7">
+             <p><AssistantNames /></p>
+             <p><VitalCollection /></p>
+             <p>
+              <div className="aligned"> {TextInterpretation()} </div> 
+              <div className="aligned"> <SpeechToText />  </div>
+              </p>
+            
+          </div>
         </div>
-      </section>
+      </div>
     </div>
   );
 }
 
-export default App;
+export default Home;

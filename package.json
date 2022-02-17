@@ -14,6 +14,7 @@
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
     "react-native-microphone-stream": "github:chadsmith/react-native-microphone-stream",
+    "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
     "web-vitals": "^0.2.4",
     "workbox-background-sync": "^5.1.4",
