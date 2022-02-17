@@ -1,0 +1,13 @@
+{
+    "resourceName": "comamorIntepretResource",
+    "interpretPolicyName": "interpretPolicy5aabf07e",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "interpretType": "interpretText",
+    "type": "SENTIMENT",
+    "access": "auth"
+}

@@ -12,8 +12,11 @@ Amplify.addPluggable(new AmazonAIPredictionsProvider());
 function App() {
   function SpeechToText(props) {
     const [response, setResponse] = useState("");
-  
+    const [sentiment, setSentiment] = useState("");
+   
+
     function AudioRecorder(props) {
+      console.log("Audio Recorder", props);
       const [recording, setRecording] = useState(false);
       const [micStream, setMicStream] = useState();
       const [audioBuffer] = useState(
@@ -80,6 +83,7 @@ function App() {
         const resultBuffer = audioBuffer.getData();
   
         if (typeof finishRecording === "function") {
+          console.log('finishRecording function', resultBuffer);
           finishRecording(resultBuffer);
         }
       }
@@ -109,6 +113,45 @@ function App() {
         .catch(err => setResponse(JSON.stringify(err, null, 2)))
     }
     
+
+
+    function AnalyzeSentiment(props){
+
+      async function analizeMessage(){
+           console.log('start analizing message');
+            const { finishAnalyzing } = props;  
+
+             const message = response;
+             
+            if (typeof finishAnalyzing === "function") {             
+              finishAnalyzing(message);
+            } 
+                                
+      };
+
+       return (
+        <div className="sentimentAnalysis">
+          <div>
+            {response && <button onClick={analizeMessage}>Como foi o seu dia</button>}           
+          </div>
+        </div>
+      );
+    }
+ 
+    function convertToSentiment(textToInterpret){
+       console.log('start interpreting message', textToInterpret);
+      const textToInterpret1 = "Great day";
+      Predictions.interpret({
+        text: {
+          source: {
+            text: textToInterpret1,
+          },
+          type: "ALL"
+        }
+      })
+      .then(result => setSentiment( result ))
+      .catch(err => setSentiment(JSON.stringify(err, null, 2)))
+    };
   
     return (
       <div className="Text">
@@ -116,11 +159,43 @@ function App() {
           <h1>Quais as novidades?</h1>
           <AudioRecorder finishRecording={convertFromBuffer} />          
           <p>{response}</p>
+          <AnalyzeSentiment finishAnalyzing={convertToSentiment} />   
         </div>
       </div>
     );
   }
 
+function TextInterpretation() {
+  const [response, setResponse] = useState("Input some text and click enter to test")
+  const [textToInterpret, setTextToInterpret] = useState("write some text here to interpret");
+
+  function interpretFromPredictions() {
+    Predictions.interpret({
+      text: {
+        source: {
+          text: textToInterpret,
+        },
+        type: "ALL"
+      }
+    }).then(result => setResponse(JSON.stringify(result, null, 2)))
+      .catch(err => setResponse(JSON.stringify(err, null, 2)))
+  }
+
+  function setText(event) {
+    setTextToInterpret(event.target.value);
+  }
+
+  return (
+    <div className="Text">
+      <div>
+        <h3>Text interpretation</h3>
+        <input value={textToInterpret} onChange={setText}></input>
+        <button onClick={interpretFromPredictions}>test</button>
+        <p>{response}</p>
+      </div>
+    </div>
+  );
+}
 
   
 
@@ -131,6 +206,9 @@ function App() {
       </header>
       <section>     
       <SpeechToText />    
+      </section>
+      <section>
+      <TextInterpretation />
       </section>
     </div>
   );

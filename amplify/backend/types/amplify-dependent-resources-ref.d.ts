@@ -24,16 +24,21 @@ export type AmplifyDependentResourcesAttributes = {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "UserPoolId": "string",
+            "UserPoolArn": "string",
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
             "AppClientID": "string",
-            "AppClientSecret": "string"
+            "CreatedSNSRole": "string"
         }
     },
     "predictions": {
         "transcription53bda798": {
             "region": "string",
             "language": "string"
+        },
+        "comamorIntepretResource": {
+            "region": "string",
+            "type": "string"
         }
     }
 }
