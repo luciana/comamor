@@ -10,7 +10,10 @@ Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
 
 function App() {
-  function SpeechToText(props) {
+
+const [textToInterpret, setTextToInterpret] = useState("");
+
+function SpeechToText(props) {
     const [response, setResponse] = useState("");
     const [sentiment, setSentiment] = useState("");
    
@@ -101,6 +104,7 @@ function App() {
     function convertFromBuffer(bytes) {
       console.log('converting text');
       setResponse('Converting text...');
+      setTextToInterpret('Converting text...');
   
       Predictions.convert({
         transcription: {
@@ -109,66 +113,24 @@ function App() {
           },
           language: "pt-BR", // other options are "en-GB", "fr-FR", "fr-CA", "es-US"
         },
-      }).then(({ transcription: { fullText } }) => setResponse(fullText))
-        .catch(err => setResponse(JSON.stringify(err, null, 2)))
+      }).then(({ transcription: { fullText } }) => setTextToInterpret(fullText))
+        .catch(err => setTextToInterpret(JSON.stringify(err, null, 2)))
     }
-    
-
-
-    function AnalyzeSentiment(props){
-
-      async function analizeMessage(){
-           console.log('start analizing message');
-            const { finishAnalyzing } = props;  
-
-             const message = response;
-             
-            if (typeof finishAnalyzing === "function") {             
-              finishAnalyzing(message);
-            } 
-                                
-      };
-
-       return (
-        <div className="sentimentAnalysis">
-          <div>
-            {response && <button onClick={analizeMessage}>Como foi o seu dia</button>}           
-          </div>
-        </div>
-      );
-    }
- 
-    function convertToSentiment(textToInterpret){
-       console.log('start interpreting message', textToInterpret);
-      const textToInterpret1 = "Great day";
-      Predictions.interpret({
-        text: {
-          source: {
-            text: textToInterpret1,
-          },
-          type: "ALL"
-        }
-      })
-      .then(result => setSentiment( result ))
-      .catch(err => setSentiment(JSON.stringify(err, null, 2)))
-    };
   
     return (
       <div className="Text">
         <div>
           <h1>Quais as novidades?</h1>
           <AudioRecorder finishRecording={convertFromBuffer} />          
-          <p>{response}</p>
-          <AnalyzeSentiment finishAnalyzing={convertToSentiment} />   
+          <p>{response}</p>        
         </div>
       </div>
     );
   }
 
 function TextInterpretation() {
-  const [response, setResponse] = useState("Input some text and click enter to test")
-  const [textToInterpret, setTextToInterpret] = useState("write some text here to interpret");
-
+  const [response, setResponse] = useState("")
+  
   function interpretFromPredictions() {
     Predictions.interpret({
       text: {
@@ -187,23 +149,33 @@ function TextInterpretation() {
 
   return (
     <div className="Text">
-      <div>
-        <h3>Text interpretation</h3>
-        <input value={textToInterpret} onChange={setText}></input>
-        <button onClick={interpretFromPredictions}>test</button>
-        <p>{response}</p>
+      <div>       
+        <textarea value={textToInterpret} onChange={setText}></textarea>
       </div>
+      <div>
+        <button onClick={interpretFromPredictions}>Interpreta o dia</button>      
+      </div>
+      <div>   <p>{response}</p> </div>
     </div>
   );
 }
 
-  
+function DateDisplay(){
+    return (
+      <div class="date">
+        <p> {new Date().toLocaleString()}</p>
+      </div>
+    );
+}
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" /> 
       </header>
+      <section>
+      <DateDisplay />
+      </section>
       <section>     
       <SpeechToText />    
       </section>
