@@ -7,7 +7,7 @@ import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
 import { FaMicrophone, FaConfluence, FaUserAlt} from 'react-icons/fa';
-import { NavLink } from "react-router-dom";
+/*import { NavLink } from "react-router-dom";*/
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
 
@@ -115,7 +115,7 @@ function Home() {
      
       <div>         
         <AudioRecorder finishRecording={convertFromBuffer} />          
-        <p>{response}</p>        
+        <span>{response}</span>        
       </div>
     );
   }
@@ -226,10 +226,10 @@ function VitalCollection(){
           <div className="col-lg-7">
              <p><AssistantNames /></p>
              <p><VitalCollection /></p>
-             <p>
+             <div>
               <div className="aligned"> {TextInterpretation()} </div> 
               <div className="aligned"> <SpeechToText />  </div>
-              </p>
+              </div>
             
           </div>
         </div>
