@@ -6,7 +6,7 @@ import Predictions, { AmazonAIPredictionsProvider } from '@aws-amplify/predictio
 import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
-import { FaMicrophone} from 'react-icons/fa';
+import { FaMicrophone, FaConfluence} from 'react-icons/fa';
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
 
@@ -101,8 +101,7 @@ function SpeechToText(props) {
     }
   
     function convertFromBuffer(bytes) {
-      console.log('converting text');
-      setTextToInterpret('Converting text...');
+      setTextToInterpret('Traduzindo audio...');
   
       Predictions.convert({
         transcription: {
@@ -142,19 +141,22 @@ function TextInterpretation() {
   }
 
   function setText(event) {
+    console.log("set Text", event.target.value);
     setTextToInterpret(event.target.value);
   }
 
   return (
-    <div className="Text">
-      <div>       
-        {/*<textarea rows="4" cols="50" value={textToInterpret} onChange={setText}></textarea> */}
-        <textarea rows="4" cols="50" defaultValue={textToInterpret} onChange={setText}></textarea>
-      </div>
-      <div>
-        <button onClick={interpretFromPredictions}>Interpreta o dia</button>      
-      </div>
-      <div>   <p>{response}</p> </div>
+    <div className="Text">            
+       <div> <textarea rows="4" cols="50" defaultValue={textToInterpret} onChange={setText}></textarea>   </div>           
+        <div> 
+          <button className="button" onClick={interpretFromPredictions}>
+          <div>
+            <FaConfluence className="confluence"/>
+            <span>Interpreta o humor do dia</span>
+          </div>
+          </button>      
+        </div>  
+       <div> <p>{response}</p></div>  
     </div>
   );
 }
@@ -179,7 +181,7 @@ function DateDisplay(){
       <SpeechToText />    
       </section>
       <section>
-      <TextInterpretation />
+        {TextInterpretation()}
       </section>
     </div>
   );

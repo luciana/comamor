@@ -42,6 +42,7 @@
 .mic {
   font-size: 50px;
   color: #282c34;
+  padding: 15px;
 }
 
 .recording{
@@ -51,8 +52,7 @@
 .button {
   background-color: #eee;
   border: none;
-  color: white;
-  padding: 20px;
+  padding: 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -62,4 +62,8 @@
 
 .round {
   border-radius: 50%;
+}
+
+.confluence{
+  padding-right: 5px;
 }
