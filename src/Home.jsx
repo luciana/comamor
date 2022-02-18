@@ -143,9 +143,9 @@ function Home() {
   return (   
     <div>  
      <div>    
-        <div className="inner white curve"> 
-          <div className="">Como foi o dia hoje?</div>
-          <textarea rows="5" cols="55" defaultValue={textToInterpret} onChange={setText}></textarea>          
+        <div className="inner white curve w-65"> 
+          <div className="">Relate os acontecimentos</div>
+          <textarea rows="5" cols="51" defaultValue={textToInterpret} onChange={setText}></textarea>          
           <div>
             <button className="button" onClick={interpretFromPredictions}>
             <div>
@@ -172,8 +172,8 @@ function DateDisplay(){
 function SelectHumor(){
   return (
     <div className="outer">
-      <div className="inner curve white">
-        <label htmlFor="humor-select">Qual o humor?</label>
+      <div className="inner curve white w-75">
+        <label htmlFor="humor-select">Qual o comportamento?</label>
           <select name="humor" id="humor-select">
               <option value=""></option>
               <option value="Alegre">Alegre</option>
@@ -214,15 +214,15 @@ function AssistantNames(){
 function VitalCollection(){
   return (
     <div className="outer">
-    <div className="inner curve white highlight">
+    <div className="inner curve white highlight w-25">
       <label htmlFor="name" className="block">Pressão Arterial</label>
       <input id="pressao" placeholder="120/80" name="pressao" maxLength="10" size="6"  /> mmHg
     </div>
-    <div className="inner curve white highlight">
+    <div className="inner curve white highlight w-25">
      <label htmlFor="name" className="block">Saturação</label>
       <input id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> SpO<span className="tiny">2%</span>
     </div>
-     <div className="inner curve white highlight">
+     <div className="inner curve white highlight w-25">
       <label htmlFor="name" className="block">Temperatura</label>
       <input id="temperatura" placeholder="37" name="temperatura" maxLength="10" size="6"  /> &deg;C
       </div> 
