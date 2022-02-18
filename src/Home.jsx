@@ -169,19 +169,38 @@ function DateDisplay(){
     );
 }
 
+function SelectHumor(){
+  return (
+    <div className="outer">
+      <div className="inner curve white">
+        <label htmlFor="humor-select">Qual o humor?</label>
+          <select name="humor" id="humor-select">
+              <option value=""></option>
+              <option value="Alegre">Alegre</option>
+              <option value="">Sorrisonho</option>
+              <option value="">Calado</option>
+              <option value="">Agitado</option>             
+              <option value="">Triste</option>
+              <option value="">Com Raiva</option>
+          </select>
+      </div>
+    </div>
+  );
+}
+
 function AssistantNames(){
   return (
     <div className="outer">
-    <div className="inner">
-      <button className="button curve user">
+    <div className="inner curve white highlight">
+      <button className="">
             <div>
               <FaUserAlt className="fauser"/>
               <span>Miriam Sobrenome</span>
             </div>
       </button> 
     </div>
-     <div className="inner">
-      <button className="button curve user">
+     <div className="inner curve white highlight">
+      <button className="">
             <div>
               <FaUserAlt className="fauser"/>
               <span>Samira Sobrenome</span>
@@ -214,18 +233,19 @@ function VitalCollection(){
   return (
     <div className="home">
       <div className="container">
-        <div className="row align-items-center my-5">
+        <div className="row my-5">
           <div className="col-lg-5">
             <div className="App-header">        
                 <img src={logo} className="App-logo" alt="logo" /> 
                 <h1> Diario do Papai </h1>
-                 <p> <DateDisplay /></p>
+                 <DateDisplay />
             </div>
 
           </div>
           <div className="col-lg-7">
-             <p><AssistantNames /></p>
-             <p><VitalCollection /></p>
+             <AssistantNames />
+             <VitalCollection />
+             <SelectHumor />
              <div>
               <div className="aligned"> {TextInterpretation()} </div> 
               <div className="aligned"> <SpeechToText />  </div>

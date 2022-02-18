@@ -1,8 +1,9 @@
 /* eslint-disable import/first */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import './App.css';
+import './index.css';
+
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 import {Buffer} from 'buffer';

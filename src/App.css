@@ -66,6 +66,9 @@
 }
 
 /* BUTTONS */
+button {
+  border: 0;
+}
 .button {
   border: none;
   text-align: center;
@@ -73,6 +76,7 @@
   display: inline-block;
   font-size: 16px;
   padding: 10px;
+
 }
 
 .round {
@@ -96,14 +100,12 @@
 .outer
 {
     width:100%;
-    text-align: center;
 }
 .inner { 
   display: inline-block; 
   padding: 10px;
   margin: 4px 4px;
 }
-.user:hover{background-color:green;}
 .highlight:hover{background-color:darkgray;}
 
 /* FORM */
