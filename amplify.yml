@@ -14,7 +14,6 @@ frontend:
     preBuild:
       commands:
         - npm install
-        - npm ci
     build:
       commands:
         - echo "I am running 🏃on $BUILD_ENV"
