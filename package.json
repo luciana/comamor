@@ -1,6 +1,7 @@
 {
   "name": "comamor",
   "version": "0.1.0",
+  "homepage": "https://main.d32uvie3c9lfuo.amplifyapp.com/",
   "private": true,
   "dependencies": {
     "@aws-amplify/ui-react": "^2.4.0",
