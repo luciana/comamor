@@ -13,7 +13,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm install env-cmd
+        - npm install
         - npm ci
     build:
       commands:
