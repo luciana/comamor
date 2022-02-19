@@ -7,16 +7,22 @@
 			"type": "image/x-icon"
 		},
 		{
+			"src": "android-chrome-96x96.png",
+			"sizes": "144x144",
+			"type": "image/png",
+			"purpose": "any maskable"
+		  },
+		{
 			"src": "android-chrome-maskable-192x192.png",
 			"type": "image/png",
 			"sizes": "192x192",
-			"purpose": "splash page for 192"
+			"purpose": "any splash page for 192"
 		},
 		{
 			"src": "android-chrome-maskable-512x512.png",
 			"type": "image/png",
 			"sizes": "512x512",
-			"purpose": "splash page for 512"
+			"purpose": "any splash page for 512"
 		}
 	],
 	"start_url": "/",
