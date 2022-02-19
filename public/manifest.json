@@ -7,7 +7,7 @@
 			"type": "image/x-icon"
 		},
 		{
-			"src": "android-chrome-96x96.png",
+			"src": "android-chrome-maskable-96x96",
 			"sizes": "144x144",
 			"type": "image/png",
 			"purpose": "any maskable"
