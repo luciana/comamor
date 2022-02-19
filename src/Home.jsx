@@ -8,7 +8,7 @@ import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
 import Cookies from 'universal-cookie';
-import { FaMicrophone, FaConfluence, FaRegSun, FaSun} from 'react-icons/fa';
+import { FaMicrophone, FaConfluence, FaRegSun, FaSun, FaStar} from 'react-icons/fa';
 /*import { NavLink } from "react-router-dom";*/
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -237,6 +237,36 @@ function RelatorioDaTarde() {
   );
 }
 
+function RelatorioDaNoite() {
+  return ( 
+   <div className="outer">
+      <div className="inner curve white w-75">
+       <h2> <FaStar className="fastar"/>  Noite </h2>
+      <label htmlFor="noite-remedios-text">Remédios</label><br />
+      <textarea rows="2" cols="35"></textarea> 
+      <label htmlFor="noite-refeicao-text">Refeição</label>
+      <textarea rows="2" cols="35"></textarea> 
+      <label htmlFor="noite-higiene-text">Higiene</label>
+      <textarea rows="2" cols="35"></textarea> 
+      <label htmlFor="noite-atividade-text">Atividade</label>
+      <textarea rows="2" cols="35"></textarea> <br />
+      <label htmlFor="noite-humor-select">Qual o comportamento?</label>
+        <select name="noite-humor" id="humor-select">
+            <option value=""></option>
+            <option value="aborrecido">Aborrecido</option>
+            <option value="agitado">Agitado</option>
+            <option value="agressivo">Agressivo</option>
+            <option value="concentrado">Concentrado</option>
+            <option value="disperso">Disperso</option>
+            <option value="feliz">Feliz</option>   
+            <option value="sonolento">Sonolento</option>          
+            <option value="tranquilo">Tranquilo</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
 function AssistantNames(){
   return (
     <div>
@@ -285,6 +315,7 @@ function VitalCollection(){
              <VitalCollection />
              <RelatorioDoDia />
              <RelatorioDaTarde />
+             <RelatorioDaNoite />
              <div>
               <div className="aligned"> {TextInterpretation()} </div> 
               <div className="aligned"> <SpeechToText />  </div>
