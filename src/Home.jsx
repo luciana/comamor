@@ -1,11 +1,13 @@
 /* eslint-disable import/first */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import Amplify from 'aws-amplify';
+import './App.css';
 import Predictions, { AmazonAIPredictionsProvider } from '@aws-amplify/predictions';
 import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
+import Cookies from 'universal-cookie';
 import { FaMicrophone, FaConfluence, FaUserAlt} from 'react-icons/fa';
 /*import { NavLink } from "react-router-dom";*/
 Amplify.configure(awsconfig);
@@ -13,6 +15,12 @@ Amplify.addPluggable(new AmazonAIPredictionsProvider());
 
 function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
+  useEffect(()=>{
+    const cookiestored = new Cookies();
+    console.log(`stored cookie ${cookiestored.get('comamor_cookie_data')}`);
+    const cookie = new Cookies();
+    cookie.set('comamor_cookie_data','cookie data',{path: '/'});    
+  },[]);
 
   function SpeechToText(props) {
     const [response] = useState("");
@@ -199,7 +207,7 @@ function AssistantNames(){
             </div>
       </button> 
     </div>
-     <div className="inner curve white highlight">
+     <div className="inner curve white highlight w-25">
       <button className="">
             <div>
               <FaUserAlt className="fauser"/>

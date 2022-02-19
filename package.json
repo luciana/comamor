@@ -17,6 +17,7 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
     "recharts": "^2.1.9",
+    "universal-cookie": "^4.0.4",
     "web-vitals": "^0.2.4",
     "workbox-background-sync": "^5.1.4",
     "workbox-broadcast-update": "^5.1.4",
