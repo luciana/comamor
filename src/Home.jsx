@@ -8,7 +8,7 @@ import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
 import Cookies from 'universal-cookie';
-import { FaMicrophone, FaConfluence, FaUserAlt} from 'react-icons/fa';
+import { FaMicrophone, FaConfluence, FaRegSun, FaSun} from 'react-icons/fa';
 /*import { NavLink } from "react-router-dom";*/
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -113,7 +113,7 @@ function Home() {
           source: {
             bytes
           },
-          language: "pt-BR", // other options are "en-GB", "fr-FR", "fr-CA", "es-US"
+          language: "pt-BR", //other options are "en-GB", "fr-FR", "fr-CA", "es-US"
         },
       }).then(({ transcription: { fullText } }) => setTextToInterpret(fullText))
         .catch(err => setTextToInterpret(JSON.stringify(err, null, 2)))
@@ -153,12 +153,12 @@ function Home() {
      <div>    
         <div className="inner white curve w-65"> 
           <div className="">Relate os acontecimentos</div>
-          <textarea rows="5" cols="51" defaultValue={textToInterpret} onChange={setText}></textarea>          
+          <textarea rows="5" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>          
           <div>
             <button className="button" onClick={interpretFromPredictions}>
             <div>
               <FaConfluence className="faconfluence"/>
-              <span>Interpreta o humor do dia</span>
+              <span>Interpretar o dia</span>
             </div>
           </button>     
           </div>    
@@ -177,20 +177,61 @@ function DateDisplay(){
     );
 }
 
-function SelectHumor(){
-  return (
+function RelatorioDoDia(){
+  return ( 
     <div className="outer">
       <div className="inner curve white w-75">
-        <label htmlFor="humor-select">Qual o comportamento?</label>
-          <select name="humor" id="humor-select">
-              <option value=""></option>
-              <option value="Alegre">Alegre</option>
-              <option value="">Sorrisonho</option>
-              <option value="">Calado</option>
-              <option value="">Agitado</option>             
-              <option value="">Triste</option>
-              <option value="">Com Raiva</option>
-          </select>
+       <h2> <FaRegSun className="faregsun"/>  Manhã </h2>
+      <label htmlFor="manha-remedios-text">Remédios</label><br />
+      <textarea rows="2" cols="35"></textarea> 
+      <label htmlFor="manha-refeicao-text">Refeição</label>
+      <textarea rows="2" cols="35"></textarea> 
+      <label htmlFor="manha-higiene-text">Higiene</label>
+      <textarea rows="2" cols="35"></textarea> 
+      <label htmlFor="manha-atividade-text">Atividade</label>
+      <textarea rows="2" cols="35"></textarea> <br />
+      <label htmlFor="manha-humor-select">Qual o comportamento?</label>
+        <select name="manha-humor" id="humor-select">
+            <option value=""></option>
+            <option value="aborrecido">Aborrecido</option>
+            <option value="agitado">Agitado</option>
+            <option value="agressivo">Agressivo</option>
+            <option value="concentrado">Concentrado</option>
+            <option value="disperso">Disperso</option>
+            <option value="feliz">Feliz</option>   
+            <option value="sonolento">Sonolento</option>          
+            <option value="tranquilo">Tranquilo</option>
+        </select>
+      </div>
+    </div>   
+  );
+}
+
+function RelatorioDaTarde() {
+  return ( 
+   <div className="outer">
+      <div className="inner curve white w-75">
+       <h2> <FaSun className="fasun"/>  Tarde </h2>
+      <label htmlFor="tarde-remedios-text">Remédios</label><br />
+      <textarea rows="2" cols="35"></textarea> 
+      <label htmlFor="tarde-refeicao-text">Refeição</label>
+      <textarea rows="2" cols="35"></textarea> 
+      <label htmlFor="tarde-higiene-text">Higiene</label>
+      <textarea rows="2" cols="35"></textarea> 
+      <label htmlFor="tarde-atividade-text">Atividade</label>
+      <textarea rows="2" cols="35"></textarea> <br />
+      <label htmlFor="tarde-humor-select">Qual o comportamento?</label>
+        <select name="tarde-humor" id="humor-select">
+            <option value=""></option>
+            <option value="aborrecido">Aborrecido</option>
+            <option value="agitado">Agitado</option>
+            <option value="agressivo">Agressivo</option>
+            <option value="concentrado">Concentrado</option>
+            <option value="disperso">Disperso</option>
+            <option value="feliz">Feliz</option>   
+            <option value="sonolento">Sonolento</option>          
+            <option value="tranquilo">Tranquilo</option>
+        </select>
       </div>
     </div>
   );
@@ -198,24 +239,13 @@ function SelectHumor(){
 
 function AssistantNames(){
   return (
-    <div className="outer">
-    <div className="inner curve white highlight">
-      <button className="">
-            <div>
-              <FaUserAlt className="fauser"/>
-              <span>Miriam Sobrenome</span>
-            </div>
-      </button> 
+    <div>
+      <p>Cuidadora</p>
+      <input type="radio" id="1" name="cuidadora_do_dia" value="1" />
+      <label  htmlFor="1">Miriam Sobrenome</label>
+      <input type="radio" id="2" name="cuidadora_do_dia" value="2" />
+      <label  htmlFor="2">Samira Sobrenome</label>
     </div>
-     <div className="inner curve white highlight w-25">
-      <button className="">
-            <div>
-              <FaUserAlt className="fauser"/>
-              <span>Samira Sobrenome</span>
-            </div>
-      </button> 
-      </div> 
-    </div>  
   )
 }
 
@@ -253,7 +283,8 @@ function VitalCollection(){
           <div className="col-lg-7">
              <AssistantNames />
              <VitalCollection />
-             <SelectHumor />
+             <RelatorioDoDia />
+             <RelatorioDaTarde />
              <div>
               <div className="aligned"> {TextInterpretation()} </div> 
               <div className="aligned"> <SpeechToText />  </div>

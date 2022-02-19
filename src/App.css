@@ -111,7 +111,10 @@ button {
 /* FORM */
 
 label{
-  padding: 5px;
+  padding: 0 15px;
+}
+textarea {
+  display: block;
 }
 
  

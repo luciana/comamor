@@ -78,10 +78,14 @@ const lineData = [
 
 
 const barData = [
-  {name: 'Dificil', comportamento: 50},
-  {name: 'Ansioso', comportamento: 30},
-  {name: 'Calmo', comportamento: 200},
-  {name: 'Sonolento', comportamento: 100}
+  {name: 'aborrecido', comportamento: 50},
+  {name: 'agitado', comportamento: 30},
+  {name: 'agressivo', comportamento: 200},
+  {name: 'concentrado', comportamento: 100},
+  {name: 'disperso', comportamento: 50},
+  {name: 'feliz', comportamento: 30},
+  {name: 'sonolento', comportamento: 80},
+  {name: 'tranquilo', comportamento: 120}  
 ];
 
 function Result() {
