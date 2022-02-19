@@ -98,8 +98,8 @@ function Home() {
       return (
         <div className="audioRecorder">
           <div>
-            {recording && <button onClick={stopRecording} className="button round white" ><FaMicrophone className="famic recording" /></button>}
-            {!recording && <button onClick={startRecording} className="button round white"><FaMicrophone className='famic'/></button>}
+            {recording && <button name="stop recording" onClick={stopRecording} className="button round white" ><FaMicrophone className="famic recording" /></button>}
+            {!recording && <button name="start recording"  onClick={startRecording} className="button round white"><FaMicrophone className='famic'/></button>}
           </div>
         </div>
       );
@@ -152,10 +152,11 @@ function Home() {
     <div>  
      <div>    
         <div className="inner white curve w-65"> 
-          <div className="">Relate os acontecimentos</div>
-          <textarea class="form-control" rows="5" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>          
+          
+          <label htmlFor="acontecimentos">Relate os acontecimentos</label><br />
+          <textarea id="acontecimentos" class="form-control" rows="5" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>          
           <div>
-            <button className="button" onClick={interpretFromPredictions}>
+            <button name="interpretar" className="button" onClick={interpretFromPredictions}>
             <div>
               <FaConfluence className="faconfluence"/>
               <span>Interpretar o dia</span>
@@ -191,7 +192,7 @@ function RelatorioDoDia(){
       <label htmlFor="manha-atividade-text">Atividade</label>
       <textarea id="manha-atividade-text"class="form-control" rows="2" cols="35"></textarea> <br />
       <label htmlFor="manha-humor-select">Qual o comportamento?</label>
-        <select class="form-control" name="manha-humor" id="humor-select">
+        <select class="form-control" name="manha-humor" id="manha-humor-select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -221,7 +222,7 @@ function RelatorioDaTarde() {
       <label htmlFor="tarde-atividade-text">Atividade</label>
       <textarea id="tarde-atividade-text" class="form-control" rows="2" cols="35"></textarea> <br />
       <label htmlFor="tarde-humor-select">Qual o comportamento?</label>
-        <select class="form-control" name="tarde-humor" id="humor-select">
+        <select class="form-control" name="tarde-humor" id="tarde-humor-select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -251,7 +252,7 @@ function RelatorioDaNoite() {
       <label htmlFor="noite-atividade-text">Atividade</label>
       <textarea id="noite-atividade-text"  class="form-control" rows="2" cols="35"></textarea> <br />
       <label htmlFor="noite-humor-select">Qual o comportamento?</label>
-        <select class="form-control" name="noite-humor" id="humor-select">
+        <select class="form-control" name="noite-humor" id="noite-humor-select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
