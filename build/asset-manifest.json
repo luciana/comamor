@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.22eb1a93.chunk.css",
-    "main.js": "/static/js/main.346da4c0.chunk.js",
-    "main.js.map": "/static/js/main.346da4c0.chunk.js.map",
+    "main.js": "/static/js/main.7711e24a.chunk.js",
+    "main.js.map": "/static/js/main.7711e24a.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.e5ff1fce.js",
     "runtime-main.js.map": "/static/js/runtime-main.e5ff1fce.js.map",
     "static/js/2.2cfd4e24.chunk.js": "/static/js/2.2cfd4e24.chunk.js",
@@ -14,13 +14,12 @@
     "service-worker.js.map": "/service-worker.js.map",
     "static/css/main.22eb1a93.chunk.css.map": "/static/css/main.22eb1a93.chunk.css.map",
     "static/js/2.2cfd4e24.chunk.js.LICENSE.txt": "/static/js/2.2cfd4e24.chunk.js.LICENSE.txt",
-    "static/media/logo.5b7ce74c.svg": "/static/media/logo.5b7ce74c.svg",
-    "static/media/sentiment-analysis-graph.27319c3e.png": "/static/media/sentiment-analysis-graph.27319c3e.png"
+    "static/media/logo.5b7ce74c.svg": "/static/media/logo.5b7ce74c.svg"
   },
   "entrypoints": [
     "static/js/runtime-main.e5ff1fce.js",
     "static/js/2.2cfd4e24.chunk.js",
     "static/css/main.22eb1a93.chunk.css",
-    "static/js/main.346da4c0.chunk.js"
+    "static/js/main.7711e24a.chunk.js"
   ]
 }
