@@ -110,11 +110,11 @@ button {
 
 /* FORM */
 
-label{
-  padding: 0 15px;
-}
-textarea {
-  display: block;
+
+
+input[type=radio] {
+  width: 20px;
+  height: 20px;
 }
 
  

@@ -153,7 +153,7 @@ function Home() {
      <div>    
         <div className="inner white curve w-65"> 
           <div className="">Relate os acontecimentos</div>
-          <textarea rows="5" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>          
+          <textarea class="form-control" rows="5" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>          
           <div>
             <button className="button" onClick={interpretFromPredictions}>
             <div>
@@ -183,15 +183,15 @@ function RelatorioDoDia(){
       <div className="inner curve white w-75">
        <h2> <FaRegSun className="faregsun"/>  Manhã </h2>
       <label htmlFor="manha-remedios-text">Remédios</label><br />
-      <textarea rows="2" cols="35"></textarea> 
+      <textarea id="manha-remedios-text" class="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="manha-refeicao-text">Refeição</label>
-      <textarea rows="2" cols="35"></textarea> 
+      <textarea id="manha-refeicao-text" class="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="manha-higiene-text">Higiene</label>
-      <textarea rows="2" cols="35"></textarea> 
+      <textarea id="manha-higiene-text"class="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="manha-atividade-text">Atividade</label>
-      <textarea rows="2" cols="35"></textarea> <br />
+      <textarea id="manha-atividade-text"class="form-control" rows="2" cols="35"></textarea> <br />
       <label htmlFor="manha-humor-select">Qual o comportamento?</label>
-        <select name="manha-humor" id="humor-select">
+        <select class="form-control" name="manha-humor" id="humor-select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -213,15 +213,15 @@ function RelatorioDaTarde() {
       <div className="inner curve white w-75">
        <h2> <FaSun className="fasun"/>  Tarde </h2>
       <label htmlFor="tarde-remedios-text">Remédios</label><br />
-      <textarea rows="2" cols="35"></textarea> 
+      <textarea id="tarde-remedios-text" class="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="tarde-refeicao-text">Refeição</label>
-      <textarea rows="2" cols="35"></textarea> 
+      <textarea id="tarde-refeicao-text" class="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="tarde-higiene-text">Higiene</label>
-      <textarea rows="2" cols="35"></textarea> 
+      <textarea id="tarde-higiene-text" class="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="tarde-atividade-text">Atividade</label>
-      <textarea rows="2" cols="35"></textarea> <br />
+      <textarea id="tarde-atividade-text" class="form-control" rows="2" cols="35"></textarea> <br />
       <label htmlFor="tarde-humor-select">Qual o comportamento?</label>
-        <select name="tarde-humor" id="humor-select">
+        <select class="form-control" name="tarde-humor" id="humor-select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -243,15 +243,15 @@ function RelatorioDaNoite() {
       <div className="inner curve white w-75">
        <h2> <FaStar className="fastar"/>  Noite </h2>
       <label htmlFor="noite-remedios-text">Remédios</label><br />
-      <textarea rows="2" cols="35"></textarea> 
+      <textarea id="noite-remedios-text" class="form-control"  rows="2" cols="35"></textarea> 
       <label htmlFor="noite-refeicao-text">Refeição</label>
-      <textarea rows="2" cols="35"></textarea> 
+      <textarea id="noite-refeicao-text"  class="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="noite-higiene-text">Higiene</label>
-      <textarea rows="2" cols="35"></textarea> 
+      <textarea id="noite-higiene-text" class="form-control"  rows="2" cols="35"></textarea> 
       <label htmlFor="noite-atividade-text">Atividade</label>
-      <textarea rows="2" cols="35"></textarea> <br />
+      <textarea id="noite-atividade-text"  class="form-control" rows="2" cols="35"></textarea> <br />
       <label htmlFor="noite-humor-select">Qual o comportamento?</label>
-        <select name="noite-humor" id="humor-select">
+        <select class="form-control" name="noite-humor" id="humor-select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -271,10 +271,17 @@ function AssistantNames(){
   return (
     <div>
       <p>Cuidadora</p>
-      <input type="radio" id="1" name="cuidadora_do_dia" value="1" />
-      <label  htmlFor="1">Miriam Sobrenome</label>
-      <input type="radio" id="2" name="cuidadora_do_dia" value="2" />
-      <label  htmlFor="2">Samira Sobrenome</label>
+      <div class="form-check form-check-inline">
+       
+        <input class="form-check-input"  type="radio" id="1" name="cuidadora_do_dia" value="1" />
+         <label  class="form-check-label" htmlFor="1"> Miriam Sobrenome</label>
+      </div>
+      <div class="form-check form-check-inline">
+       
+        <input class="form-check-input"  type="radio" id="2" name="cuidadora_do_dia" value="2" />
+         <label  class="form-check-label" htmlFor="2"> Samira Sobrenome</label>
+      </div>
+      
     </div>
   )
 }
@@ -283,16 +290,16 @@ function VitalCollection(){
   return (
     <div className="outer">
     <div className="inner curve white highlight w-25">
-      <label htmlFor="name" className="block">Pressão Arterial</label>
-      <input id="pressao" placeholder="120/80" name="pressao" maxLength="10" size="6"  /> mmHg
+      <label htmlFor="name" className="block">Pressão</label>
+      <input class="form-control" id="pressao" placeholder="120/80" name="pressao" maxLength="10" size="6"  /> mmHg
     </div>
     <div className="inner curve white highlight w-25">
-     <label htmlFor="name" className="block">Saturação</label>
-      <input id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> SpO<span className="tiny">2%</span>
+     <label class="form-control" htmlFor="name" className="block">Saturação</label>
+      <input class="form-control" id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> SpO<span className="tiny">2%</span>
     </div>
      <div className="inner curve white highlight w-25">
-      <label htmlFor="name" className="block">Temperatura</label>
-      <input id="temperatura" placeholder="37" name="temperatura" maxLength="10" size="6"  /> &deg;C
+      <label class="form-control" htmlFor="name" className="block">Temperatura</label>
+      <input class="form-control" id="temperatura" placeholder="37" name="temperatura" maxLength="10" size="6"  /> &deg;C
       </div> 
     </div>  
   )
