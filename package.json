@@ -4,7 +4,7 @@
   "homepage": "https://main.d32uvie3c9lfuo.amplifyapp.com/",
   "private": true,
   "dependencies": {
-    "@aws-amplify/ui-react": "^2.4.0",
+    "@aws-amplify/ui-react": "^2.5.0",
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",

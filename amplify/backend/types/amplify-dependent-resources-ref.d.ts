@@ -40,5 +40,11 @@ export type AmplifyDependentResourcesAttributes = {
             "region": "string",
             "type": "string"
         }
+    },
+    "api": {
+        "comamor": {
+            "GraphQLAPIIdOutput": "string",
+            "GraphQLAPIEndpointOutput": "string"
+        }
     }
 }

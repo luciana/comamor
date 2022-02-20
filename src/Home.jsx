@@ -1,7 +1,9 @@
 /* eslint-disable import/first */
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
-import Amplify from 'aws-amplify';
+import { Amplify, API } from 'aws-amplify';
+import { withAuthenticator, Authenticator } from '@aws-amplify/ui-react';
+import '@aws-amplify/ui-react/styles.css';
 import './App.css';
 import Predictions, { AmazonAIPredictionsProvider } from '@aws-amplify/predictions';
 import awsconfig from './aws-exports';
@@ -9,18 +11,87 @@ import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
 import Cookies from 'universal-cookie';
 import { FaMicrophone, FaConfluence, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
-/*import { NavLink } from "react-router-dom";*/
+import { listNotes } from './graphql/queries';
+import { createNote as createNoteMutation, deleteNote as deleteNoteMutation } from './graphql/mutations';
+
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
+const initialFormState = { title: '' }
+
 
 function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
+  const [notes, setNotes] = useState([]);
+  const [formData, setFormData] = useState(initialFormState);
   useEffect(()=>{
+    /* Save cookie data */
     const cookiestored = new Cookies();
     console.log(`stored cookie ${cookiestored.get('comamor_cookie_data')}`);
     const cookie = new Cookies();
     cookie.set('comamor_cookie_data','cookie data',{path: '/'});    
+
+    /* Get Notes information from GraphQL db ( AWS AppSync )*/
+    fetchNotes();
   },[]);
+
+
+  async function fetchNotes() {
+    const apiData = await API.graphql({ query: listNotes });
+    setNotes(apiData.data.listNotes.items);
+  }
+
+   async function createNote() {
+    if (!formData.title ) return;
+    await API.graphql({ query: createNoteMutation, variables: { input: formData } });
+    setNotes([ ...notes, formData ]);
+    setFormData(initialFormState);
+  }
+
+  async function deleteNote({ id }) {
+    const newNotesArray = notes.filter(note => note.id !== id);
+    setNotes(newNotesArray);
+    await API.graphql({ query: deleteNoteMutation, variables: { input: { id } }});
+  }
+
+
+  function ShowSaveNoteButton(){
+    return(
+      <div className="py-1">
+        <button className="btn btn-success" onClick={createNote}>Salvar anotações do dia</button>
+      </div>
+    );
+  }
+  function ShowNotes(){
+     return (              
+          <div style={{marginBottom: 30}}>
+            <div className="outer">           
+            {
+              notes.map(note => ( 
+                <div className="inner curve white" key={note.id || note.title}>
+                  <h2>{note.title}</h2>
+                  <button onClick={() => deleteNote(note)}>Delete note</button>
+                </div>
+              ))
+           
+            }
+            </div>
+         </div>
+      );
+  }
+
+  function Login(){
+
+    return (
+     <Authenticator>
+          {({ signOut, user }) => (
+            <div className="container">
+              <span className="text"> Olá {user.username}, seja bem vinda(o)!</span>
+              <button onClick={signOut}>Sair</button>
+            </div>
+          )}
+      </Authenticator>
+    );
+  }
 
   function SpeechToText(props) {
     const [response] = useState("");
@@ -131,43 +202,43 @@ function Home() {
   function TextInterpretation() {
     const [response, setResponse] = useState("")
   
-  function interpretFromPredictions() {
-    Predictions.interpret({
-      text: {
-        source: {
-          text: textToInterpret,
-        },
-        type: "ALL"
-      }
-    }).then(result => setResponse(JSON.stringify(result, null, 2)))
-      .catch(err => setResponse(JSON.stringify(err, null, 2)))
-  }
+    function interpretFromPredictions() {
+      Predictions.interpret({
+        text: {
+          source: {
+            text: textToInterpret,
+          },
+          type: "ALL"
+        }
+      }).then(result => setResponse(JSON.stringify(result, null, 2)))
+        .catch(err => setResponse(JSON.stringify(err, null, 2)))
+    }
 
-  function setText(event) {
-    console.log("set Text", event.target.value);
-    setTextToInterpret(event.target.value);
-  }
+    function setText(event) {
+      console.log("set Text", event.target.value);
+      setTextToInterpret(event.target.value);
+    }
 
-  return (   
-    <div>  
-     <div className="outer">    
-        <div className="inner white curve">           
-          <label htmlFor="acontecimentos">Relate os acontecimentos</label><br />
-          <textarea id="acontecimentos" className="form-control" rows="5" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>          
-          <div>
-            <button name="interpretar" className="button" onClick={interpretFromPredictions}>
+    return (   
+      <div>  
+      <div className="outer">    
+          <div className="inner white curve">           
+            <label htmlFor="acontecimentos">Relate os acontecimentos</label><br />
+            <textarea id="acontecimentos" className="form-control" rows="5" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>          
             <div>
-              <FaConfluence className="faconfluence"/>
-              <span>Interpretar o dia</span>
-            </div>
-          </button>     
-          </div>    
-        </div>        
+              <button name="interpretar" className="button" onClick={interpretFromPredictions}>
+              <div>
+                <FaConfluence className="faconfluence"/>
+                <span>Interpretar o dia</span>
+              </div>
+            </button>     
+            </div>    
+          </div>        
+        </div>
+        <div>{response}</div> 
       </div>
-      <div>{response}</div> 
-    </div>
-  );
-}
+    );
+  }
 
 function DateDisplay(){
     return (
@@ -292,12 +363,17 @@ function VitalCollection(){
     <div className="outer">
       <div className="inner curve white">
         <h3> <FaNotesMedical className="fanotesmedical"/>  Sinais Vitais </h3>
-        <label htmlFor="pressao" className="block">Pressão Arterial</label>
-        <input className="form-control" id="pressao" placeholder="120/80" name="pressao" maxLength="10" size="6"  /> mmHg
-        <label className="form-control block" htmlFor="name" >Saturação</label>
-        <input className="form-control" id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> SpO<span className="tiny">2%</span>
-        <label className="form-control block" htmlFor="name">Temperatura</label>
-        <input className="form-control" id="temperatura" placeholder="37" name="temperatura" maxLength="10" size="6"  /> &deg;C
+        <label htmlFor="pressao" className="block">Pressão Arterial ( mmHg )</label>
+        <input className="form-control" 
+                id="pressao" 
+                placeholder="120/80" 
+                defaultValue={formData.title}
+                name="pressao" maxLength="10" size="6"
+                onChange={e => setFormData({ ...formData, 'title': e.target.value})}  />
+        <label className="block" htmlFor="saturacao" >Saturação (SpO<span className="tiny">2%</span> )</label>
+        <input className="form-control" id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> 
+        <label className="block" htmlFor="name">Temperatura (&deg;C)</label>
+        <input className="form-control" id="temperatura" placeholder="37" name="temperatura" maxLength="10" size="6"  /> 
       </div> 
     </div>  
   )
@@ -315,6 +391,8 @@ function VitalCollection(){
             </div>
           </div>
           <div className="col-lg-7">
+            <Login />
+             <ShowNotes />
              <AssistantNames />
              <VitalCollection />
              <RelatorioDoDia />
@@ -323,8 +401,8 @@ function VitalCollection(){
              <div>
               <div className="aligned"> {TextInterpretation()} </div> 
               <div className="aligned"> <SpeechToText />  </div>
-              </div>
-            
+              </div>            
+            <ShowSaveNoteButton />
           </div>
         </div>
       </div>
@@ -332,4 +410,4 @@ function VitalCollection(){
   );
 }
 
-export default Home;
+export default withAuthenticator(Home);
