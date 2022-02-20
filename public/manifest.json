@@ -8,10 +8,16 @@
 		},
 		{
 			"src": "android-chrome-maskable-96x96.png",
+			"sizes": "96x96",
+			"type": "image/png",
+			"purpose": "any maskable"
+		},
+		{
+			"src": "android-chrome-maskable-144x144.png",
 			"sizes": "144x144",
 			"type": "image/png",
 			"purpose": "any maskable"
-		  },
+		},
 		{
 			"src": "android-chrome-maskable-192x192.png",
 			"type": "image/png",
