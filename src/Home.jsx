@@ -8,7 +8,7 @@ import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
 import Cookies from 'universal-cookie';
-import { FaMicrophone, FaConfluence, FaRegSun, FaUserAlt, FaSun, FaStar} from 'react-icons/fa';
+import { FaMicrophone, FaConfluence, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
 /*import { NavLink } from "react-router-dom";*/
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -271,7 +271,7 @@ function AssistantNames(){
   return (
      <div className="outer">
       <div className="inner curve white">
-       <h3> <FaUserAlt className="fauser"/>  Cuidadoras </h3>
+       <h3> <FaUserAlt className="fauseralt"/>  Cuidadoras </h3>
       <div className="form-check form-check-inline">       
         <input className="form-check-input"  type="radio" id="1" name="cuidadora_do_dia" value="1" />
          <label  className="form-check-label" htmlFor="1"> Miriam Sobrenome</label>
@@ -291,7 +291,7 @@ function VitalCollection(){
 
     <div className="outer">
       <div className="inner curve white">
-        <h3> <FaStar className="fastar"/>  Sinais Vitais </h3>
+        <h3> <FaNotesMedical className="fanotesmedical"/>  Sinais Vitais </h3>
         <label htmlFor="pressao" className="block">Pressão Arterial</label>
         <input className="form-control" id="pressao" placeholder="120/80" name="pressao" maxLength="10" size="6"  /> mmHg
         <label className="form-control block" htmlFor="name" >Saturação</label>
