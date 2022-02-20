@@ -8,7 +8,7 @@ import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
 import Cookies from 'universal-cookie';
-import { FaMicrophone, FaConfluence, FaRegSun, FaSun, FaStar} from 'react-icons/fa';
+import { FaMicrophone, FaConfluence, FaRegSun, FaUserAlt, FaSun, FaStar} from 'react-icons/fa';
 /*import { NavLink } from "react-router-dom";*/
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -150,11 +150,10 @@ function Home() {
 
   return (   
     <div>  
-     <div>    
-        <div className="inner white curve w-65"> 
-          
+     <div className="outer">    
+        <div className="inner white curve">           
           <label htmlFor="acontecimentos">Relate os acontecimentos</label><br />
-          <textarea id="acontecimentos" class="form-control" rows="5" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>          
+          <textarea id="acontecimentos" className="form-control" rows="5" cols="35" defaultValue={textToInterpret} onChange={setText}></textarea>          
           <div>
             <button name="interpretar" className="button" onClick={interpretFromPredictions}>
             <div>
@@ -181,18 +180,18 @@ function DateDisplay(){
 function RelatorioDoDia(){
   return ( 
     <div className="outer">
-      <div className="inner curve white w-75">
-       <h2> <FaRegSun className="faregsun"/>  Manhã </h2>
+      <div className="inner curve white">
+       <h3> <FaRegSun className="faregsun"/>  Manhã </h3>
       <label htmlFor="manha-remedios-text">Remédios</label><br />
-      <textarea id="manha-remedios-text" class="form-control" rows="2" cols="35"></textarea> 
+      <textarea id="manha-remedios-text" className="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="manha-refeicao-text">Refeição</label>
-      <textarea id="manha-refeicao-text" class="form-control" rows="2" cols="35"></textarea> 
+      <textarea id="manha-refeicao-text" className="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="manha-higiene-text">Higiene</label>
-      <textarea id="manha-higiene-text"class="form-control" rows="2" cols="35"></textarea> 
+      <textarea id="manha-higiene-text"className="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="manha-atividade-text">Atividade</label>
-      <textarea id="manha-atividade-text"class="form-control" rows="2" cols="35"></textarea> <br />
+      <textarea id="manha-atividade-text"className="form-control" rows="2" cols="35"></textarea> <br />
       <label htmlFor="manha-humor-select">Qual o comportamento?</label>
-        <select class="form-control" name="manha-humor" id="manha-humor-select">
+        <select className="form-control" name="manha-humor" id="manha-humor-select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -211,18 +210,18 @@ function RelatorioDoDia(){
 function RelatorioDaTarde() {
   return ( 
    <div className="outer">
-      <div className="inner curve white w-75">
-       <h2> <FaSun className="fasun"/>  Tarde </h2>
+      <div className="inner curve white">
+       <h3> <FaSun className="fasun"/>  Tarde </h3>
       <label htmlFor="tarde-remedios-text">Remédios</label><br />
-      <textarea id="tarde-remedios-text" class="form-control" rows="2" cols="35"></textarea> 
+      <textarea id="tarde-remedios-text" className="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="tarde-refeicao-text">Refeição</label>
-      <textarea id="tarde-refeicao-text" class="form-control" rows="2" cols="35"></textarea> 
+      <textarea id="tarde-refeicao-text" className="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="tarde-higiene-text">Higiene</label>
-      <textarea id="tarde-higiene-text" class="form-control" rows="2" cols="35"></textarea> 
+      <textarea id="tarde-higiene-text" className="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="tarde-atividade-text">Atividade</label>
-      <textarea id="tarde-atividade-text" class="form-control" rows="2" cols="35"></textarea> <br />
+      <textarea id="tarde-atividade-text" className="form-control" rows="2" cols="35"></textarea> <br />
       <label htmlFor="tarde-humor-select">Qual o comportamento?</label>
-        <select class="form-control" name="tarde-humor" id="tarde-humor-select">
+        <select className="form-control" name="tarde-humor" id="tarde-humor-select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -241,18 +240,18 @@ function RelatorioDaTarde() {
 function RelatorioDaNoite() {
   return ( 
    <div className="outer">
-      <div className="inner curve white w-75">
-       <h2> <FaStar className="fastar"/>  Noite </h2>
+      <div className="inner curve white">
+       <h3> <FaStar className="fastar"/>  Noite </h3>
       <label htmlFor="noite-remedios-text">Remédios</label><br />
-      <textarea id="noite-remedios-text" class="form-control"  rows="2" cols="35"></textarea> 
+      <textarea id="noite-remedios-text" className="form-control"  rows="2" cols="35"></textarea> 
       <label htmlFor="noite-refeicao-text">Refeição</label>
-      <textarea id="noite-refeicao-text"  class="form-control" rows="2" cols="35"></textarea> 
+      <textarea id="noite-refeicao-text"  className="form-control" rows="2" cols="35"></textarea> 
       <label htmlFor="noite-higiene-text">Higiene</label>
-      <textarea id="noite-higiene-text" class="form-control"  rows="2" cols="35"></textarea> 
+      <textarea id="noite-higiene-text" className="form-control"  rows="2" cols="35"></textarea> 
       <label htmlFor="noite-atividade-text">Atividade</label>
-      <textarea id="noite-atividade-text"  class="form-control" rows="2" cols="35"></textarea> <br />
+      <textarea id="noite-atividade-text"  className="form-control" rows="2" cols="35"></textarea> <br />
       <label htmlFor="noite-humor-select">Qual o comportamento?</label>
-        <select class="form-control" name="noite-humor" id="noite-humor-select">
+        <select className="form-control" name="noite-humor" id="noite-humor-select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -270,37 +269,35 @@ function RelatorioDaNoite() {
 
 function AssistantNames(){
   return (
-    <div>
-      <p>Cuidadora</p>
-      <div class="form-check form-check-inline">
-       
-        <input class="form-check-input"  type="radio" id="1" name="cuidadora_do_dia" value="1" />
-         <label  class="form-check-label" htmlFor="1"> Miriam Sobrenome</label>
+     <div className="outer">
+      <div className="inner curve white">
+       <h3> <FaUserAlt className="fauser"/>  Cuidadoras </h3>
+      <div className="form-check form-check-inline">       
+        <input className="form-check-input"  type="radio" id="1" name="cuidadora_do_dia" value="1" />
+         <label  className="form-check-label" htmlFor="1"> Miriam Sobrenome</label>
       </div>
-      <div class="form-check form-check-inline">
+      <div className="form-check form-check-inline">
        
-        <input class="form-check-input"  type="radio" id="2" name="cuidadora_do_dia" value="2" />
-         <label  class="form-check-label" htmlFor="2"> Samira Sobrenome</label>
+        <input className="form-check-input"  type="radio" id="2" name="cuidadora_do_dia" value="2" />
+         <label  className="form-check-label" htmlFor="2"> Samira Sobrenome</label>
       </div>
-      
+    </div>
     </div>
   )
 }
 
 function VitalCollection(){
   return (
+
     <div className="outer">
-    <div className="inner curve white highlight w-25">
-      <label htmlFor="name" className="block">Pressão</label>
-      <input class="form-control" id="pressao" placeholder="120/80" name="pressao" maxLength="10" size="6"  /> mmHg
-    </div>
-    <div className="inner curve white highlight w-25">
-     <label class="form-control" htmlFor="name" className="block">Saturação</label>
-      <input class="form-control" id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> SpO<span className="tiny">2%</span>
-    </div>
-     <div className="inner curve white highlight w-25">
-      <label class="form-control" htmlFor="name" className="block">Temperatura</label>
-      <input class="form-control" id="temperatura" placeholder="37" name="temperatura" maxLength="10" size="6"  /> &deg;C
+      <div className="inner curve white">
+        <h3> <FaStar className="fastar"/>  Sinais Vitais </h3>
+        <label htmlFor="pressao" className="block">Pressão Arterial</label>
+        <input className="form-control" id="pressao" placeholder="120/80" name="pressao" maxLength="10" size="6"  /> mmHg
+        <label className="form-control block" htmlFor="name" >Saturação</label>
+        <input className="form-control" id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> SpO<span className="tiny">2%</span>
+        <label className="form-control block" htmlFor="name">Temperatura</label>
+        <input className="form-control" id="temperatura" placeholder="37" name="temperatura" maxLength="10" size="6"  /> &deg;C
       </div> 
     </div>  
   )
@@ -316,7 +313,6 @@ function VitalCollection(){
                 <h1> Diario do Papai </h1>
                  <DateDisplay />
             </div>
-
           </div>
           <div className="col-lg-7">
              <AssistantNames />
