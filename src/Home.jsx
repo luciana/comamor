@@ -17,7 +17,26 @@ import { createNote as createNoteMutation, deleteNote as deleteNoteMutation } fr
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
 const initialFormState = { title: new Date().toLocaleString(), 
-                          patientID: '1' }
+                          patientID: '1',
+                          cuidadora_do_dia: null,
+                          pressao:'',
+                          saturacao: null,
+                          temperatura:null,
+                          manha_remedios_text: '',
+                          manha_refeicao_text: '',
+                          manha_higiene_text: '',
+                          manha_atividade_text: '',
+                          manha_humor_select: '',
+                          tarde_remedios_text: '',
+                          tarde_refeicao_text: '',
+                          tarde_higiene_text: '',
+                          tarde_atividade_text: '',
+                          tarde_humor_select: '',
+                          noite_remedios_text: '',
+                          noite_refeicao_text: '',
+                          noite_higiene_text: '',
+                          noite_atividade_text: '',
+                          noite_humor_select: '' }
 
 
 function Home() {
@@ -258,17 +277,35 @@ function RelatorioDoDia(){
   return ( 
     <div className="outer">
       <div className="inner curve white">
-       <h3> <FaRegSun className="faregsun"/>  Manhã </h3>
-      <label htmlFor="manha-remedios-text">Remédios</label><br />
-      <textarea id="manha-remedios-text" className="form-control" rows="2" cols="35"></textarea> 
-      <label htmlFor="manha-refeicao-text">Refeição</label>
-      <textarea id="manha-refeicao-text" className="form-control" rows="2" cols="35"></textarea> 
-      <label htmlFor="manha-higiene-text">Higiene</label>
-      <textarea id="manha-higiene-text"className="form-control" rows="2" cols="35"></textarea> 
-      <label htmlFor="manha-atividade-text">Atividade</label>
-      <textarea id="manha-atividade-text"className="form-control" rows="2" cols="35"></textarea> <br />
-      <label htmlFor="manha-humor-select">Qual o comportamento?</label>
-        <select className="form-control" name="manha-humor" id="manha-humor-select">
+      <h3> <FaRegSun className="faregsun"/>  Manhã </h3>
+      <label htmlFor="manha_remedios_text">Remédios</label><br />
+      <textarea id="manha_remedios_text" 
+                className="form-control" rows="2" cols="35"
+                value={formData.manha_remedios_text}
+                onChange={e => setFormData({ ...formData, 'manha_remedios_text': e.target.value})} 
+                ></textarea> 
+      <label htmlFor="manha_refeicao_text">Refeição</label>
+      <textarea id="manha_refeicao_text" 
+                className="form-control" rows="2" cols="35"
+                value={formData.manha_refeicao_text}
+                onChange={e => setFormData({ ...formData, 'manha_refeicao_text': e.target.value})} 
+                ></textarea> 
+      <label htmlFor="manha_higiene_text">Higiene</label>
+      <textarea id="manha_higiene_text"
+                className="form-control" rows="2" cols="35"
+                value={formData.manha_higiene_text}
+                onChange={e => setFormData({ ...formData, 'manha_higiene_text': e.target.value})} 
+                ></textarea> 
+      <label htmlFor="manha_atividade_text">Atividade</label>
+      <textarea id="manha_atividade_text"
+                  className="form-control" rows="2" cols="35"
+                  value={formData.manha_atividade_text}
+                  onChange={e => setFormData({ ...formData, 'manha_atividade_text': e.target.value})} 
+                  ></textarea> <br />
+      <label htmlFor="manha_humor_select">Qual o comportamento?</label>
+      <select className="form-control" 
+              name="manha_humor_select" 
+              id="manha_humor_select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -278,7 +315,7 @@ function RelatorioDoDia(){
             <option value="feliz">Feliz</option>   
             <option value="sonolento">Sonolento</option>          
             <option value="tranquilo">Tranquilo</option>
-        </select>
+      </select>
       </div>
     </div>   
   );
@@ -289,16 +326,34 @@ function RelatorioDaTarde() {
    <div className="outer">
       <div className="inner curve white">
        <h3> <FaSun className="fasun"/>  Tarde </h3>
-      <label htmlFor="tarde-remedios-text">Remédios</label><br />
-      <textarea id="tarde-remedios-text" className="form-control" rows="2" cols="35"></textarea> 
-      <label htmlFor="tarde-refeicao-text">Refeição</label>
-      <textarea id="tarde-refeicao-text" className="form-control" rows="2" cols="35"></textarea> 
-      <label htmlFor="tarde-higiene-text">Higiene</label>
-      <textarea id="tarde-higiene-text" className="form-control" rows="2" cols="35"></textarea> 
-      <label htmlFor="tarde-atividade-text">Atividade</label>
-      <textarea id="tarde-atividade-text" className="form-control" rows="2" cols="35"></textarea> <br />
-      <label htmlFor="tarde-humor-select">Qual o comportamento?</label>
-        <select className="form-control" name="tarde-humor" id="tarde-humor-select">
+      <label htmlFor="tarde_remedios_text">Remédios</label><br />
+      <textarea id="tarde_remedios_text" 
+                className="form-control" rows="2" cols="35"
+                value={formData.tarde_remedios_text}
+                onChange={e => setFormData({ ...formData, 'tarde_remedios_text': e.target.value})} 
+                ></textarea> 
+      <label htmlFor="tarde_refeicao_text">Refeição</label>
+      <textarea id="tarde_refeicao_text" 
+                className="form-control" rows="2" cols="35"
+                value={formData.tarde_refeicao_text}
+                onChange={e => setFormData({ ...formData, 'tarde_refeicao_text': e.target.value})} 
+                ></textarea> 
+      <label htmlFor="tarde_higiene_text">Higiene</label>
+      <textarea id="tarde_higiene_text" 
+                className="form-control" rows="2" cols="35"
+                value={formData.tarde_higiene_text}
+                onChange={e => setFormData({ ...formData, 'tarde_higiene_text': e.target.value})} 
+                ></textarea> 
+      <label htmlFor="tarde_atividade_text">Atividade</label>
+      <textarea id="tarde_atividade_text" 
+                className="form-control" rows="2" cols="35"
+                value={formData.tarde_atividade_text}
+                onChange={e => setFormData({ ...formData, 'tarde_atividade_text': e.target.value})} 
+                ></textarea> <br />
+      <label htmlFor="tarde_humor_select">Qual o comportamento?</label>
+        <select className="form-control" 
+                name="tarde_humor_select" 
+                id="tarde_humor_select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -319,16 +374,34 @@ function RelatorioDaNoite() {
    <div className="outer">
       <div className="inner curve white">
        <h3> <FaStar className="fastar"/>  Noite </h3>
-      <label htmlFor="noite-remedios-text">Remédios</label><br />
-      <textarea id="noite-remedios-text" className="form-control"  rows="2" cols="35"></textarea> 
-      <label htmlFor="noite-refeicao-text">Refeição</label>
-      <textarea id="noite-refeicao-text"  className="form-control" rows="2" cols="35"></textarea> 
-      <label htmlFor="noite-higiene-text">Higiene</label>
-      <textarea id="noite-higiene-text" className="form-control"  rows="2" cols="35"></textarea> 
-      <label htmlFor="noite-atividade-text">Atividade</label>
-      <textarea id="noite-atividade-text"  className="form-control" rows="2" cols="35"></textarea> <br />
-      <label htmlFor="noite-humor-select">Qual o comportamento?</label>
-        <select className="form-control" name="noite-humor" id="noite-humor-select">
+      <label htmlFor="noite_remedios_text">Remédios</label><br />
+      <textarea id="noite_remedios_text" 
+                className="form-control"  rows="2" cols="35"
+                value={formData.noite_remedios_text}
+                onChange={e => setFormData({ ...formData, 'noite_remedios_text': e.target.value})} 
+                ></textarea> 
+      <label htmlFor="noite_refeicao_text">Refeição</label>
+      <textarea id="noite_refeicao_text"  
+                className="form-control" rows="2" cols="35"
+                value={formData.noite_refeicao_text}
+                onChange={e => setFormData({ ...formData, 'noite_refeicao_text': e.target.value})} 
+                ></textarea> 
+      <label htmlFor="noite_higiene_text">Higiene</label>
+      <textarea id="noite_higiene_text" 
+                className="form-control"  rows="2" cols="35"
+                value={formData.noite_higiene_text}
+                onChange={e => setFormData({ ...formData, 'noite_higiene_text': e.target.value})} 
+                ></textarea> 
+      <label htmlFor="noite_atividade_text">Atividade</label>
+      <textarea id="noite_atividade_text"  
+                className="form-control" rows="2" cols="35"
+                value={formData.noite_atividade_text}
+                onChange={e => setFormData({ ...formData, 'noite_atividade_text': e.target.value})} 
+                ></textarea> <br />
+      <label htmlFor="noite_humor_select">Qual o comportamento?</label>
+        <select className="form-control" 
+                name="noite_humor_select" 
+                id="noite_humor_select">
             <option value=""></option>
             <option value="aborrecido">Aborrecido</option>
             <option value="agitado">Agitado</option>
@@ -350,12 +423,20 @@ function AssistantNames(){
       <div className="inner curve white">
        <h3> <FaUserAlt className="fauseralt"/>  Cuidadoras </h3>
       <div className="form-check form-check-inline">       
-        <input className="form-check-input"  type="radio" id="1" name="cuidadora_do_dia" value="1" />
+        <input className="form-check-input"  
+              type="radio"  
+              name="cuidadora_do_dia" 
+              value="1"            
+              onChange={e => setFormData({ ...formData, 'cuidadora_do_dia': e.target.value})} 
+               />
          <label  className="form-check-label" htmlFor="1"> Miriam Sobrenome</label>
       </div>
-      <div className="form-check form-check-inline">
-       
-        <input className="form-check-input"  type="radio" id="2" name="cuidadora_do_dia" value="2" />
+      <div className="form-check form-check-inline">       
+        <input className="form-check-input"  
+              type="radio"  
+              name="cuidadora_do_dia" 
+              value="2"
+              onChange={e => setFormData({ ...formData, 'cuidadora_do_dia': e.target.value})} />
          <label  className="form-check-label" htmlFor="2"> Samira Sobrenome</label>
       </div>
     </div>
@@ -377,9 +458,18 @@ function VitalCollection(){
                 name="pressao" maxLength="10" size="6"
                 onChange={e => setFormData({ ...formData, 'pressao': e.target.value})}  />
         <label className="block" htmlFor="saturacao" >Saturação (SpO<span className="tiny">2%</span> )</label>
-        <input className="form-control" id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> 
+        <input className="form-control" 
+                id="saturacao" 
+                placeholder="95" name="saturacao" maxLength="10" size="6"
+                defaultValue={formData.saturacao}
+                onChange={e => setFormData({ ...formData, 'saturacao': e.target.value})}  />
         <label className="block" htmlFor="name">Temperatura (&deg;C)</label>
-        <input className="form-control" id="temperatura" placeholder="37" name="temperatura" maxLength="10" size="6"  /> 
+        <input className="form-control" 
+                id="temperatura" 
+                placeholder="37" 
+                name="temperatura" maxLength="10" size="6"  
+                defaultValue={formData.temperatura}
+                onChange={e => setFormData({ ...formData, 'temperatura': e.target.value})}  /> 
       </div> 
     </div>  
   )
