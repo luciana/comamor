@@ -26,6 +26,9 @@ type Note @model @key(name: "byPatient", fields: ["patientID"]) {
   noite_higiene_text: String,
   noite_atividade_text: String,
   noite_humor_select: String,
+  sentiment_predominant: String,
+  sentiment: String,
+  acontecimentos:String,
   patientID: ID!
   patient: Patient @connection(fields: ["patientID"])
   comments: [Comment] @connection(keyName: "byNote", fields: ["id"])
