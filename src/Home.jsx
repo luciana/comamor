@@ -283,8 +283,26 @@ function Home() {
           },
           type: "ALL"
         }
-      }).then(result => setSentimentResponse(JSON.stringify(result, null, 2)))
+      }).then(result => setSentimentFormFields(JSON.stringify(result, null, 2)))
         .catch(err => setSentimentResponse(JSON.stringify(err, null, 2)))
+  }
+
+  function setSentimentFormFields(data){          
+      let s = JSON.parse(data);     
+      let sentiment = s.textInterpretation.sentiment;      
+      let sentiment_value = JSON.stringify(sentiment, null, 2);
+      console.log("sentiment_value",sentiment_value);
+      let sentiment_p = sentiment.predominant;     
+      setFormData({ ...formData, 'sentiment': sentiment_value});
+      setFormData({ ...formData, 'sentiment_predominant': sentiment_p});
+      setSentimentResponse(sentiment_p);
+      return(
+          <div>
+            <input type="hidden"  value={sentiment_value} name="sentiment" id="sentiment" readOnly  />
+            <input type="hidden"  value={sentiment_p} name="sentiment_predominant" id="sentiment_predominant" readOnly  />
+          </div>
+      );
+
   }
 
 
