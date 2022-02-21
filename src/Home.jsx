@@ -16,7 +16,8 @@ import { createNote as createNoteMutation, deleteNote as deleteNoteMutation } fr
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
-const initialFormState = { title: '', patientID: '1' }
+const initialFormState = { title: new Date().toLocaleString(), 
+                          patientID: '1' }
 
 
 function Home() {
@@ -368,13 +369,13 @@ function VitalCollection(){
     <div className="outer">
       <div className="inner curve white">
         <h3> <FaNotesMedical className="fanotesmedical"/>  Sinais Vitais </h3>
-        <label htmlFor="title" className="block">Pressão Arterial ( mmHg )</label>
+        <label htmlFor="pressao" className="block">Pressão Arterial ( mmHg )</label>
         <input className="form-control" 
-                id="title" 
+                id="pressao" 
                 placeholder="120/80"                
-                defaultValue={formData.title}
-                name="title" maxLength="10" size="6"
-                onChange={e => setFormData({ ...formData, 'title': e.target.value})}  />
+                defaultValue={formData.pressao}
+                name="pressao" maxLength="10" size="6"
+                onChange={e => setFormData({ ...formData, 'pressao': e.target.value})}  />
         <label className="block" htmlFor="saturacao" >Saturação (SpO<span className="tiny">2%</span> )</label>
         <input className="form-control" id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> 
         <label className="block" htmlFor="name">Temperatura (&deg;C)</label>
@@ -387,7 +388,8 @@ function VitalCollection(){
 function DataForm(){
   return (
      <form onSubmit={handleSubmit} >     
-      <input type="hidden" value='1' name="patientID" id="patientID: ID!" readOnly />       
+      <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
+      <input type="hidden"  value={new Date().toLocaleString()} name="title" id="title" readOnly  />
              <AssistantNames />
               <div> {VitalCollection()} </div>
              <RelatorioDoDia />
