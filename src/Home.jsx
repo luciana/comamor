@@ -16,7 +16,7 @@ import { createNote as createNoteMutation, deleteNote as deleteNoteMutation } fr
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
-const initialFormState = { title: '' }
+const initialFormState = { title: '', patientID: '1' }
 
 
 function Home() {
@@ -34,6 +34,11 @@ function Home() {
     fetchNotes();
   },[]);
 
+
+  const handleSubmit = (e) => {
+      e.preventDefault()
+      console.log(formData)
+  }
 
   async function fetchNotes() {
     const apiData = await API.graphql({ query: listNotes });
@@ -363,12 +368,12 @@ function VitalCollection(){
     <div className="outer">
       <div className="inner curve white">
         <h3> <FaNotesMedical className="fanotesmedical"/>  Sinais Vitais </h3>
-        <label htmlFor="pressao" className="block">Pressão Arterial ( mmHg )</label>
+        <label htmlFor="title" className="block">Pressão Arterial ( mmHg )</label>
         <input className="form-control" 
-                id="pressao" 
-                placeholder="120/80" 
+                id="title" 
+                placeholder="120/80"                
                 defaultValue={formData.title}
-                name="pressao" maxLength="10" size="6"
+                name="title" maxLength="10" size="6"
                 onChange={e => setFormData({ ...formData, 'title': e.target.value})}  />
         <label className="block" htmlFor="saturacao" >Saturação (SpO<span className="tiny">2%</span> )</label>
         <input className="form-control" id="saturacao" placeholder="95" name="saturacao" maxLength="10" size="6"  /> 
@@ -379,6 +384,23 @@ function VitalCollection(){
   )
 }
 
+function DataForm(){
+  return (
+     <form onSubmit={handleSubmit} >     
+      <input type="hidden" value='1' name="patientID" id="patientID: ID!" readOnly />       
+             <AssistantNames />
+              <div> {VitalCollection()} </div>
+             <RelatorioDoDia />
+             <RelatorioDaTarde />
+             <RelatorioDaNoite />
+             <div>
+              <div className="aligned"> {TextInterpretation()} </div> 
+              <div className="aligned"> <SpeechToText />  </div>
+              </div>            
+            <ShowSaveNoteButton />
+      </form>
+  );
+}
   return (
     <div className="home">
       <div className="container">
@@ -392,17 +414,8 @@ function VitalCollection(){
           </div>
           <div className="col-lg-7">
             <Login />
-             <ShowNotes />
-             <AssistantNames />
-             <VitalCollection />
-             <RelatorioDoDia />
-             <RelatorioDaTarde />
-             <RelatorioDaNoite />
-             <div>
-              <div className="aligned"> {TextInterpretation()} </div> 
-              <div className="aligned"> <SpeechToText />  </div>
-              </div>            
-            <ShowSaveNoteButton />
+            <ShowNotes />
+             <div> {DataForm()} </div>
           </div>
         </div>
       </div>
