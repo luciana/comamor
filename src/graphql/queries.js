@@ -10,6 +10,28 @@ export const getPatient = /* GraphQL */ `
         items {
           id
           title
+          cuidadora_do_dia
+          pressao
+          saturacao
+          temperatura
+          manha_remedios_text
+          manha_refeicao_text
+          manha_higiene_text
+          manha_atividade_text
+          manha_humor_select
+          tarde_remedios_text
+          tarde_refeicao_text
+          tarde_higiene_text
+          tarde_atividade_text
+          tarde_humor_select
+          noite_remedios_text
+          noite_refeicao_text
+          noite_higiene_text
+          noite_atividade_text
+          noite_humor_select
+          sentiment_predominant
+          sentiment
+          acontecimentos
           patientID
           createdAt
           updatedAt
@@ -46,6 +68,28 @@ export const getNote = /* GraphQL */ `
     getNote(id: $id) {
       id
       title
+      cuidadora_do_dia
+      pressao
+      saturacao
+      temperatura
+      manha_remedios_text
+      manha_refeicao_text
+      manha_higiene_text
+      manha_atividade_text
+      manha_humor_select
+      tarde_remedios_text
+      tarde_refeicao_text
+      tarde_higiene_text
+      tarde_atividade_text
+      tarde_humor_select
+      noite_remedios_text
+      noite_refeicao_text
+      noite_higiene_text
+      noite_atividade_text
+      noite_humor_select
+      sentiment_predominant
+      sentiment
+      acontecimentos
       patientID
       patient {
         id
@@ -81,6 +125,28 @@ export const listNotes = /* GraphQL */ `
       items {
         id
         title
+        cuidadora_do_dia
+        pressao
+        saturacao
+        temperatura
+        manha_remedios_text
+        manha_refeicao_text
+        manha_higiene_text
+        manha_atividade_text
+        manha_humor_select
+        tarde_remedios_text
+        tarde_refeicao_text
+        tarde_higiene_text
+        tarde_atividade_text
+        tarde_humor_select
+        noite_remedios_text
+        noite_refeicao_text
+        noite_higiene_text
+        noite_atividade_text
+        noite_humor_select
+        sentiment_predominant
+        sentiment
+        acontecimentos
         patientID
         patient {
           id
@@ -106,6 +172,28 @@ export const getComment = /* GraphQL */ `
       note {
         id
         title
+        cuidadora_do_dia
+        pressao
+        saturacao
+        temperatura
+        manha_remedios_text
+        manha_refeicao_text
+        manha_higiene_text
+        manha_atividade_text
+        manha_humor_select
+        tarde_remedios_text
+        tarde_refeicao_text
+        tarde_higiene_text
+        tarde_atividade_text
+        tarde_humor_select
+        noite_remedios_text
+        noite_refeicao_text
+        noite_higiene_text
+        noite_atividade_text
+        noite_humor_select
+        sentiment_predominant
+        sentiment
+        acontecimentos
         patientID
         patient {
           id
@@ -138,6 +226,28 @@ export const listComments = /* GraphQL */ `
         note {
           id
           title
+          cuidadora_do_dia
+          pressao
+          saturacao
+          temperatura
+          manha_remedios_text
+          manha_refeicao_text
+          manha_higiene_text
+          manha_atividade_text
+          manha_humor_select
+          tarde_remedios_text
+          tarde_refeicao_text
+          tarde_higiene_text
+          tarde_atividade_text
+          tarde_humor_select
+          noite_remedios_text
+          noite_refeicao_text
+          noite_higiene_text
+          noite_atividade_text
+          noite_humor_select
+          sentiment_predominant
+          sentiment
+          acontecimentos
           patientID
           createdAt
           updatedAt
