@@ -10,7 +10,7 @@ import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
 import Cookies from 'universal-cookie';
-import { FaMicrophone, FaConfluence, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
+import { FaMicrophone, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
 import { listNotes } from './graphql/queries';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation } from './graphql/mutations';
 
@@ -129,12 +129,14 @@ function Home() {
           !formData.noite_higiene_text && 
           !formData.noite_remedios_text &&
           !formData.noite_refeicao_text ) {setErrors("Precisamos de mais informação no turno da noite");return; }
-    setErrors([]);
-    try{
-      await API.graphql({ query: createNoteMutation, variables: { input: formData } });
-      setNotes([ ...notes, formData ]);
-      setFormData(initialFormState);
-    } catch (err) {setErrors(err.errors[0].message );}
+    
+      setErrors([]);
+      try{
+        await API.graphql({ query: createNoteMutation, variables: { input: formData } });
+        setNotes([ ...notes, formData ]);
+        setFormData(initialFormState);
+      } catch (err) {setErrors(err.errors[0].message );
+      } finally { setFormData(initialFormState); }
   }
 
   async function deleteNote({ id }) {
@@ -149,13 +151,7 @@ function Home() {
   function ShowSaveNoteButton(){
     return(
       <div className="py-1">
-       <button name="interpretar" className="btn btn-warning" onClick={interpretFromPredictions}>
-              <div>
-                <FaConfluence className="faconfluence"/>
-                <span>Interpretar o dia</span>
-              </div>
-        </button> 
-        <button className="btn btn-success" onClick={createNote}>Salvar anotações do dia</button>
+        <button className="btn btn-success" onClick={interpretFromPredictions}>Salvar anotações do dia</button>
 
         <div>           
           {errors.length > 0 &&                 
@@ -173,10 +169,20 @@ function Home() {
      return (                     
           <div className="my-5 container outer">
               <h2> Histórico de Anotações </h2>              
-              <div className="row inner curve white" >          
+              <div className="row inner curve white" >
+                  <div className="row strong">
+                  <div className="col-md-3 text font-weight-bold">Dia</div>
+                  <div className="col-sm text font-weight-bold">Cuidadora</div>
+                  <div className="col-sm text font-weight-bold ">Em Geral</div>
+                  <div className="col-sm text font-weight-bold">Pressão</div>
+                  <div className="col-sm text font-weight-bold">Saturação</div>
+                  <div className="col-sm text font-weight-bold">Temperatura</div>  
+                   <div className="col-sm text font-weight-bold"></div>  
+                </div>        
                 {notes.map(note => ( 
                   <div className="row" key={note.id || note.title}>
                   <div className="col-md-3 text">{note.title}</div>
+                  <div className="col-sm text">{note.cuidadora_do_dia}</div>
                   <div className="col-sm text">{note.sentiment_predominant}</div>
                   <div className="col-sm text">{note.pressao}</div>
                   <div className="col-sm text">{note.saturacao}</div>
@@ -333,7 +339,11 @@ function Home() {
           },
           type: "ALL"
         }
-      }).then(result => setSentimentFormFields(JSON.stringify(result, null, 2)))
+      }).then(result => {
+             setSentimentFormFields(JSON.stringify(result, null, 2))
+             createNote()
+      })
+     
         .catch(err => setSentimentResponse(JSON.stringify(err, null, 2)))
   }
 
