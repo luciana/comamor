@@ -47,9 +47,12 @@ function Home() {
   const [comportamentoType, setComportamentoType] = useState([{ label: "Loading ...", value: "" }]);
   const [loading, setLoading] = React.useState(true);
   const [sentimentResponse, setSentimentResponse] = useState("")
- 
+  const [errors, setErrors] = useState([]);
+  
+  
   useEffect(()=>{
     let unmounted = false;
+
     /* Save cookie data */
     const cookiestored = new Cookies();
     console.log(`stored cookie ${cookiestored.get('comamor_cookie_data')}`);
@@ -85,27 +88,39 @@ function Home() {
   },[]);
 
 
-  const handleSubmit = (e) => {
+   function handleSubmit(e) {
       e.preventDefault()
       console.log("form data", formData);
+
   }
 
   async function fetchNotes() {
-    const apiData = await API.graphql({ query: listNotes });
-    setNotes(apiData.data.listNotes.items);
+    try{
+      const apiData = await API.graphql({ query: listNotes });
+      setNotes(apiData.data.listNotes.items);
+     } catch (err) {setErrors(err.errors[0].message );}
   }
 
    async function createNote() {
-    if (!formData.title ) return;
-    await API.graphql({ query: createNoteMutation, variables: { input: formData } });
-    setNotes([ ...notes, formData ]);
-    setFormData(initialFormState);
+    if (!formData.cuidadora_do_dia ) {setErrors("Por favor, selecione uma cuidadora");return; }
+    if (!formData.pressao ) {setErrors("Por favor, anote a pressão arterial do paciente");return; }
+    if (!formData.saturacao ) {setErrors("Por favor, anote a saturação de oxigênio do paciente");return; }
+    if (!formData.temperatura ) {setErrors("Por favor, anote a temperatura corporal do paciente");return; }
+
+    setErrors([]);
+    try{
+      await API.graphql({ query: createNoteMutation, variables: { input: formData } });
+      setNotes([ ...notes, formData ]);
+      setFormData(initialFormState);
+    } catch (err) {setErrors(err.errors[0].message );}
   }
 
   async function deleteNote({ id }) {
-    const newNotesArray = notes.filter(note => note.id !== id);
-    setNotes(newNotesArray);
-    await API.graphql({ query: deleteNoteMutation, variables: { input: { id } }});
+    try{
+      const newNotesArray = notes.filter(note => note.id !== id);
+      setNotes(newNotesArray);
+      await API.graphql({ query: deleteNoteMutation, variables: { input: { id } }});
+    } catch (err) {setErrors(err.errors[0].message );}
   }
 
 
@@ -119,24 +134,37 @@ function Home() {
               </div>
         </button> 
         <button className="btn btn-success" onClick={createNote}>Salvar anotações do dia</button>
+
+        <div>           
+          {errors.length > 0 &&                 
+            <div className="py-1 my-2 alert alert-danger alert-dismissible fade show">
+              <strong>Erro!</strong> {errors}
+              <button type="button" className="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+          } 
+        </div>
+        
       </div>
     );
   }
   function ShowNotes(){
-     return (              
-          <div style={{marginBottom: 30}}>
-            <div className="outer">           
-            {
-              notes.map(note => ( 
-                <div className="inner curve white" key={note.id || note.title}>
-                  <h2>{note.title}</h2>
-                  <button onClick={() => deleteNote(note)}>Delete note</button>
-                </div>
-              ))
-           
-            }
+     return (                     
+          <div className="my-5 container outer">
+              <h2> Histórico de Anotações </h2>              
+              <div className="row inner curve white" >          
+                {notes.map(note => ( 
+                  <div className="row" key={note.id || note.title}>
+                  <div className="col-md-3 text">{note.title}</div>
+                  <div className="col-sm text">{note.sentiment_predominant}</div>
+                  <div className="col-sm text">{note.pressao}</div>
+                  <div className="col-sm text">{note.saturacao}</div>
+                  <div className="col-sm text">{note.temperatura}</div>
+                  <div className="col-sm text"><button onClick={() => deleteNote(note)}>Deletar nota</button>  </div>
+                  </div>             
+                ))}
+              </div>
             </div>
-         </div>
+        
       );
   }
 
@@ -346,29 +374,25 @@ function Home() {
         <label htmlFor="manha_remedios_text">Remédios</label><br />
         <textarea id="manha_remedios_text" 
                   className="form-control" rows="2" cols="35"
-                  /*value={formData.manha_remedios_text}*/
-                  defaultValue="os remedios de hoje foram Benicar e Esc"
+                  value={formData.manha_remedios_text}                
                   onChange={e => setFormData({ ...formData, 'manha_remedios_text': e.target.value})}     
                   ></textarea> 
         <label htmlFor="manha_refeicao_text">Refeição</label>
         <textarea id="manha_refeicao_text" 
                   className="form-control" rows="2" cols="35"
-                  /*value={formData.manha_refeicao_text}*/
-                  defaultValue="banana com aveia, granola, açafrão, canela e ganbeury Cappuccino com pão e queijo Biscoito"
+                  value={formData.manha_refeicao_text}
                   onChange={e => setFormData({ ...formData, 'manha_refeicao_text': e.target.value})} 
                   ></textarea> 
         <label htmlFor="manha_higiene_text">Higiene</label>
         <textarea id="manha_higiene_text"
                   className="form-control" rows="2" cols="35"
-                  defaultValue="escovou os dentes direitinho"
-                /* value={formData.manha_higiene_text} */
+                  value={formData.manha_higiene_text}
                   onChange={e => setFormData({ ...formData, 'manha_higiene_text': e.target.value})} 
                   ></textarea> 
         <label htmlFor="manha_atividade_text">Atividade</label>
         <textarea id="manha_atividade_text"
                     className="form-control" rows="2" cols="35"
-                    /*value={formData.manha_atividade_text}*/
-                    defaultValue="Sr. Adilson fez uma caminhada leve na pracinha for 10min e quiz voltar pra casa."
+                    value={formData.manha_atividade_text}
                     onChange={e => setFormData({ ...formData, 'manha_atividade_text': e.target.value})} 
                     ></textarea> <br />
         <label htmlFor="manha_humor_select">Qual o comportamento?</label>
@@ -395,29 +419,25 @@ function Home() {
         <label htmlFor="tarde_remedios_text">Remédios</label><br />
         <textarea id="tarde_remedios_text" 
                   className="form-control" rows="2" cols="35"
-                  /*value={formData.tarde_remedios_text}*/
-                  defaultValue="Tomou luftal depois do almoco porque esta com a barriga inchada"
+                  value={formData.tarde_remedios_text}
                   onChange={e => setFormData({ ...formData, 'tarde_remedios_text': e.target.value})} 
                   ></textarea> 
         <label htmlFor="tarde_refeicao_text">Refeição</label>
         <textarea id="tarde_refeicao_text" 
                   className="form-control" rows="2" cols="35"
-                  /*value={formData.tarde_refeicao_text}*/
-                  defaultValue="comeu uma saladinha e galinha. comeu sozinho e mastigou tudo. tomou suco de limao"
+                  value={formData.tarde_refeicao_text}
                   onChange={e => setFormData({ ...formData, 'tarde_refeicao_text': e.target.value})} 
                   ></textarea> 
         <label htmlFor="tarde_higiene_text">Higiene</label>
         <textarea id="tarde_higiene_text" 
                   className="form-control" rows="2" cols="35"
-                  /*value={formData.tarde_higiene_text}*/
-                  defaultValue="depois do cochilo fez bastante coco"
+                  value={formData.tarde_higiene_text}
                   onChange={e => setFormData({ ...formData, 'tarde_higiene_text': e.target.value})} 
                   ></textarea> 
         <label htmlFor="tarde_atividade_text">Atividade</label>
         <textarea id="tarde_atividade_text" 
                   className="form-control" rows="2" cols="35"
-                  /*value={formData.tarde_atividade_text}*/
-                  defaultValue="assistiu TV com a Dona Hilza"
+                  value={formData.tarde_atividade_text}
                   onChange={e => setFormData({ ...formData, 'tarde_atividade_text': e.target.value})} 
                   ></textarea> <br />
         <label htmlFor="tarde_humor_select">Qual o comportamento?</label>
@@ -443,29 +463,25 @@ function Home() {
         <label htmlFor="noite_remedios_text">Remédios</label><br />
         <textarea id="noite_remedios_text" 
                   className="form-control"  rows="2" cols="35"
-                  /*value={formData.noite_remedios_text}*/
-                  defaultValue="deve que tomar um Rivotril pois estava muito agitado"
+                  value={formData.noite_remedios_text}
                   onChange={e => setFormData({ ...formData, 'noite_remedios_text': e.target.value})} 
                   ></textarea> 
         <label htmlFor="noite_refeicao_text">Refeição</label>
         <textarea id="noite_refeicao_text"  
                   className="form-control" rows="2" cols="35"
-                  /*value={formData.noite_refeicao_text}*/
-                  defaultValue="Comeu um paozinho com queijo e cafe, mas nao quiz comer muito mais do que isso"
+                  value={formData.noite_refeicao_text}
                   onChange={e => setFormData({ ...formData, 'noite_refeicao_text': e.target.value})} 
                   ></textarea> 
         <label htmlFor="noite_higiene_text">Higiene</label>
         <textarea id="noite_higiene_text" 
                   className="form-control"  rows="2" cols="35"
-                  /*value={formData.noite_higiene_text}*/
-                  defaultValue="tomar banho foi dificil, mas com a ajuda da Dona Rosa e Seu Junior finalmente conseguimos."
+                  value={formData.noite_higiene_text}
                   onChange={e => setFormData({ ...formData, 'noite_higiene_text': e.target.value})} 
                   ></textarea> 
         <label htmlFor="noite_atividade_text">Atividade</label>
         <textarea id="noite_atividade_text"  
                   className="form-control" rows="2" cols="35"
-                  /*value={formData.noite_atividade_text}*/
-                  defaultValue="Sentou para assistir TV em familia e estava muito calmo"
+                  value={formData.noite_atividade_text}
                   onChange={e => setFormData({ ...formData, 'noite_atividade_text': e.target.value})} 
                   ></textarea> <br />
         <label htmlFor="noite_humor_select">Qual o comportamento?</label>
@@ -520,24 +536,21 @@ function Home() {
           <input className="form-control" 
                   id="pressao" 
                   placeholder="120/80"                
-                  /*value={formData.pressao}*/
-                  defaultValue="120/69"
+                  value={formData.pressao}                 
                   name="pressao" maxLength="10" size="6"
                   onChange={e => setFormData({ ...formData, 'pressao': e.target.value})}  />
           <label className="block" htmlFor="saturacao" >Saturação (SpO<span className="tiny">2%</span> )</label>
           <input className="form-control" 
                   id="saturacao" 
                   placeholder="95" name="saturacao" maxLength="10" size="6"
-                  /*value={formData.saturacao}*/
-                  defaultValue="97"
+                  value={formData.saturacao}                 
                   onChange={e => setFormData({ ...formData, 'saturacao': e.target.value})}  />
           <label className="block" htmlFor="name">Temperatura (&deg;C)</label>
           <input className="form-control" 
                   id="temperatura" 
                   placeholder="37" 
                   name="temperatura" maxLength="10" size="6"  
-                  /*value={formData.temperatura}*/
-                  defaultValue="37"
+                  value={formData.temperatura}
                   onChange={e => setFormData({ ...formData, 'temperatura': e.target.value})}  /> 
         </div> 
       </div>  
@@ -575,90 +588,13 @@ function Home() {
           </div>
           <div className="col-lg-7">
             <Login />
-           
-             <div> {DataForm()} </div>
-              <ShowNotes />
+            <div> {DataForm()} </div>             
           </div>
         </div>
+         <ShowNotes />
       </div>
     </div>
   );
 }
 
 export default withAuthenticator(Home);
-
-/*
-{
-    "textInterpretation": {
-        "keyPhrases": [{
-            "text": "o comportamento proteica da casa"
-        }, {
-            "text": "o bem do meu bem"
-        }],
-        "language": "pt",
-        "sentiment": {
-            "predominant": "POSITIVE",
-            "positive": 0.9991956353187561,
-            "negative": 0.00006222010415513068,
-            "neutral": 0.0007334873080253601,
-            "mixed": 0.000008671748219057918
-        },
-        "syntax": [{
-            "text": "Corrigir",
-            "syntax": "VERB"
-        }, {
-            "text": "o",
-            "syntax": "DET"
-        }, {
-            "text": "comportamento",
-            "syntax": "NOUN"
-        }, {
-            "text": "proteica",
-            "syntax": "ADJ"
-        }, {
-            "text": "da",
-            "syntax": "ADP"
-        }, {
-            "text": "casa",
-            "syntax": "NOUN"
-        }, {
-            "text": "estava",
-            "syntax": "VERB"
-        }, {
-            "text": "muito",
-            "syntax": "ADV"
-        }, {
-            "text": "bem",
-            "syntax": "ADV"
-        }, {
-            "text": "como",
-            "syntax": "ADV"
-        }, {
-            "text": "é",
-            "syntax": "AUX"
-        }, {
-            "text": "o",
-            "syntax": "DET"
-        }, {
-            "text": "bem",
-            "syntax": "NOUN"
-        }, {
-            "text": "do",
-            "syntax": "ADP"
-        }, {
-            "text": "meu",
-            "syntax": "DET"
-        }, {
-            "text": "bem",
-            "syntax": "NOUN"
-        }, {
-            "text": ".",
-            "syntax": "PUNCT"
-        }],
-        "textEntities": [{
-            "type": "QUANTITY",
-            "text": "muito bem"
-        }]
-    }
-}
-*/
