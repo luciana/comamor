@@ -67,7 +67,8 @@ function Home() {
     async function getcomportamentoType() {
       /* const response = await fetch("<api_url_to_get_comportamentoType>"); */
       /*const body = await response.json();*/
-      const body = [{ name: "Aborrecido"},
+      const body = [  { name: '' },
+                      { name: "Aborrecido"},
                       { name: "Agitado" },
                       { name: "Agressivo" },
                       { name: "Concentrado"},
@@ -89,8 +90,15 @@ function Home() {
 
 
    function handleSubmit(e) {
-      e.preventDefault()
-      console.log("form data", formData);
+    
+      if (e.target.checkValidity()) {
+          e.preventDefault()
+          console.log("form data", formData);
+        } else {
+          console.log("form data not valid");
+          e.preDefault()
+          e.stopPropagation()
+      }
 
   }
 
@@ -106,7 +114,21 @@ function Home() {
     if (!formData.pressao ) {setErrors("Por favor, anote a pressão arterial do paciente");return; }
     if (!formData.saturacao ) {setErrors("Por favor, anote a saturação de oxigênio do paciente");return; }
     if (!formData.temperatura ) {setErrors("Por favor, anote a temperatura corporal do paciente");return; }
-
+    if (!formData.manha_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a manhã?");return; }
+    if (!formData.tarde_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a tarde?");return; }
+    if (!formData.noite_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a noite?");return; }
+    if (!formData.manha_atividade_text && 
+          !formData.manha_higiene_text && 
+          !formData.manha_remedios_text &&         
+          !formData.manha_refeicao_text ) {setErrors("Precisamos de mais informação no turno da manhã");return; }
+     if (!formData.tarde_atividade_text && 
+          !formData.tarde_higiene_text && 
+          !formData.tarde_remedios_text &&
+          !formData.tarde_refeicao_text ) {setErrors("Precisamos de mais informação no turno da tarde");return; }
+     if (!formData.noite_atividade_text && 
+          !formData.noite_higiene_text && 
+          !formData.noite_remedios_text &&
+          !formData.noite_refeicao_text ) {setErrors("Precisamos de mais informação no turno da noite");return; }
     setErrors([]);
     try{
       await API.graphql({ query: createNoteMutation, variables: { input: formData } });
@@ -395,17 +417,20 @@ function Home() {
                     value={formData.manha_atividade_text}
                     onChange={e => setFormData({ ...formData, 'manha_atividade_text': e.target.value})} 
                     ></textarea> <br />
-        <label htmlFor="manha_humor_select">Qual o comportamento?</label>
-        <select disabled={loading}
-                className="form-control" 
-                name="manha_humor_select" 
-                id="manha_humor_select"             
-                onChange={e => setFormData({ ...formData, 'manha_humor_select': e.target.value})}                
-                >               
-                {comportamentoType.map(({ label, value }) => (
-                  <option key={value} value={value}>{label}</option>
-                ))}     
-        </select>
+        <div className="form-group was-validated">
+          <label htmlFor="manha_humor_select">Qual o comportamento?</label>
+          <select disabled={loading}
+                  className="form-control" 
+                  name="manha_humor_select" 
+                  id="manha_humor_select"    
+                  required="required"         
+                  onChange={e => setFormData({ ...formData, 'manha_humor_select': e.target.value})}                
+                  >               
+                  {comportamentoType.map(({ label, value }) => (
+                    <option key={value} value={value}>{label}</option>
+                  ))}     
+          </select>
+        </div>
         </div>
       </div>   
     );
@@ -440,16 +465,19 @@ function Home() {
                   value={formData.tarde_atividade_text}
                   onChange={e => setFormData({ ...formData, 'tarde_atividade_text': e.target.value})} 
                   ></textarea> <br />
-        <label htmlFor="tarde_humor_select">Qual o comportamento?</label>
+        <div className="form-group was-validated">
+          <label htmlFor="tarde_humor_select">Qual o comportamento?</label>
           <select className="form-control" 
                   name="tarde_humor_select" 
                   id="tarde_humor_select"
+                  required="required"  
                   onChange={e => setFormData({ ...formData, 'tarde_humor_select': e.target.value})}                
                   >               
                   {comportamentoType.map(({ label, value }) => (
                     <option key={value} value={value}>{label}</option>
                   ))}     
           </select>
+        </div>
         </div>
       </div>
     );
@@ -460,6 +488,7 @@ function Home() {
     <div className="outer">
         <div className="inner curve white">
         <h3> <FaStar className="fastar"/>  Noite </h3>
+        <div className="form-group">
         <label htmlFor="noite_remedios_text">Remédios</label><br />
         <textarea id="noite_remedios_text" 
                   className="form-control"  rows="2" cols="35"
@@ -484,16 +513,20 @@ function Home() {
                   value={formData.noite_atividade_text}
                   onChange={e => setFormData({ ...formData, 'noite_atividade_text': e.target.value})} 
                   ></textarea> <br />
-        <label htmlFor="noite_humor_select">Qual o comportamento?</label>
+        <div className="form-group was-validated">
+          <label htmlFor="noite_humor_select">Qual o comportamento?</label>
           <select className="form-control" 
                   name="noite_humor_select" 
                   id="noite_humor_select"
+                  required="required"  
                   onChange={e => setFormData({ ...formData, 'noite_humor_select': e.target.value})}                
                   >               
                   {comportamentoType.map(({ label, value }) => (
                     <option key={value} value={value}>{label}</option>
                   ))} 
           </select>
+          </div>
+        </div>
         </div>
       </div>
     );
@@ -504,11 +537,13 @@ function Home() {
       <div className="outer">
         <div className="inner curve white">
         <h3> <FaUserAlt className="fauseralt"/>  Cuidadoras </h3>
+        <div className="form-group was-validated">
         <div className="form-check form-check-inline">       
           <input className="form-check-input"  
                 type="radio"  
                 name="cuidadora_do_dia" 
-                value="1"            
+                value="1"     
+                required="required"            
                 onChange={e => setFormData({ ...formData, 'cuidadora_do_dia': e.target.value})} 
                 />
           <label  className="form-check-label" htmlFor="1"> Miriam Sobrenome</label>
@@ -518,8 +553,10 @@ function Home() {
                 type="radio"  
                 name="cuidadora_do_dia" 
                 value="2"
+                required="required"     
                 onChange={e => setFormData({ ...formData, 'cuidadora_do_dia': e.target.value})} />
           <label  className="form-check-label" htmlFor="2"> Samira Sobrenome</label>
+        </div>
         </div>
       </div>
       </div>
@@ -532,26 +569,31 @@ function Home() {
       <div className="outer">
         <div className="inner curve white">
           <h3> <FaNotesMedical className="fanotesmedical"/>  Sinais Vitais </h3>
+          <div className="form-group was-validated">
           <label htmlFor="pressao" className="block">Pressão Arterial ( mmHg )</label>
           <input className="form-control" 
-                  id="pressao" 
-                  placeholder="120/80"                
-                  value={formData.pressao}                 
+                  id="pressao"                 
+                  placeholder="120/80"    
+                  required="required"            
+                  defaultValue={formData.pressao}                 
                   name="pressao" maxLength="10" size="6"
                   onChange={e => setFormData({ ...formData, 'pressao': e.target.value})}  />
           <label className="block" htmlFor="saturacao" >Saturação (SpO<span className="tiny">2%</span> )</label>
           <input className="form-control" 
-                  id="saturacao" 
+                  id="saturacao"                 
                   placeholder="95" name="saturacao" maxLength="10" size="6"
-                  value={formData.saturacao}                 
+                  defaultValue={formData.saturacao}                 
+                  required="required"     
                   onChange={e => setFormData({ ...formData, 'saturacao': e.target.value})}  />
           <label className="block" htmlFor="name">Temperatura (&deg;C)</label>
           <input className="form-control" 
-                  id="temperatura" 
+                  id="temperatura"                 
                   placeholder="37" 
+                  required="required"     
                   name="temperatura" maxLength="10" size="6"  
-                  value={formData.temperatura}
+                  defaultValue={formData.temperatura}
                   onChange={e => setFormData({ ...formData, 'temperatura': e.target.value})}  /> 
+          </div>
         </div> 
       </div>  
     )
@@ -559,7 +601,7 @@ function Home() {
 
   function DataForm(){
     return (
-      <form onSubmit={handleSubmit} >     
+      <form className="" onSubmit={handleSubmit} >     
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
         <input type="hidden"  value={new Date().toLocaleString()} name="title" id="title" readOnly  />
                 <div> {AssistantNames()} </div> 
