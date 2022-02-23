@@ -136,7 +136,7 @@ function Home() {
         setNotes([ ...notes, formData ]);
         setFormData(initialFormState);
       } catch (err) {setErrors(err.errors[0].message );
-      } finally { setFormData(initialFormState); }
+      } finally {  }
   }
 
   async function deleteNote({ id }) {
@@ -184,9 +184,9 @@ function Home() {
                   <div className="col-md-3 text">{note.title}</div>
                   <div className="col-sm text">{note.cuidadora_do_dia}</div>
                   <div className="col-sm text">{note.sentiment_predominant}</div>
-                  <div className="col-sm text">{note.pressao}</div>
-                  <div className="col-sm text">{note.saturacao}</div>
-                  <div className="col-sm text">{note.temperatura}</div>
+                  <div className="col-sm text">{note.pressao} mmHg</div>
+                  <div className="col-sm text">{note.saturacao} SpO<span className="tiny">2%</span></div>
+                  <div className="col-sm text">{note.temperatura} &deg;C</div>
                   <div className="col-sm text"><button onClick={() => deleteNote(note)}>Deletar nota</button>  </div>
                   </div>             
                 ))}
