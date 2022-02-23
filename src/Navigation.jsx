@@ -1,12 +1,15 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
+
 function Navigation() {
+
+
   return (
     <div className="navigation">
       <nav className="navbar navbar-expand navbar-dark bg-dark">
         <div className="container">
-          <NavLink className="navbar-brand" to="/">
+          <NavLink className="navbar-brand" to="/" >
             Diario do Papai com amor
           </NavLink>
           <div>
@@ -22,6 +25,7 @@ function Navigation() {
                   Análise
                 </NavLink>
               </li>
+              
             
             </ul>
           </div>

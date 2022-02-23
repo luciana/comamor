@@ -12,7 +12,7 @@ import MicrophoneStream from 'microphone-stream';
 import Cookies from 'universal-cookie';
 import { FaMicrophone, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
 import { listNotes } from './graphql/queries';
-import { createNote as createNoteMutation, deleteNote as deleteNoteMutation } from './graphql/mutations';
+import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, updateNote as updateNoteMutation } from './graphql/mutations';
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -147,6 +147,14 @@ function Home() {
     } catch (err) {setErrors(err.errors[0].message );}
   }
 
+   async function updateNote({ id }) {
+    try{
+      const newNotesArray = notes.filter(note => note.id !== id);
+      setNotes(newNotesArray);
+      await API.graphql({ query: updateNoteMutation, variables: { input: formData }});
+    } catch (err) {setErrors(err.errors[0].message );}
+  }
+
 
   function ShowSaveNoteButton(){
     return(
@@ -171,23 +179,27 @@ function Home() {
               <h2> Histórico de Anotações </h2>              
               <div className="row inner curve white" >
                   <div className="row strong">
+                 
                   <div className="col-md-3 text font-weight-bold">Dia</div>
                   <div className="col-sm text font-weight-bold">Cuidadora</div>
                   <div className="col-sm text font-weight-bold ">Em Geral</div>
                   <div className="col-sm text font-weight-bold">Pressão</div>
                   <div className="col-sm text font-weight-bold">Saturação</div>
                   <div className="col-sm text font-weight-bold">Temperatura</div>  
-                   <div className="col-sm text font-weight-bold"></div>  
+                  <div className="col-sm text font-weight-bold"></div>  
+                  <div className="col-sm text font-weight-bold"></div>  
                 </div>        
                 {notes.map(note => ( 
                   <div className="row" key={note.id || note.title}>
+                
                   <div className="col-md-3 text">{note.title}</div>
-                  <div className="col-sm text">{note.cuidadora_do_dia}</div>
+                  <div className="col-sm text">{covertIDToName(note.cuidadora_do_dia)}</div>
                   <div className="col-sm text">{note.sentiment_predominant}</div>
                   <div className="col-sm text">{note.pressao} mmHg</div>
                   <div className="col-sm text">{note.saturacao} SpO<span className="tiny">2%</span></div>
                   <div className="col-sm text">{note.temperatura} &deg;C</div>
                   <div className="col-sm text"><button onClick={() => deleteNote(note)}>Deletar nota</button>  </div>
+                  <div className="col-sm text"><button onClick={() => updateNote(note)}>Update nota</button>  </div>
                   </div>             
                 ))}
               </div>
@@ -198,12 +210,17 @@ function Home() {
 
   function Login(){
 
+    function displayGreetingName ( name ) {
+      if (!name) return
+      return name.replace(/(\w{3})[\w.-]+@([\w.]+\w)/, "$1***@$2")
+    }
+    
     return (
      <Authenticator>
-          {({ signOut, user }) => (
+          {({ signOut, user }) => (          
             <div className="container">
-              <span className="text"> Olá {user.username}, seja bem vinda(o)!</span>
-              <button onClick={signOut}>Sair</button>
+              <span className="text"> Olá {displayGreetingName(user.attributes.email)}, seja bem vinda(o)!</span> 
+              <button onClick={signOut} type="button" className="btn btn-link">Sair</button>
             </div>
           )}
       </Authenticator>
@@ -541,6 +558,13 @@ function Home() {
       </div>
     );
   }
+
+  function covertIDToName(id){
+    if(!id) { return; }
+    if ( id == 1) return "Miriam";
+    if ( id == 2) return "Samira";
+  }
+    
 
   function AssistantNames(){
     return (
