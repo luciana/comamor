@@ -32,7 +32,6 @@ export const createPatient = /* GraphQL */ `
           noite_higiene_text
           noite_atividade_text
           noite_humor_select
-          sentiment_predominant
           sentiment
           acontecimentos
           patientID
@@ -77,7 +76,6 @@ export const updatePatient = /* GraphQL */ `
           noite_higiene_text
           noite_atividade_text
           noite_humor_select
-          sentiment_predominant
           sentiment
           acontecimentos
           patientID
@@ -122,7 +120,6 @@ export const deletePatient = /* GraphQL */ `
           noite_higiene_text
           noite_atividade_text
           noite_humor_select
-          sentiment_predominant
           sentiment
           acontecimentos
           patientID
@@ -163,7 +160,6 @@ export const createNote = /* GraphQL */ `
       noite_higiene_text
       noite_atividade_text
       noite_humor_select
-      sentiment_predominant
       sentiment
       acontecimentos
       patientID
@@ -218,7 +214,6 @@ export const updateNote = /* GraphQL */ `
       noite_higiene_text
       noite_atividade_text
       noite_humor_select
-      sentiment_predominant
       sentiment
       acontecimentos
       patientID
@@ -273,7 +268,6 @@ export const deleteNote = /* GraphQL */ `
       noite_higiene_text
       noite_atividade_text
       noite_humor_select
-      sentiment_predominant
       sentiment
       acontecimentos
       patientID
@@ -331,7 +325,6 @@ export const createComment = /* GraphQL */ `
         noite_higiene_text
         noite_atividade_text
         noite_humor_select
-        sentiment_predominant
         sentiment
         acontecimentos
         patientID
@@ -383,7 +376,6 @@ export const updateComment = /* GraphQL */ `
         noite_higiene_text
         noite_atividade_text
         noite_humor_select
-        sentiment_predominant
         sentiment
         acontecimentos
         patientID
@@ -435,7 +427,6 @@ export const deleteComment = /* GraphQL */ `
         noite_higiene_text
         noite_atividade_text
         noite_humor_select
-        sentiment_predominant
         sentiment
         acontecimentos
         patientID

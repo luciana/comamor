@@ -29,7 +29,6 @@ export const getPatient = /* GraphQL */ `
           noite_higiene_text
           noite_atividade_text
           noite_humor_select
-          sentiment_predominant
           sentiment
           acontecimentos
           patientID
@@ -87,7 +86,6 @@ export const getNote = /* GraphQL */ `
       noite_higiene_text
       noite_atividade_text
       noite_humor_select
-      sentiment_predominant
       sentiment
       acontecimentos
       patientID
@@ -144,7 +142,6 @@ export const listNotes = /* GraphQL */ `
         noite_higiene_text
         noite_atividade_text
         noite_humor_select
-        sentiment_predominant
         sentiment
         acontecimentos
         patientID
@@ -191,7 +188,6 @@ export const getComment = /* GraphQL */ `
         noite_higiene_text
         noite_atividade_text
         noite_humor_select
-        sentiment_predominant
         sentiment
         acontecimentos
         patientID
@@ -245,7 +241,6 @@ export const listComments = /* GraphQL */ `
           noite_higiene_text
           noite_atividade_text
           noite_humor_select
-          sentiment_predominant
           sentiment
           acontecimentos
           patientID

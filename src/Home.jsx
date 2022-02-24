@@ -39,8 +39,7 @@ const initialFormState = { title: new Date().toLocaleString(),
                           noite_higiene_text: '',
                           noite_atividade_text: '',
                           noite_humor_select: '',
-                          acontecimentos:'',
-                          sentiment_predominant: '',
+                          acontecimentos:'',                         
                           sentiment: ''}
 function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
@@ -52,17 +51,14 @@ function Home() {
   const [sentiment, setSentiment] = useState("")
   const [sentimentObject, setSentimentObject] = useState("")
   const [errors, setErrors] = useState([]);
+  console.log('set error', errors);
   const [show, setShow] = useState("");
- 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   
   
   useEffect(()=>{
     let unmounted = false;
-
-    /* Setup initial state of form */
-    
 
     /* Save cookie data */
     const cookiestored = new Cookies();
@@ -99,18 +95,25 @@ function Home() {
     };
   },[]);
 
-   function handleSubmit(e) {
-    
+   function handleSubmit(e) {    
       if (e.target.checkValidity()) {
           e.preventDefault()
           console.log("form data from form submit", formData);
         } else {
-          console.log("form data not valid");
+          console.log("form data not valid", formData);
+          setErrors(formData);
           e.preDefault()
           e.stopPropagation()
       }
-
   }
+  
+  function handleChange(e){
+    e.persist();
+    console.log('handle Change');
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+    // Check and see if errors exist, and remove them from the error object:
+    if ( !!errors ) { console.log('handle Change errors'); setErrors([]);  console.log('handle Change cleared error');}
+  };
 
   async function fetchNotes() {
     try{
@@ -122,14 +125,15 @@ function Home() {
    async function createNote() {
       if (formValidation() !== 0 ) { return; }
       console.log("create note", formData);
-      setErrors([]);
       try{
         await API.graphql({ query: createNoteMutation, variables: { input: formData } });
-        setNotes([ ...notes, formData ]);
-        setFormData(initialFormState);
-      } catch (err) {
-        setErrors(err.errors[0].message );
-        setFormData(initialFormState);
+        setNotes([ ...notes, formData ]);       
+      }catch (err) {
+        console.log("ERROR: creating notes", err);
+        if(err.errors[0]){
+            console.log("ERROR: creating notes", err.errors[0]);
+            if(err.errors[0].message) setErrors(err.errors[0].message );              
+        }             
       } finally { handleClose(); }
   }
 
@@ -138,7 +142,10 @@ function Home() {
       const newNotesArray = notes.filter(note => note.id !== id);
       setNotes(newNotesArray);
       await API.graphql({ query: deleteNoteMutation, variables: { input: { id } }});
-    } catch (err) {setErrors(err.errors[0].message );}
+    } catch (err) {
+      console.log("ERROR: deleting notes", err);
+      setErrors(err.errors[0].message );
+      }
   }
 
    async function updateNote({ id }) {
@@ -146,11 +153,27 @@ function Home() {
       const newNotesArray = notes.filter(note => note.id !== id);
       setNotes(newNotesArray);
       await API.graphql({ query: updateNoteMutation, variables: { input: formData }});
-    } catch (err) {setErrors(err.errors[0].message );}
+    } catch (err) {
+      console.log("ERROR: updating notes", err);
+      setErrors(err.errors[0].message );
+      }
+  }
+
+  function parseSentimentData(sentiment_string){
+    if (!sentiment_string) return;
+    try{
+        let s = JSON.parse(sentiment_string);        
+        if(!s.predominant) return;  
+        return s.predominant; 
+    }catch(err){
+      console.log("ERROR: can't parse the sentiment object in the database", sentiment_string);
+      return;
+    }
+      
   }
 
   function ShowSaveNoteButton(){
-       function interpretFromPredictions(event) {
+    function interpretFromPredictions(event) {
           event.preventDefault();
           if (formValidation() !== 0 ) { return; }
           let dataToSentiment = formData.manha_atividade_text + ' ' +                                                       
@@ -176,20 +199,30 @@ function Home() {
                 const sentiment_string = JSON.stringify(result, null, 2);
                 let s = JSON.parse(sentiment_string);     
                 let sentimentObject = s.textInterpretation.sentiment; 
-                let sentimentObjectString = JSON.stringify(s.textInterpretation.sentiment, null, 2);   
+                let sentimentObjectString = JSON.stringify(sentimentObject, null, 2);   
                 let sentiment_p = sentimentObject.predominant;   
-                setSentiment(sentiment_p); 
-                setSentimentObject(sentimentObjectString);    
-                setFormData({ ...formData, 'sentiment_predominant': sentiment_p});  
+                console.log('sentiment_p',sentiment_p);                
+                console.log('sentiment_object',sentimentObjectString);
+                setSentiment(sentiment_p);                
+                setSentimentObject(sentimentObjectString);          
                 setFormData({ ...formData, 'sentiment': sentimentObjectString});  
                 handleShow();
                               
           }).catch(err => 
               { 
-                alert('Houve um problema. tente novament');
-                setSentiment(JSON.stringify(err, null, 2))
+                console.log("ERROR: Houve um problema. tente novamente connectando com AWS. logging sentiment error", JSON.stringify(err, null, 2));               
+                setFormData({ ...formData, 'sentiment': null});  
+                handleShow();
               })
-      }
+    }
+
+    function ShowSentimentInReview(props) {
+        const sentiment = props.sentiment;
+        if (sentiment) {
+          return <p className="text-dark"> Em geral, o paciente teve um dia <span>{sentiment} </span></p> ;
+        }
+        return;
+    }
 
     return(
       <div className="py-1">
@@ -201,30 +234,30 @@ function Home() {
                 size="lg"
                 aria-labelledby="contained-modal-title-vcenter"
                 centered>
-              <div className="modal-header text-dark">Resumo de Anotações</div>
+              <h3 className="modal-header text-dark">Resumo de Anotações</h3>
               <div className="modal-body">
               
               <p className="text-dark text-bold"> Cuidadora do dia: {formData.cuidadora_do_dia}</p>
-              <h3 className="text-dark">Sinais Vitais</h3>
+              <h4 className="text-dark">Sinais Vitais</h4>
               <p className="text-dark"> Pressão Arterial: {formData.pressao} mmHg</p>   
               <p className="text-dark"> Saturação: {formData.temperatura} SpO2%</p>   
               <p className="text-dark"> Temperatura: {formData.temperatura} &deg;C </p>   
 
-              <h3 className="text-dark">Pela Manhã</h3>
+              <h4 className="text-dark">Pela Manhã</h4>
               <p className="text-dark"> Remedios: {formData.manha_remedios_text}</p>   
               <p className="text-dark"> Refeição: {formData.manha_higiene_text}</p>   
               <p className="text-dark"> Higiene: {formData.manha_higiene_text} </p>  
               <p className="text-dark"> Atividade: {formData.manha_atividade_text}</p> 
               <p className="text-dark"> Comportamento: {formData.manha_humor_select}</p> 
 
-              <h3 className="text-dark">A Tarde</h3>
+              <h4 className="text-dark">A Tarde</h4>
               <p className="text-dark"> Remedios: {formData.tarde_remedios_text}</p>   
               <p className="text-dark"> Refeição: {formData.tarde_higiene_text}</p>   
               <p className="text-dark"> Higiene: {formData.tarde_higiene_text} </p>  
               <p className="text-dark"> Atividade: {formData.tarde_atividade_text}</p> 
               <p className="text-dark"> Comportamento: {formData.tarde_humor_select}</p> 
 
-              <h3 className="text-dark">A Noite</h3>
+              <h4 className="text-dark">A Noite</h4>
               <p className="text-dark"> Remedios: {formData.noite_remedios_text}</p>   
               <p className="text-dark"> Refeição: {formData.noite_higiene_text}</p>   
               <p className="text-dark"> Higiene: {formData.noite_higiene_text} </p>  
@@ -236,7 +269,9 @@ function Home() {
                 <span>{formData.acontecimentos}</span> 
               </div>
 
-              <p className="text-dark"> Em geral, o paciente teve um dia <span>{sentiment} </span></p>             
+
+              <ShowSentimentInReview sentiment={sentiment} />                       
+
               </div>
                <div className="modal-footer">
                 <Button variant="secondary" onClick={handleClose}>Fechar</Button>
@@ -276,10 +311,11 @@ function Home() {
                   <div className="col-sm text font-weight-bold"></div>  
                 </div>        
                 {notes.map(note => ( 
+                 
                   <div className="row" key={note.id || note.title}>                
                   <div className="col-md-3 text">{note.title}</div>
                   <div className="col-sm text">{note.cuidadora_do_dia}</div>
-                  <div className="col-sm text">{note.sentiment_predominant}</div>
+                  <div className="col-sm text">{parseSentimentData(note.sentiment)}</div>
                   <div className="col-sm text">{note.pressao} mmHg</div>
                   <div className="col-sm text">{note.saturacao} SpO<span className="tiny">2%</span></div>
                   <div className="col-sm text">{note.temperatura} &deg;C</div>
@@ -406,11 +442,13 @@ function Home() {
           language: "pt-BR", //other options are "en-GB", "fr-FR", "fr-CA", "es-US"
         },
       }).then(({ transcription: { fullText } }) => setTextToInterpret(fullText))
-        .catch(err => setTextToInterpret(JSON.stringify(err, null, 2)))
+        .catch(err => {
+          console.log("ERROR: Could not translate audio to text", JSON.stringify(err, null, 2));
+          setTextToInterpret("");
+         })
     }
   
-    return (
-     
+    return (     
       <div>         
         <AudioRecorder finishRecording={convertFromBuffer} />                        
       </div>
@@ -444,8 +482,6 @@ function Home() {
       return 0;
   }
   
-
-
   function TextInterpretation() {
     function setText(event) {
       console.log("set Text", event.target.value);
@@ -487,25 +523,25 @@ function Home() {
         <textarea id="manha_remedios_text" 
                   className="form-control" rows="2" cols="35"
                   value={formData.manha_remedios_text}                
-                  onChange={e => setFormData({ ...formData, 'manha_remedios_text': e.target.value})}     
+                  onChange={e => handleChange(e)} 
                   ></textarea> 
         <label htmlFor="manha_refeicao_text">Refeição</label>
         <textarea id="manha_refeicao_text" 
                   className="form-control" rows="2" cols="35"
                   value={formData.manha_refeicao_text}
-                  onChange={e => setFormData({ ...formData, 'manha_refeicao_text': e.target.value})} 
+                  onChange={e => handleChange(e)} 
                   ></textarea> 
         <label htmlFor="manha_higiene_text">Higiene</label>
         <textarea id="manha_higiene_text"
                   className="form-control" rows="2" cols="35"
                   value={formData.manha_higiene_text}
-                  onChange={e => setFormData({ ...formData, 'manha_higiene_text': e.target.value})} 
+                  onChange={e => handleChange(e)} 
                   ></textarea> 
         <label htmlFor="manha_atividade_text">Atividade</label>
         <textarea id="manha_atividade_text"
                     className="form-control" rows="2" cols="35"
                     value={formData.manha_atividade_text}
-                    onChange={e => setFormData({ ...formData, 'manha_atividade_text': e.target.value})} 
+                    onChange={e => handleChange(e)} 
                     ></textarea> <br />
         <div className="form-group was-validated">
           <label htmlFor="manha_humor_select">Qual o comportamento?</label>
@@ -514,7 +550,7 @@ function Home() {
                   name="manha_humor_select" 
                   id="manha_humor_select"    
                   required="required"         
-                  onChange={e => setFormData({ ...formData, 'manha_humor_select': e.target.value})}                
+                  onChange={e => handleChange(e)}             
                   >               
                   {comportamentoType.map(({ label, value }) => (
                     <option key={value} value={value}>{label}</option>
@@ -535,34 +571,33 @@ function Home() {
         <textarea id="tarde_remedios_text" 
                   className="form-control" rows="2" cols="35"
                   value={formData.tarde_remedios_text}
-                  onChange={e => setFormData({ ...formData, 'tarde_remedios_text': e.target.value})} 
-                  ></textarea> 
+                  onChange={e => handleChange(e)} 
+                ></textarea> 
         <label htmlFor="tarde_refeicao_text">Refeição</label>
         <textarea id="tarde_refeicao_text" 
                   className="form-control" rows="2" cols="35"
                   value={formData.tarde_refeicao_text}
-                  onChange={e => setFormData({ ...formData, 'tarde_refeicao_text': e.target.value})} 
-                  ></textarea> 
+                  onChange={e => handleChange(e)} 
+                ></textarea> 
         <label htmlFor="tarde_higiene_text">Higiene</label>
         <textarea id="tarde_higiene_text" 
                   className="form-control" rows="2" cols="35"
                   value={formData.tarde_higiene_text}
-                  onChange={e => setFormData({ ...formData, 'tarde_higiene_text': e.target.value || ""})} 
-                  ></textarea> 
+                  onChange={e => handleChange(e)} 
+        ></textarea> 
         <label htmlFor="tarde_atividade_text">Atividade</label>
         <textarea id="tarde_atividade_text" 
                   className="form-control" rows="2" cols="35"
                   value={formData.tarde_atividade_text}
-                  onChange={e => setFormData({ ...formData, 'tarde_atividade_text': e.target.value})} 
-                  ></textarea> <br />
+                  onChange={e => handleChange(e)} 
+                 ></textarea> <br />
         <div className="form-group was-validated">
           <label htmlFor="tarde_humor_select">Qual o comportamento?</label>
           <select className="form-control" 
                   name="tarde_humor_select" 
                   id="tarde_humor_select"
                   required="required"  
-                  onChange={e => setFormData({ ...formData, 'tarde_humor_select': e.target.value})}                
-                  >               
+                  onChange={e => handleChange(e)}>             
                   {comportamentoType.map(({ label, value }) => (
                     <option key={value} value={value}>{label}</option>
                   ))}     
@@ -583,25 +618,24 @@ function Home() {
         <textarea id="noite_remedios_text" 
                   className="form-control"  rows="2" cols="35"
                   value={formData.noite_remedios_text}
-                  onChange={e => setFormData({ ...formData, 'noite_remedios_text': e.target.value})} 
+                  onChange={e => handleChange(e)}
                   ></textarea> 
         <label htmlFor="noite_refeicao_text">Refeição</label>
         <textarea id="noite_refeicao_text"  
                   className="form-control" rows="2" cols="35"
                   value={formData.noite_refeicao_text}
-                  onChange={e => setFormData({ ...formData, 'noite_refeicao_text': e.target.value})} 
+                  onChange={e => handleChange(e)}
                   ></textarea> 
         <label htmlFor="noite_higiene_text">Higiene</label>
         <textarea id="noite_higiene_text" 
                   className="form-control"  rows="2" cols="35"
                   value={formData.noite_higiene_text}
-                  onChange={e => setFormData({ ...formData, 'noite_higiene_text': e.target.value})} 
-                  ></textarea> 
+                  onChange={e => handleChange(e)}                  ></textarea> 
         <label htmlFor="noite_atividade_text">Atividade</label>
         <textarea id="noite_atividade_text"  
                   className="form-control" rows="2" cols="35"
                   value={formData.noite_atividade_text}
-                  onChange={e => setFormData({ ...formData, 'noite_atividade_text': e.target.value})} 
+                  onChange={e => handleChange(e)} 
                   ></textarea> <br />
         <div className="form-group was-validated">
           <label htmlFor="noite_humor_select">Qual o comportamento?</label>
@@ -609,7 +643,7 @@ function Home() {
                   name="noite_humor_select" 
                   id="noite_humor_select"
                   required="required"  
-                  onChange={e => setFormData({ ...formData, 'noite_humor_select': e.target.value})}                
+                  onChange={e => handleChange(e)}              
                   >               
                   {comportamentoType.map(({ label, value }) => (
                     <option key={value} value={value}>{label}</option>
@@ -637,7 +671,7 @@ function Home() {
                 name="cuidadora_do_dia" 
                 value="1"     
                 required="required"            
-                onChange={e => setFormData({ ...formData, 'cuidadora_do_dia': e.target.value})} 
+                 onChange={e => handleChange(e)} 
                 />
           <label  className="form-check-label" htmlFor="1"> Miriam</label>
         </div>
@@ -647,7 +681,7 @@ function Home() {
                 name="cuidadora_do_dia" 
                 value="2"
                 required="required"     
-                onChange={e => setFormData({ ...formData, 'cuidadora_do_dia': e.target.value})} />
+                onChange={e => handleChange(e)} />
           <label  className="form-check-label" htmlFor="2"> Samira</label>
         </div>
         </div>
@@ -671,7 +705,7 @@ function Home() {
                   defaultValue={formData.pressao}   
                   inputMode='numeric'             
                   name="pressao" maxLength="10" size="6"
-                  onChange={e => setFormData({ ...formData, 'pressao': e.target.value})}  />
+                   onChange={e => handleChange(e)}  />
           <label className="block" htmlFor="saturacao" >Saturação (SpO<span className="tiny">2%</span> )</label>
           <input className="form-control" 
                   id="saturacao"                 
@@ -679,7 +713,7 @@ function Home() {
                   defaultValue={formData.saturacao}                 
                   required="required"    
                   type='number' inputMode='numeric' pattern="[0-9]*"  
-                  onChange={e => setFormData({ ...formData, 'saturacao': e.target.value})}  />
+                   onChange={e => handleChange(e)} />
           <label className="block" htmlFor="name">Temperatura (&deg;C)</label>
           <input className="form-control" 
                   id="temperatura"                 
@@ -688,7 +722,7 @@ function Home() {
                   type='number' inputMode='numeric' pattern="[0-9]*"    
                   name="temperatura" maxLength="10" size="6"  
                   defaultValue={formData.temperatura}
-                  onChange={e => setFormData({ ...formData, 'temperatura': e.target.value})}  /> 
+                  onChange={e => handleChange(e)}  /> 
           </div>
         </div> 
       </div>  
@@ -713,11 +747,7 @@ function Home() {
                 <input type="hidden"  
                       defaultValue={sentimentObject} 
                       name="sentiment"                      
-                      id="sentiment"   />
-                <input type="hidden"  
-                      defaultValue={sentiment} 
-                      name="sentiment_predominant"                       
-                      id="sentiment_predominant"   />
+                      id="sentiment"   />         
               </div>         
               <ShowSaveNoteButton />
         </form>
