@@ -1,6 +1,7 @@
 /* eslint-disable import/first */
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
+import {Modal, Button} from 'react-bootstrap';
 import { Amplify, API } from 'aws-amplify';
 import { withAuthenticator, Authenticator } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
@@ -13,6 +14,7 @@ import Cookies from 'universal-cookie';
 import { FaMicrophone, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
 import { listNotes } from './graphql/queries';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, updateNote as updateNoteMutation } from './graphql/mutations';
+
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -44,14 +46,23 @@ function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
   const [notes, setNotes] = useState([]);
   const [formData, setFormData] = useState(initialFormState);
+  console.log('form initial state set to empty', formData);
   const [comportamentoType, setComportamentoType] = useState([{ label: "Loading ...", value: "" }]);
   const [loading, setLoading] = React.useState(true);
-  const [sentimentResponse, setSentimentResponse] = useState("")
+  const [sentiment, setSentiment] = useState("")
+  const [sentimentObject, setSentimentObject] = useState("")
   const [errors, setErrors] = useState([]);
+  const [show, setShow] = useState("");
+ 
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   
   
   useEffect(()=>{
     let unmounted = false;
+
+    /* Setup initial state of form */
+    
 
     /* Save cookie data */
     const cookiestored = new Cookies();
@@ -88,12 +99,11 @@ function Home() {
     };
   },[]);
 
-
    function handleSubmit(e) {
     
       if (e.target.checkValidity()) {
           e.preventDefault()
-          console.log("form data", formData);
+          console.log("form data from form submit", formData);
         } else {
           console.log("form data not valid");
           e.preDefault()
@@ -110,33 +120,15 @@ function Home() {
   }
 
    async function createNote() {
-    if (!formData.cuidadora_do_dia ) {setErrors("Por favor, selecione uma cuidadora");return; }
-    if (!formData.pressao ) {setErrors("Por favor, anote a pressão arterial do paciente");return; }
-    if (!formData.saturacao ) {setErrors("Por favor, anote a saturação de oxigênio do paciente");return; }
-    if (!formData.temperatura ) {setErrors("Por favor, anote a temperatura corporal do paciente");return; }
-    if (!formData.manha_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a manhã?");return; }
-    if (!formData.tarde_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a tarde?");return; }
-    if (!formData.noite_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a noite?");return; }
-    if (!formData.manha_atividade_text && 
-          !formData.manha_higiene_text && 
-          !formData.manha_remedios_text &&         
-          !formData.manha_refeicao_text ) {setErrors("Precisamos de mais informação no turno da manhã");return; }
-     if (!formData.tarde_atividade_text && 
-          !formData.tarde_higiene_text && 
-          !formData.tarde_remedios_text &&
-          !formData.tarde_refeicao_text ) {setErrors("Precisamos de mais informação no turno da tarde");return; }
-     if (!formData.noite_atividade_text && 
-          !formData.noite_higiene_text && 
-          !formData.noite_remedios_text &&
-          !formData.noite_refeicao_text ) {setErrors("Precisamos de mais informação no turno da noite");return; }
-    
+      if (formValidation() !== 0 ) { return; }
+      console.log("create note", formData);
       setErrors([]);
       try{
         await API.graphql({ query: createNoteMutation, variables: { input: formData } });
         setNotes([ ...notes, formData ]);
         setFormData(initialFormState);
       } catch (err) {setErrors(err.errors[0].message );
-      } finally {  }
+      } finally { handleClose(); }
   }
 
   async function deleteNote({ id }) {
@@ -155,11 +147,97 @@ function Home() {
     } catch (err) {setErrors(err.errors[0].message );}
   }
 
-
   function ShowSaveNoteButton(){
+       function interpretFromPredictions(event) {
+          event.preventDefault();
+          if (formValidation() !== 0 ) { return; }
+          let dataToSentiment = formData.manha_atividade_text + ' ' +                                                       
+                                formData.manha_higiene_text + ' ' +
+                                formData.manha_atividade_text + ' ' +
+                                formData.manha_humor_select + ' ' +                                                   
+                                formData.tarde_higiene_text + ' ' +
+                                formData.tarde_atividade_text + ' ' +
+                                formData.tarde_humor_select + ' ' +                           
+                                formData.noite_higiene_text + ' ' +
+                                formData.noite_atividade_text + ' ' +
+                                formData.noite_humor_select + ' ' +
+                                formData.acontecimentos;
+          console.log("Data to analyze sentiment ", dataToSentiment);
+          Predictions.interpret({
+            text: {
+              source: {
+                text: dataToSentiment,
+              },
+              type: "ALL"
+            }
+          }).then(result => {
+                const sentiment_string = JSON.stringify(result, null, 2);
+                let s = JSON.parse(sentiment_string);     
+                let sentimentObject = s.textInterpretation.sentiment; 
+                let sentimentObjectString = JSON.stringify(s.textInterpretation.sentiment, null, 2);   
+                let sentiment_p = sentimentObject.predominant;   
+                setSentiment(sentiment_p); 
+                setSentimentObject(sentimentObjectString);    
+                setFormData({ ...formData, 'sentiment_predominant': sentiment_p});  
+                setFormData({ ...formData, 'sentiment': sentimentObjectString});  
+                handleShow();
+                              
+          }).catch(err => 
+              { 
+                alert('Houve um problema. tente novament');
+                setSentiment(JSON.stringify(err, null, 2))
+              })
+      }
+
     return(
       <div className="py-1">
-        <button className="btn btn-success" onClick={interpretFromPredictions}>Salvar anotações do dia</button>
+        <div> <button type="button" className="btn btn-warning" onClick={interpretFromPredictions}> Prevê Anotações</button>  </div>
+        <div>          
+          <Modal show={show} onHide={handleClose}>
+              <div className="modal-header text-dark">Resumo de Anotações</div>
+              <div className="modal-body">
+              
+              <p className="text-dark text-bold"> Cuidadora do dia: {formData.cuidadora_do_dia}</p>
+              <h3 className="text-dark">Sinais Vitais</h3>
+              <p className="text-dark"> Pressão Arterial: {formData.pressao} mmHg</p>   
+              <p className="text-dark"> Saturação: {formData.temperatura} SpO2%</p>   
+              <p className="text-dark"> Temperatura: {formData.temperatura} &deg;C </p>   
+
+              <h3 className="text-dark">Pela Manhã</h3>
+              <p className="text-dark"> Remedios: {formData.manha_remedios_text}</p>   
+              <p className="text-dark"> Refeição: {formData.manha_higiene_text}</p>   
+              <p className="text-dark"> Higiene: {formData.manha_higiene_text} </p>  
+              <p className="text-dark"> Atividade: {formData.manha_atividade_text}</p> 
+              <p className="text-dark"> Comportamento: {formData.manha_humor_select}</p> 
+
+              <h3 className="text-dark">A Tarde</h3>
+              <p className="text-dark"> Remedios: {formData.tarde_remedios_text}</p>   
+              <p className="text-dark"> Refeição: {formData.tarde_higiene_text}</p>   
+              <p className="text-dark"> Higiene: {formData.tarde_higiene_text} </p>  
+              <p className="text-dark"> Atividade: {formData.tarde_atividade_text}</p> 
+              <p className="text-dark"> Comportamento: {formData.tarde_humor_select}</p> 
+
+              <h3 className="text-dark">A Noite</h3>
+              <p className="text-dark"> Remedios: {formData.noite_remedios_text}</p>   
+              <p className="text-dark"> Refeição: {formData.noite_higiene_text}</p>   
+              <p className="text-dark"> Higiene: {formData.noite_higiene_text} </p>  
+              <p className="text-dark"> Atividade: {formData.noite_atividade_text}</p> 
+              <p className="text-dark"> Comportamento: {formData.noite_humor_select}</p> 
+
+              <div className="text-dark"> 
+                <span className="text-bold"> Outras observações: </span> 
+                <span>{formData.acontecimentos}</span> 
+              </div>
+
+              <p className="text-dark"> Em geral, o paciente teve um dia <span>{sentiment} </span></p>             
+              </div>
+               <div className="modal-footer">
+                <Button variant="secondary" onClick={handleClose}>Fechar</Button>
+                <Button variant="success" onClick={createNote}>Salvar Anotações do dia</Button>
+               </div>
+           
+          </Modal>
+        </div>
 
         <div>           
           {errors.length > 0 &&                 
@@ -174,6 +252,7 @@ function Home() {
     );
   }
   function ShowNotes(){
+
      return (                     
           <div className="my-5 container outer">
               <h2> Histórico de Anotações </h2>              
@@ -190,10 +269,9 @@ function Home() {
                   <div className="col-sm text font-weight-bold"></div>  
                 </div>        
                 {notes.map(note => ( 
-                  <div className="row" key={note.id || note.title}>
-                
+                  <div className="row" key={note.id || note.title}>                
                   <div className="col-md-3 text">{note.title}</div>
-                  <div className="col-sm text">{covertIDToName(note.cuidadora_do_dia)}</div>
+                  <div className="col-sm text">{note.cuidadora_do_dia}</div>
                   <div className="col-sm text">{note.sentiment_predominant}</div>
                   <div className="col-sm text">{note.pressao} mmHg</div>
                   <div className="col-sm text">{note.saturacao} SpO<span className="tiny">2%</span></div>
@@ -228,7 +306,7 @@ function Home() {
   }
 
   function SpeechToText(props) {
-    const [response] = useState("");
+    
     function AudioRecorder(props) {      
       const [recording, setRecording] = useState(false);
       const [micStream, setMicStream] = useState();
@@ -327,60 +405,36 @@ function Home() {
     return (
      
       <div>         
-        <AudioRecorder finishRecording={convertFromBuffer} />          
-        <span>{response}</span>        
+        <AudioRecorder finishRecording={convertFromBuffer} />                        
       </div>
     );
   }
 
 
-
+  function formValidation(){
+      console.log("validate form");
+      if (!formData.cuidadora_do_dia ) {setErrors("Por favor, selecione uma cuidadora");return; }
+      if (!formData.pressao ) {setErrors("Por favor, anote a pressão arterial do paciente");return; }
+      if (!formData.saturacao ) {setErrors("Por favor, anote a saturação de oxigênio do paciente");return; }
+      if (!formData.temperatura ) {setErrors("Por favor, anote a temperatura corporal do paciente");return; }
+      if (!formData.manha_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a manhã?");return; }
+      if (!formData.tarde_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a tarde?");return; }
+      if (!formData.noite_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a noite?");return; }
+      if (!formData.manha_atividade_text && 
+            !formData.manha_higiene_text && 
+            !formData.manha_remedios_text &&         
+            !formData.manha_refeicao_text ) {setErrors("Precisamos de mais informação no turno da manhã");return; }
+      if (!formData.tarde_atividade_text && 
+            !formData.tarde_higiene_text && 
+            !formData.tarde_remedios_text &&
+            !formData.tarde_refeicao_text ) {setErrors("Precisamos de mais informação no turno da tarde");return; }
+      if (!formData.noite_atividade_text && 
+            !formData.noite_higiene_text && 
+            !formData.noite_remedios_text &&
+            !formData.noite_refeicao_text ) {setErrors("Precisamos de mais informação no turno da noite");return; }
+      return 0;
+  }
   
-  function interpretFromPredictions() {
-      let dataToSentiment = formData.manha_atividade_text + ' ' +                                                       
-                            formData.manha_higiene_text + ' ' +
-                            formData.manha_atividade_text + ' ' +
-                            formData.manha_humor_select + ' ' +                                                   
-                            formData.tarde_higiene_text + ' ' +
-                            formData.tarde_atividade_text + ' ' +
-                            formData.tarde_humor_select + ' ' +                           
-                            formData.noite_higiene_text + ' ' +
-                            formData.noite_atividade_text + ' ' +
-                            formData.noite_humor_select + ' ' +
-                            formData.acontecimentos;
-      console.log("Data to analyze sentiment ", dataToSentiment);
-      Predictions.interpret({
-        text: {
-          source: {
-            text: dataToSentiment,
-          },
-          type: "ALL"
-        }
-      }).then(result => {
-             setSentimentFormFields(JSON.stringify(result, null, 2))
-             createNote()
-      })
-     
-        .catch(err => setSentimentResponse(JSON.stringify(err, null, 2)))
-  }
-
-  function setSentimentFormFields(data){          
-      let s = JSON.parse(data);     
-      let sentiment = s.textInterpretation.sentiment;      
-      let sentiment_value = JSON.stringify(sentiment, null, 2);
-      console.log("sentiment_value",sentiment_value);
-      let sentiment_p = sentiment.predominant;     
-      setFormData({ ...formData, 'sentiment': sentiment_value});
-      setFormData({ ...formData, 'sentiment_predominant': sentiment_p});
-      setSentimentResponse(sentiment_p);
-      return(
-          <div>
-            <input type="hidden"  value={sentiment_value} name="sentiment" id="sentiment" readOnly  />
-            <input type="hidden"  value={sentiment_p} name="sentiment_predominant" id="sentiment_predominant" readOnly  />
-          </div>
-      );
-
-  }
 
 
   function TextInterpretation() {
@@ -394,7 +448,7 @@ function Home() {
       <div>  
       <div className="outer">    
           <div className="inner white curve">           
-            <label htmlFor="acontecimentos">Relate os acontecimentos</label><br />
+            <label htmlFor="acontecimentos">Observações:</label><br />
             <textarea id="acontecimentos" 
                       className="form-control" rows="5" cols="35" 
                       defaultValue={textToInterpret} 
@@ -402,7 +456,7 @@ function Home() {
                
           </div>        
         </div>
-        <div>{sentimentResponse}</div> 
+        <div>Sentiment Response: {sentiment}</div> 
       </div>
     );
   }
@@ -559,11 +613,7 @@ function Home() {
     );
   }
 
-  function covertIDToName(id){
-    if(!id) { return; }
-    if ( id == 1) return "Miriam";
-    if ( id == 2) return "Samira";
-  }
+
     
 
   function AssistantNames(){
@@ -580,7 +630,7 @@ function Home() {
                 required="required"            
                 onChange={e => setFormData({ ...formData, 'cuidadora_do_dia': e.target.value})} 
                 />
-          <label  className="form-check-label" htmlFor="1"> Miriam Sobrenome</label>
+          <label  className="form-check-label" htmlFor="1"> Miriam</label>
         </div>
         <div className="form-check form-check-inline">       
           <input className="form-check-input"  
@@ -589,7 +639,7 @@ function Home() {
                 value="2"
                 required="required"     
                 onChange={e => setFormData({ ...formData, 'cuidadora_do_dia': e.target.value})} />
-          <label  className="form-check-label" htmlFor="2"> Samira Sobrenome</label>
+          <label  className="form-check-label" htmlFor="2"> Samira</label>
         </div>
         </div>
       </div>
@@ -634,6 +684,7 @@ function Home() {
   }
 
   function DataForm(){
+    console.log("sentiment in form", sentiment);
     return (
       <form className="" onSubmit={handleSubmit} >     
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
@@ -646,7 +697,17 @@ function Home() {
               <div>
                 <div className="aligned"> {TextInterpretation()} </div> 
                 <div className="aligned"> <SpeechToText />  </div>
-                </div>            
+              </div>
+              <div>               
+                <input type="hidden"  
+                      defaultValue={sentimentObject} 
+                      name="sentiment"                      
+                      id="sentiment"   />
+                <input type="hidden"  
+                      defaultValue={sentiment} 
+                      name="sentiment_predominant"                       
+                      id="sentiment_predominant"   />
+              </div>         
               <ShowSaveNoteButton />
         </form>
     );
