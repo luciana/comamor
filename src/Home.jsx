@@ -127,7 +127,9 @@ function Home() {
         await API.graphql({ query: createNoteMutation, variables: { input: formData } });
         setNotes([ ...notes, formData ]);
         setFormData(initialFormState);
-      } catch (err) {setErrors(err.errors[0].message );
+      } catch (err) {
+        setErrors(err.errors[0].message );
+        setFormData(initialFormState);
       } finally { handleClose(); }
   }
 
@@ -193,7 +195,12 @@ function Home() {
       <div className="py-1">
         <div> <button type="button" className="btn btn-warning" onClick={interpretFromPredictions}> Prevê Anotações</button>  </div>
         <div>          
-          <Modal show={show} onHide={handleClose}>
+          <Modal show={show} 
+                onHide={handleClose} 
+                animation={false}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered>
               <div className="modal-header text-dark">Resumo de Anotações</div>
               <div className="modal-body">
               
@@ -416,7 +423,9 @@ function Home() {
       if (!formData.cuidadora_do_dia ) {setErrors("Por favor, selecione uma cuidadora");return; }
       if (!formData.pressao ) {setErrors("Por favor, anote a pressão arterial do paciente");return; }
       if (!formData.saturacao ) {setErrors("Por favor, anote a saturação de oxigênio do paciente");return; }
+      if (isNaN(formData.saturacao)) {setErrors("Por favor, digite um número para registrar a saturação de oxigênio do paciente");return; }
       if (!formData.temperatura ) {setErrors("Por favor, anote a temperatura corporal do paciente");return; }
+       if (isNaN(formData.temperatura)) {setErrors("Por favor, digite um número para registrar a temperatura do paciente");return; }     
       if (!formData.manha_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a manhã?");return; }
       if (!formData.tarde_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a tarde?");return; }
       if (!formData.noite_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a noite?");return; }
@@ -456,7 +465,7 @@ function Home() {
                
           </div>        
         </div>
-        <div>Sentiment Response: {sentiment}</div> 
+        <div>Análise de comportamento: {sentiment}</div> 
       </div>
     );
   }
@@ -538,7 +547,7 @@ function Home() {
         <textarea id="tarde_higiene_text" 
                   className="form-control" rows="2" cols="35"
                   value={formData.tarde_higiene_text}
-                  onChange={e => setFormData({ ...formData, 'tarde_higiene_text': e.target.value})} 
+                  onChange={e => setFormData({ ...formData, 'tarde_higiene_text': e.target.value || ""})} 
                   ></textarea> 
         <label htmlFor="tarde_atividade_text">Atividade</label>
         <textarea id="tarde_atividade_text" 
@@ -684,7 +693,6 @@ function Home() {
   }
 
   function DataForm(){
-    console.log("sentiment in form", sentiment);
     return (
       <form className="" onSubmit={handleSubmit} >     
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
