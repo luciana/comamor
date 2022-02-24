@@ -45,7 +45,7 @@ function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
   const [notes, setNotes] = useState([]);
   const [formData, setFormData] = useState(initialFormState);
-  console.log('form initial state set to empty', formData);
+  console.log('form initial state', formData);
   const [comportamentoType, setComportamentoType] = useState([{ label: "Loading ...", value: "" }]);
   const [loading, setLoading] = React.useState(true);
   const [sentiment, setSentiment] = useState("")
@@ -94,13 +94,15 @@ function Home() {
     };
   },[]);
 
-   function handleSubmit(e) {    
+
+/* doesn't seem like this method is getting triggered */
+   function handleSubmit(e) {  
+      console.log("handleSubmit");
       if (e.target.checkValidity()) {
           e.preventDefault()
           console.log("form data from form submit", formData);
           setFormData(initialFormState);
           console.log("empty form data from form submit");
-
         } else {
           console.log("form data not valid", formData);
           setErrors(formData);
@@ -110,10 +112,8 @@ function Home() {
   }
   
   function handleChange(e){
-    e.persist();
-    console.log('handle Change', e.target.name);
+    e.persist();   
     setFormData({ ...formData, [e.target.name]: e.target.value })
-    // Check and see if errors exist, and remove them from the error object:
     if ( !!errors ) { setErrors([]);}
   };
 
@@ -285,7 +285,7 @@ function Home() {
               </div>
                <div className="modal-footer">
                 <Button variant="secondary" onClick={handleClose}>Fechar</Button>
-                <Button variant="success" onClick={createNote}>Salvar Anotações do dia</Button>
+                <Button type="submit" variant="success" onClick={createNote}>Salvar Anotações do dia</Button>
                </div>
            
           </Modal>
@@ -510,8 +510,7 @@ function Home() {
                       onChange={setText}></textarea>          
                
           </div>        
-        </div>
-        <div>Análise de comportamento: {sentiment}</div> 
+        </div>       
       </div>
     );
   }
