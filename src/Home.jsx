@@ -668,7 +668,8 @@ function Home() {
                   id="pressao"                 
                   placeholder="120/80"    
                   required="required"            
-                  defaultValue={formData.pressao}                 
+                  defaultValue={formData.pressao}   
+                  inputMode='numeric'             
                   name="pressao" maxLength="10" size="6"
                   onChange={e => setFormData({ ...formData, 'pressao': e.target.value})}  />
           <label className="block" htmlFor="saturacao" >Saturação (SpO<span className="tiny">2%</span> )</label>
@@ -676,13 +677,15 @@ function Home() {
                   id="saturacao"                 
                   placeholder="95" name="saturacao" maxLength="10" size="6"
                   defaultValue={formData.saturacao}                 
-                  required="required"     
+                  required="required"    
+                  type='number' inputMode='numeric' pattern="[0-9]*"  
                   onChange={e => setFormData({ ...formData, 'saturacao': e.target.value})}  />
           <label className="block" htmlFor="name">Temperatura (&deg;C)</label>
           <input className="form-control" 
                   id="temperatura"                 
                   placeholder="37" 
-                  required="required"     
+                  required="required"  
+                  type='number' inputMode='numeric' pattern="[0-9]*"    
                   name="temperatura" maxLength="10" size="6"  
                   defaultValue={formData.temperatura}
                   onChange={e => setFormData({ ...formData, 'temperatura': e.target.value})}  /> 
