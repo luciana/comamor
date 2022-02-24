@@ -51,7 +51,6 @@ function Home() {
   const [sentiment, setSentiment] = useState("")
   const [sentimentObject, setSentimentObject] = useState("")
   const [errors, setErrors] = useState([]);
-  console.log('set error', errors);
   const [show, setShow] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -99,6 +98,9 @@ function Home() {
       if (e.target.checkValidity()) {
           e.preventDefault()
           console.log("form data from form submit", formData);
+          setFormData(initialFormState);
+          console.log("empty form data from form submit");
+
         } else {
           console.log("form data not valid", formData);
           setErrors(formData);
@@ -109,10 +111,10 @@ function Home() {
   
   function handleChange(e){
     e.persist();
-    console.log('handle Change');
+    console.log('handle Change', e.target.name);
     setFormData({ ...formData, [e.target.name]: e.target.value })
     // Check and see if errors exist, and remove them from the error object:
-    if ( !!errors ) { console.log('handle Change errors'); setErrors([]);  console.log('handle Change cleared error');}
+    if ( !!errors ) { setErrors([]);}
   };
 
   async function fetchNotes() {
@@ -134,7 +136,9 @@ function Home() {
             console.log("ERROR: creating notes", err.errors[0]);
             if(err.errors[0].message) setErrors(err.errors[0].message );              
         }             
-      } finally { handleClose(); }
+      } finally { 
+        handleClose(); 
+      }
   }
 
   async function deleteNote({ id }) {
@@ -144,7 +148,10 @@ function Home() {
       await API.graphql({ query: deleteNoteMutation, variables: { input: { id } }});
     } catch (err) {
       console.log("ERROR: deleting notes", err);
-      setErrors(err.errors[0].message );
+       if(err.errors[0]){
+          console.log("ERROR: deleting notes", err.errors[0]);
+          if(err.errors[0].message) setErrors(err.errors[0].message );              
+        }
       }
   }
 
@@ -155,7 +162,10 @@ function Home() {
       await API.graphql({ query: updateNoteMutation, variables: { input: formData }});
     } catch (err) {
       console.log("ERROR: updating notes", err);
-      setErrors(err.errors[0].message );
+       if(err.errors[0]){
+          console.log("ERROR: updating notes", err.errors[0]);
+          if(err.errors[0].message) setErrors(err.errors[0].message );              
+        }
       }
   }
 
@@ -521,28 +531,32 @@ function Home() {
         <h3> <FaRegSun className="faregsun"/>  Manhã </h3>
         <label htmlFor="manha_remedios_text">Remédios</label><br />
         <textarea id="manha_remedios_text" 
+                  name="manha_remedios_text"
                   className="form-control" rows="2" cols="35"
-                  value={formData.manha_remedios_text}                
+                  defaultValue={formData.manha_remedios_text}                
                   onChange={e => handleChange(e)} 
                   ></textarea> 
         <label htmlFor="manha_refeicao_text">Refeição</label>
         <textarea id="manha_refeicao_text" 
+                  name="manha_refeicao_text"
                   className="form-control" rows="2" cols="35"
-                  value={formData.manha_refeicao_text}
+                  defaultValue={formData.manha_refeicao_text}
                   onChange={e => handleChange(e)} 
                   ></textarea> 
         <label htmlFor="manha_higiene_text">Higiene</label>
         <textarea id="manha_higiene_text"
+                  name="manha_higiene_text"
                   className="form-control" rows="2" cols="35"
-                  value={formData.manha_higiene_text}
+                  defaultValue={formData.manha_higiene_text}
                   onChange={e => handleChange(e)} 
                   ></textarea> 
         <label htmlFor="manha_atividade_text">Atividade</label>
         <textarea id="manha_atividade_text"
-                    className="form-control" rows="2" cols="35"
-                    value={formData.manha_atividade_text}
-                    onChange={e => handleChange(e)} 
-                    ></textarea> <br />
+                  name="manha_atividade_text"
+                  className="form-control" rows="2" cols="35"
+                  defaultValue={formData.manha_atividade_text}
+                  onChange={e => handleChange(e)} 
+                  ></textarea> <br />
         <div className="form-group was-validated">
           <label htmlFor="manha_humor_select">Qual o comportamento?</label>
           <select disabled={loading}
@@ -568,27 +582,31 @@ function Home() {
         <div className="inner curve white">
         <h3> <FaSun className="fasun"/>  Tarde </h3>
         <label htmlFor="tarde_remedios_text">Remédios</label><br />
-        <textarea id="tarde_remedios_text" 
+        <textarea id="tarde_remedios_text"
+                  name="tarde_remedios_text"
                   className="form-control" rows="2" cols="35"
-                  value={formData.tarde_remedios_text}
+                  defaultValue={formData.tarde_remedios_text}
                   onChange={e => handleChange(e)} 
                 ></textarea> 
         <label htmlFor="tarde_refeicao_text">Refeição</label>
         <textarea id="tarde_refeicao_text" 
+                  name="tarde_refeicao_text"
                   className="form-control" rows="2" cols="35"
-                  value={formData.tarde_refeicao_text}
+                  defaultValue={formData.tarde_refeicao_text}
                   onChange={e => handleChange(e)} 
                 ></textarea> 
         <label htmlFor="tarde_higiene_text">Higiene</label>
         <textarea id="tarde_higiene_text" 
+                  name="tarde_higiene_text"
                   className="form-control" rows="2" cols="35"
-                  value={formData.tarde_higiene_text}
+                  defaultValue={formData.tarde_higiene_text}
                   onChange={e => handleChange(e)} 
         ></textarea> 
         <label htmlFor="tarde_atividade_text">Atividade</label>
         <textarea id="tarde_atividade_text" 
+                  name="tarde_atividade_text"
                   className="form-control" rows="2" cols="35"
-                  value={formData.tarde_atividade_text}
+                  defaultValue={formData.tarde_atividade_text}
                   onChange={e => handleChange(e)} 
                  ></textarea> <br />
         <div className="form-group was-validated">
@@ -615,26 +633,30 @@ function Home() {
         <h3> <FaStar className="fastar"/>  Noite </h3>
         <div className="form-group">
         <label htmlFor="noite_remedios_text">Remédios</label><br />
-        <textarea id="noite_remedios_text" 
+        <textarea id="noite_remedios_text"
+                  name="noite_remedios_text" 
                   className="form-control"  rows="2" cols="35"
-                  value={formData.noite_remedios_text}
+                  defaultValue={formData.noite_remedios_text}
                   onChange={e => handleChange(e)}
                   ></textarea> 
         <label htmlFor="noite_refeicao_text">Refeição</label>
         <textarea id="noite_refeicao_text"  
+                  name="noite_refeicao_text" 
                   className="form-control" rows="2" cols="35"
-                  value={formData.noite_refeicao_text}
+                  defaultValue={formData.noite_refeicao_text}
                   onChange={e => handleChange(e)}
                   ></textarea> 
         <label htmlFor="noite_higiene_text">Higiene</label>
         <textarea id="noite_higiene_text" 
+                  name="noite_higiene_text" 
                   className="form-control"  rows="2" cols="35"
-                  value={formData.noite_higiene_text}
+                  defaultValue={formData.noite_higiene_text}
                   onChange={e => handleChange(e)}                  ></textarea> 
         <label htmlFor="noite_atividade_text">Atividade</label>
         <textarea id="noite_atividade_text"  
+                  name="noite_atividade_text" 
                   className="form-control" rows="2" cols="35"
-                  value={formData.noite_atividade_text}
+                  defaultValue={formData.noite_atividade_text}
                   onChange={e => handleChange(e)} 
                   ></textarea> <br />
         <div className="form-group was-validated">
