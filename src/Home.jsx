@@ -100,9 +100,7 @@ function Home() {
       console.log("handleSubmit");
       if (e.target.checkValidity()) {
           e.preventDefault()
-          console.log("form data from form submit", formData);
-          setFormData(initialFormState);
-          console.log("empty form data from form submit");
+          console.log("form data from form submit", formData);     
           createNote();
         } else {
           console.log("form data not valid", formData);
@@ -256,21 +254,21 @@ function Home() {
 
               <h4 className="text-dark">Pela Manhã</h4>
               <p className="text-dark"> Remedios: {formData.manha_remedios_text}</p>   
-              <p className="text-dark"> Refeição: {formData.manha_higiene_text}</p>   
+              <p className="text-dark"> Refeição: {formData.manha_refeicao_text}</p>   
               <p className="text-dark"> Higiene: {formData.manha_higiene_text} </p>  
               <p className="text-dark"> Atividade: {formData.manha_atividade_text}</p> 
               <p className="text-dark"> Comportamento: {formData.manha_humor_select}</p> 
 
               <h4 className="text-dark">A Tarde</h4>
               <p className="text-dark"> Remedios: {formData.tarde_remedios_text}</p>   
-              <p className="text-dark"> Refeição: {formData.tarde_higiene_text}</p>   
+              <p className="text-dark"> Refeição: {formData.tarde_refeicao_text}</p>   
               <p className="text-dark"> Higiene: {formData.tarde_higiene_text} </p>  
               <p className="text-dark"> Atividade: {formData.tarde_atividade_text}</p> 
               <p className="text-dark"> Comportamento: {formData.tarde_humor_select}</p> 
 
               <h4 className="text-dark">A Noite</h4>
               <p className="text-dark"> Remedios: {formData.noite_remedios_text}</p>   
-              <p className="text-dark"> Refeição: {formData.noite_higiene_text}</p>   
+              <p className="text-dark"> Refeição: {formData.noite_refeicao_text}</p>   
               <p className="text-dark"> Higiene: {formData.noite_higiene_text} </p>  
               <p className="text-dark"> Atividade: {formData.noite_atividade_text}</p> 
               <p className="text-dark"> Comportamento: {formData.noite_humor_select}</p> 
@@ -286,7 +284,7 @@ function Home() {
               </div>
                <div className="modal-footer">
                 <Button variant="secondary" onClick={handleClose}>Fechar</Button>
-                <Button type="submit" variant="success" >Salvar Anotações do dia</Button>
+                <Button variant="success" onClick={handleSubmit}>Salvar Anotações do dia</Button>
                </div>
            
           </Modal>
@@ -468,7 +466,6 @@ function Home() {
 
 
   function formValidation(){
-      console.log("validate form");
       if (!formData.cuidadora_do_dia ) {setErrors("Por favor, selecione uma cuidadora");return; }
       if (!formData.pressao ) {setErrors("Por favor, anote a pressão arterial do paciente");return; }
       if (!formData.saturacao ) {setErrors("Por favor, anote a saturação de oxigênio do paciente");return; }
@@ -753,7 +750,7 @@ function Home() {
 
   function DataForm(){
     return (
-      <form onSubmit={handleSubmit} >     
+      <form className="form" name="formEntry" id="formEntry" alt="the form fields">     
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
         <input type="hidden"  value={new Date().toLocaleString()} name="title" id="title" readOnly  />
                 <div> {AssistantNames()} </div> 
