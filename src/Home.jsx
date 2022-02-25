@@ -103,6 +103,7 @@ function Home() {
           console.log("form data from form submit", formData);
           setFormData(initialFormState);
           console.log("empty form data from form submit");
+          createNote();
         } else {
           console.log("form data not valid", formData);
           setErrors(formData);
@@ -285,7 +286,7 @@ function Home() {
               </div>
                <div className="modal-footer">
                 <Button variant="secondary" onClick={handleClose}>Fechar</Button>
-                <Button type="submit" variant="success" onClick={createNote}>Salvar Anotações do dia</Button>
+                <Button type="submit" variant="success" >Salvar Anotações do dia</Button>
                </div>
            
           </Modal>
@@ -434,7 +435,7 @@ function Home() {
       return (
         <div className="audioRecorder">
           <div>
-            {recording && <button name="stop recording" onClick={stopRecording} className="button round white" ><FaMicrophone className="famic recording" /></button>}
+            {recording && <button name="stop recording" onClick={stopRecording} className="button round  recording" ><FaMicrophone className="famic" /></button>}
             {!recording && <button name="start recording"  onClick={startRecording} className="button round white"><FaMicrophone className='famic'/></button>}
           </div>
         </div>
@@ -752,7 +753,7 @@ function Home() {
 
   function DataForm(){
     return (
-      <form className="" onSubmit={handleSubmit} >     
+      <form onSubmit={handleSubmit} >     
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
         <input type="hidden"  value={new Date().toLocaleString()} name="title" id="title" readOnly  />
                 <div> {AssistantNames()} </div> 
