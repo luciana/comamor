@@ -1,5 +1,5 @@
 /* eslint-disable import/first */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import logo from './logo.svg';
 import {Modal, Button} from 'react-bootstrap';
 import { Amplify, API } from 'aws-amplify';
@@ -54,7 +54,8 @@ function Home() {
   const [show, setShow] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-  
+  const acontecimentoField = useRef(null)
+  function handleFocus(){ acontecimentoField.current.focus()}
   
   useEffect(()=>{
     let unmounted = false;
@@ -94,8 +95,6 @@ function Home() {
     };
   },[]);
 
-
-/* doesn't seem like this method is getting triggered */
    function handleSubmit(e) {  
       console.log("handleSubmit");
       if (e.target.checkValidity()) {
@@ -115,6 +114,11 @@ function Home() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
     if ( !!errors ) { setErrors([]);}
   };
+
+  
+
+  
+
 
   async function fetchNotes() {
     try{
@@ -329,7 +333,7 @@ function Home() {
                   <div className="col-sm text">{note.saturacao} SpO<span className="tiny">2%</span></div>
                   <div className="col-sm text">{note.temperatura} &deg;C</div>
                   <div className="col-sm text"><button onClick={() => deleteNote(note)}>Deletar nota</button>  </div>
-                  <div className="col-sm text"><button onClick={() => updateNote(note)}>Update nota</button>  </div>
+                  <div className="col-sm text">  </div>
                   </div>             
                 ))}
               </div>
@@ -390,6 +394,7 @@ function Home() {
 
       async function startRecording() {
         console.log('start recording');
+        handleFocus(); /*set focus on aconteciments field */
         audioBuffer.reset();
         const micStream = new MicrophoneStream();
 
@@ -417,6 +422,7 @@ function Home() {
   
       async function stopRecording() {
         console.log('stop recording');
+        
         const { finishRecording } = props;
   
         micStream.stop();
@@ -503,6 +509,7 @@ function Home() {
           <div className="inner white curve">           
             <label htmlFor="acontecimentos">Observações:</label><br />
             <textarea id="acontecimentos" 
+                      ref={acontecimentoField}
                       className="form-control" rows="5" cols="35" 
                       defaultValue={textToInterpret} 
                       onChange={setText}></textarea>          
@@ -721,8 +728,7 @@ function Home() {
                   id="pressao"                 
                   placeholder="120/80"    
                   required="required"            
-                  defaultValue={formData.pressao}   
-                  inputMode='numeric'             
+                  defaultValue={formData.pressao}                                
                   name="pressao" maxLength="10" size="6"
                    onChange={e => handleChange(e)}  />
           <label className="block" htmlFor="saturacao" >Saturação (SpO<span className="tiny">2%</span> )</label>
