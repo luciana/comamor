@@ -138,10 +138,15 @@ function Home() {
         setNotes([ ...notes, formData ]);       
       }catch (err) {
         console.log("ERROR: creating notes", err);
-        if(err.errors[0]){
-            console.log("ERROR: creating notes", err.errors[0]);
-            if(err.errors[0].message) setErrors(err.errors[0].message );              
-        }             
+        if(err.errors){
+          if(err.errors[0]){
+              console.log("ERROR: creating notes", err.errors[0]);
+              if(err.errors[0].message) setErrors(err.errors[0].message );              
+          }   
+        }else{
+          console.log("ERROR: creating notes", err);
+          setErrors(err);
+        }      
       } finally { 
         handleClose(); 
       }
@@ -158,6 +163,29 @@ function Home() {
           console.log("ERROR: deleting notes", err.errors[0]);
           if(err.errors[0].message) setErrors(err.errors[0].message );              
         }
+      }
+  }
+
+
+  function selectNote(note){
+      const id = note.id;
+
+      if(id){
+      
+        const index = notes.findIndex(i => i.id === note.id)
+        const notes1 = [...notes]
+        console.log("notes1", notes1);
+        
+        delete  notes1[index].patient;
+        delete  notes1[index].comments;
+        delete notes1[index].createdAt;
+        delete notes1[index].updatedAt
+
+        console.log("updated notes1", notes1);
+        setNotes( notes1 )
+        const thenote= notes1[index];
+        setFormData({ title: thenote.title, parentID: 1,
+                       manha_refeicao_text: thenote.manha_refeicao_text } );
       }
   }
 
@@ -201,9 +229,10 @@ function Home() {
       delete notes1[index].createdAt;
       delete notes1[index].updatedAt
 
-        console.log("updated notes1", notes1);
+      console.log("updated notes1", notes1);
       setNotes( notes1 )
-      await API.graphql({ query: updateNoteMutation, variables: { input: updatedNoteData }});
+      setFormData(notes1[index]);
+      /*await API.graphql({ query: updateNoteMutation, variables: { input: updatedNoteData }});*/
     } catch (err) {
       console.log("ERROR: updating notes", err);
       if(err.errors){
@@ -358,8 +387,7 @@ function Home() {
           <div className="my-5 container outer">
               <h2> Histórico de Anotações </h2>              
               <div className="row inner curve white" >
-                  <div className="row strong">
-                 
+                  <div className="row strong">                 
                   <div className="col-md-3 text font-weight-bold">Dia</div>
                   <div className="col-sm text font-weight-bold">Cuidadora</div>
                   <div className="col-sm text font-weight-bold ">Em Geral</div>
@@ -378,7 +406,7 @@ function Home() {
                   <div className="col-sm text">{note.saturacao} SpO<span className="tiny">2%</span></div>
                   <div className="col-sm text">{note.temperatura} &deg;C</div>
                   <div className="col-sm text"><button onClick={() => deleteNote(note)}>Deletar nota</button>  </div>                 
-                  <div className="col-sm text"><button onClick={() => updateNote(note)}>Editar nota</button>  </div>
+                  <div className="col-sm text"><button onClick={() => selectNote(note)}>Editar nota</button>  </div>
                   </div>
                             
                 ))}
@@ -583,7 +611,7 @@ function Home() {
         <textarea id="manha_remedios_text" 
                   name="manha_remedios_text"
                   className="form-control" rows="2" cols="35"
-                  defaultValue={formData.manha_remedios_text}                
+                  defaultValue={formData.manha_remedios_text}                           
                   onChange={e => handleChange(e)} 
                   ></textarea> 
         <label htmlFor="manha_refeicao_text">Refeição</label>
