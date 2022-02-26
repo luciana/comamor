@@ -184,8 +184,30 @@ function Home() {
         console.log("updated notes1", notes1);
         setNotes( notes1 )
         const thenote= notes1[index];
-        setFormData({ title: thenote.title, parentID: 1,
-                       manha_refeicao_text: thenote.manha_refeicao_text } );
+        setFormData({ title: thenote.title, 
+                        parentID: 1,
+                        cuidadora_do_dia: thenote.cuidadora_do_dia,
+                        pressao:thenote.pressao,
+                        saturacao: thenote.saturacao,
+                        temperatura:thenote.temperatura,
+                        manha_remedios_text: thenote.manha_remedios_text,
+                        manha_refeicao_text: thenote.manha_refeicao_text,
+                        manha_higiene_text: thenote.manha_higiene_text,
+                        manha_atividade_text: thenote.manha_atividade_text,
+                        manha_humor_select: thenote.manha_humor_select,
+                        tarde_remedios_text: thenote.tarde_remedios_text,
+                        tarde_refeicao_text: thenote.tarde_refeicao_text,
+                        tarde_higiene_text: thenote.tarde_higiene_text,
+                        tarde_atividade_text: thenote.tarde_atividade_text,
+                        tarde_humor_select: thenote.tarde_humor_select,
+                        noite_remedios_text: thenote.noite_remedios_text,
+                        noite_refeicao_text: thenote.noite_refeicao_text,
+                        noite_higiene_text: thenote.noite_higiene_text,
+                        noite_atividade_text: thenote.noite_atividade_text,
+                        noite_humor_select: thenote.noite_humor_select,
+                        acontecimentos:thenote.acontecimentos,                         
+                        sentiment: thenote.sentimen
+                       } );
       }
   }
 
