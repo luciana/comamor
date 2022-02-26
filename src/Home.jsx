@@ -19,7 +19,7 @@ import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, upd
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
 const initialFormState = { title: new Date().toLocaleString(), 
-                          patientID: '1',
+                          patientID: '1',           
                           cuidadora_do_dia: null,
                           pressao:'',
                           saturacao: null,
@@ -124,7 +124,10 @@ function Home() {
     try{
       const apiData = await API.graphql({ query: listNotes });
       setNotes(apiData.data.listNotes.items);
-     } catch (err) {setErrors(err.errors[0].message );}
+     } catch (err) {
+       console.log("ERROR: Fetching Notes")
+       setErrors(err.errors[0].message );
+       }
   }
 
    async function createNote() {
@@ -158,18 +161,61 @@ function Home() {
       }
   }
 
-   async function updateNote({ id }) {
-    try{
-      const newNotesArray = notes.filter(note => note.id !== id);
-      setNotes(newNotesArray);
-      await API.graphql({ query: updateNoteMutation, variables: { input: formData }});
+   async function updateNote( note ) {
+    console.log("note from updateNote", note  );
+    const updatedNoteData = {
+         ...note,
+          title: new Date().toLocaleString(),          
+          cuidadora_do_dia: 2,
+          pressao:'',
+          saturacao: null,
+          temperatura:null,
+          manha_remedios_text: '',
+          manha_refeicao_text: '',
+          manha_higiene_text: '',
+          manha_atividade_text: '',
+          manha_humor_select: '',
+          tarde_remedios_text: '',
+          tarde_refeicao_text: '',
+          tarde_higiene_text: '',
+          tarde_atividade_text: '',
+          tarde_humor_select: '',
+          noite_remedios_text: '',
+          noite_refeicao_text: '',
+          noite_higiene_text: '',
+          noite_atividade_text: '',
+          noite_humor_select: '',
+          sentiment: '',
+          acontecimentos:'',  
+          patientID: 2          
+    }
+    try{      
+      const index = notes.findIndex(i => i.id === note.id)
+      console.log("index", index);
+      const notes1 = [...notes]
+      console.log("notes1", notes1);
+      notes1[index] = updatedNoteData
+      console.log("notes1[index]", notes1[index]);
+      delete  notes1[index].patient;
+      delete  notes1[index].comments;
+      delete notes1[index].createdAt;
+      delete notes1[index].updatedAt
+
+        console.log("updated notes1", notes1);
+      setNotes( notes1 )
+      await API.graphql({ query: updateNoteMutation, variables: { input: updatedNoteData }});
     } catch (err) {
       console.log("ERROR: updating notes", err);
+      if(err.errors){
        if(err.errors[0]){
           console.log("ERROR: updating notes", err.errors[0]);
           if(err.errors[0].message) setErrors(err.errors[0].message );              
         }
+      }else{
+        console.log("ERROR: updating notes", err);
+        setErrors(err);
       }
+    }
   }
 
   function parseSentimentData(sentiment_string){
@@ -323,8 +369,7 @@ function Home() {
                   <div className="col-sm text font-weight-bold"></div>  
                   <div className="col-sm text font-weight-bold"></div>  
                 </div>        
-                {notes.map(note => ( 
-                 
+                {notes.map(note => (                  
                   <div className="row" key={note.id || note.title}>                
                   <div className="col-md-3 text">{note.title}</div>
                   <div className="col-sm text">{note.cuidadora_do_dia}</div>
@@ -332,9 +377,10 @@ function Home() {
                   <div className="col-sm text">{note.pressao} mmHg</div>
                   <div className="col-sm text">{note.saturacao} SpO<span className="tiny">2%</span></div>
                   <div className="col-sm text">{note.temperatura} &deg;C</div>
-                  <div className="col-sm text"><button onClick={() => deleteNote(note)}>Deletar nota</button>  </div>
-                  <div className="col-sm text">  </div>
-                  </div>             
+                  <div className="col-sm text"><button onClick={() => deleteNote(note)}>Deletar nota</button>  </div>                 
+                  <div className="col-sm text"><button onClick={() => updateNote(note)}>Editar nota</button>  </div>
+                  </div>
+                            
                 ))}
               </div>
             </div>
@@ -800,4 +846,4 @@ function Home() {
   );
 }
 
-export default withAuthenticator(Home);
+export default withAuthenticator(Home,{ includeGreetings: true });
