@@ -14,7 +14,7 @@ import Cookies from 'universal-cookie';
 import { FaMicrophone, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
 import { listNotes } from './graphql/queries';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, updateNote as updateNoteMutation } from './graphql/mutations';
-
+import Notes from './components/Notes'
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -269,19 +269,6 @@ function Home() {
     }
   }
 
-  function parseSentimentData(sentiment_string){
-    if (!sentiment_string) return;
-    try{
-        let s = JSON.parse(sentiment_string);        
-        if(!s.predominant) return;  
-        return s.predominant; 
-    }catch(err){
-      console.log("ERROR: can't parse the sentiment object in the database", sentiment_string);
-      return;
-    }
-      
-  }
-
   function ShowSaveNoteButton(){
     function interpretFromPredictions(event) {
           event.preventDefault();
@@ -403,40 +390,7 @@ function Home() {
       </div>
     );
   }
-  function ShowNotes(){
 
-     return (                     
-          <div className="my-5 container outer">
-              <h2> Histórico de Anotações </h2>              
-              <div className="row inner curve white" >
-                  <div className="row strong">                 
-                  <div className="col-md-3 text font-weight-bold">Dia</div>
-                  <div className="col-sm text font-weight-bold">Cuidadora</div>
-                  <div className="col-sm text font-weight-bold ">Em Geral</div>
-                  <div className="col-sm text font-weight-bold">Pressão</div>
-                  <div className="col-sm text font-weight-bold">Saturação</div>
-                  <div className="col-sm text font-weight-bold">Temperatura</div>  
-                  <div className="col-sm text font-weight-bold"></div>  
-                  <div className="col-sm text font-weight-bold"></div>  
-                </div>        
-                {notes.map(note => (                  
-                  <div className="row" key={note.id || note.title}>                
-                  <div className="col-md-3 text">{note.title}</div>
-                  <div className="col-sm text">{note.cuidadora_do_dia}</div>
-                  <div className="col-sm text">{parseSentimentData(note.sentiment)}</div>
-                  <div className="col-sm text">{note.pressao} mmHg</div>
-                  <div className="col-sm text">{note.saturacao} SpO<span className="tiny">2%</span></div>
-                  <div className="col-sm text">{note.temperatura} &deg;C</div>
-                  <div className="col-sm text"><button onClick={() => deleteNote(note)}>Deletar nota</button>  </div>                 
-                  <div className="col-sm text"><button onClick={() => selectNote(note)}>Editar nota</button>  </div>
-                  </div>
-                            
-                ))}
-              </div>
-            </div>
-        
-      );
-  }
 
   function Login(){
 
@@ -890,7 +844,12 @@ function Home() {
             <div> {DataForm()} </div>             
           </div>
         </div>
-         <ShowNotes />
+     
+          <Notes
+            notes={notes}
+            deleteNote={deleteNote}
+            updateNote={selectNote}
+          />
       </div>
     </div>
   );
