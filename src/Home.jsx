@@ -30,6 +30,8 @@ I18n.setLanguage('pt-BR');
 /*https://github.com/aws-amplify/amplify-js/blob/main/packages/amplify-ui-components/src/common/Translations.ts*/
 I18n.putVocabulariesForLanguage("pt-BR", {
   'Confirm Password': 'Confirmar Senha',
+  'User does not exist.': 'Essa conta não existe.',
+  'Incorrect username or password.': 'Email e senha incorretos.',
   [Translations.SIGN_IN_TEXT]: "Entre",
   [Translations.SIGN_IN_HEADER_TEXT]: "Entre na sua conta",
   [Translations.SIGN_IN_ACTION]: 'Entrar',
