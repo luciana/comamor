@@ -2,10 +2,13 @@
 import React, { useEffect, useState, useRef } from 'react';
 import logo from './logo.svg';
 import {Modal, Button} from 'react-bootstrap';
-import { Amplify, API } from 'aws-amplify';
+import { Amplify, API, I18n } from 'aws-amplify';
+import AmplifyI18n from "amplify-i18n"
 import { withAuthenticator, Authenticator } from '@aws-amplify/ui-react';
+import { Header } from "./components/auth/Header";
 import '@aws-amplify/ui-react/styles.css';
 import './App.css';
+import './styles/authenticate.css';
 import Predictions, { AmazonAIPredictionsProvider } from '@aws-amplify/predictions';
 import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
@@ -16,9 +19,31 @@ import { listNotes } from './graphql/queries';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, updateNote as updateNoteMutation } from './graphql/mutations';
 import Notes from './components/Notes'
 import PWAPrompt from 'react-ios-pwa-prompt'
+import { Translations } from "@aws-amplify/ui-components";
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
+const locales = ["en", "pt-BR"]
+AmplifyI18n.configure(locales)
+I18n.setLanguage('pt-BR');
+
+/*https://github.com/aws-amplify/amplify-js/blob/main/packages/amplify-ui-components/src/common/Translations.ts*/
+I18n.putVocabulariesForLanguage("pt-BR", {
+  'Confirm Password': 'Confirmar Senha',
+  [Translations.SIGN_IN_TEXT]: "Entre",
+  [Translations.SIGN_IN_HEADER_TEXT]: "Entre na sua conta",
+  [Translations.SIGN_IN_ACTION]: 'Entrar',
+  [Translations.FORGOT_PASSWORD_TEXT]: 'Esqueci a senha',
+  [Translations.EMPTY_USERNAME]: "A valid email address must be provided",
+  [Translations.CREATE_ACCOUNT_TEXT]:'Crie uma conta',
+  [Translations.SIGN_UP_PASSWORD_PLACEHOLDER]: 'Senha',
+  [Translations.SIGN_UP_SUBMIT_BUTTON_TEXT]:'Criar conta',
+  [Translations.SIGN_OUT]: 'Sair',
+  [Translations.SEND_CODE]: 'Mandar Codigo',
+  [Translations.CONFIRM_SIGN_UP_RESEND_CODE]: 'Mandar Codigo novament',
+  [Translations.EMAIL_PLACEHOLDER]:'Seu endereço de email'
+});
+
 const initialFormState = { title: new Date().toLocaleString(), 
                           patientID: '1',           
                           cuidadora_do_dia: null,
@@ -389,8 +414,11 @@ function Home() {
       if (!name) return
       return name.replace(/(\w{3})[\w.-]+@([\w.]+\w)/, "$1***@$2")
     }
+
+   
     
     return (
+
      <Authenticator>
           {({ signOut, user }) => (          
             <div className="container">
@@ -863,4 +891,7 @@ function Home() {
   );
 }
 
-export default withAuthenticator(Home,{ includeGreetings: true });
+export default withAuthenticator(Home,
+                                { components: { 
+                                  Header                                 
+                                   } });
