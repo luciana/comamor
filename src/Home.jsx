@@ -47,7 +47,9 @@ function Home() {
   const [formData, setFormData] = useState(initialFormState);
   console.log('form initial state', formData);
   const [comportamentoType, setComportamentoType] = useState([{ label: "Loading ...", value: "" }]);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [selectedNote, setselectedNote] = useState({});
   const [sentiment, setSentiment] = useState("")
   const [sentimentObject, setSentimentObject] = useState("")
   const [errors, setErrors] = useState([]);
@@ -69,8 +71,7 @@ function Home() {
     /* Get Notes information from GraphQL db ( AWS AppSync )*/
     fetchNotes();
 
-    /* Get ComportamentoType from an URL ( future )*/
-    
+    /* Get ComportamentoType from an URL ( future )*/  
     async function getcomportamentoType() {
       /* const response = await fetch("<api_url_to_get_comportamentoType>"); */
       /*const body = await response.json();*/
@@ -95,12 +96,20 @@ function Home() {
     };
   },[]);
 
+
    function handleSubmit(e) {  
       console.log("handleSubmit");
       if (e.target.checkValidity()) {
           e.preventDefault()
           console.log("form data from form submit", formData);     
-          createNote();
+          if(!editing){
+            console.log("CREATE NOTE");
+            createNote();
+          }else{
+            console.log("UPDATE NOTE");
+            updateNote(selectedNote);            
+          }
+          
         } else {
           console.log("form data not valid", formData);
           setErrors(formData);
@@ -114,10 +123,6 @@ function Home() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
     if ( !!errors ) { setErrors([]);}
   };
-
-  
-
-  
 
 
   async function fetchNotes() {
@@ -167,25 +172,25 @@ function Home() {
   }
 
 
-  function selectNote(note){
+  async function selectNote(note){
       const id = note.id;
 
-      if(id){
-      
+      if(id){      
+        window.scrollTo(0, 0);
+        setEditing(true);
         const index = notes.findIndex(i => i.id === note.id)
-        const notes1 = [...notes]
-        console.log("notes1", notes1);
-        
+        const notes1 = [...notes]     
         delete  notes1[index].patient;
         delete  notes1[index].comments;
         delete notes1[index].createdAt;
         delete notes1[index].updatedAt
-
-        console.log("updated notes1", notes1);
+        console.log(" notes1", notes1);
         setNotes( notes1 )
         const thenote= notes1[index];
+        setselectedNote(thenote);
+        setTextToInterpret(thenote.acontecimentos);
         setFormData({ title: thenote.title, 
-                        parentID: 1,
+                        patientID: 1,
                         cuidadora_do_dia: thenote.cuidadora_do_dia,
                         pressao:thenote.pressao,
                         saturacao: thenote.saturacao,
@@ -213,50 +218,25 @@ function Home() {
 
    async function updateNote( note ) {
     console.log("note from updateNote", note  );
-    const updatedNoteData = {
-         ...note,
-          title: new Date().toLocaleString(),          
-          cuidadora_do_dia: 2,
-          pressao:'',
-          saturacao: null,
-          temperatura:null,
-          manha_remedios_text: '',
-          manha_refeicao_text: '',
-          manha_higiene_text: '',
-          manha_atividade_text: '',
-          manha_humor_select: '',
-          tarde_remedios_text: '',
-          tarde_refeicao_text: '',
-          tarde_higiene_text: '',
-          tarde_atividade_text: '',
-          tarde_humor_select: '',
-          noite_remedios_text: '',
-          noite_refeicao_text: '',
-          noite_higiene_text: '',
-          noite_atividade_text: '',
-          noite_humor_select: '',
-          sentiment: '',
-          acontecimentos:'',  
-          patientID: 2          
-    }
+   
     try{      
       const index = notes.findIndex(i => i.id === note.id)
-      console.log("index", index);
       const notes1 = [...notes]
-      console.log("notes1", notes1);
-      notes1[index] = updatedNoteData
-      console.log("notes1[index]", notes1[index]);
+      notes1[index] = formData;
       delete  notes1[index].patient;
       delete  notes1[index].comments;
       delete notes1[index].createdAt;
-      delete notes1[index].updatedAt
-
-      console.log("updated notes1", notes1);
-      setNotes( notes1 )
+      delete notes1[index].updatedAt;
       setFormData(notes1[index]);
-      /*await API.graphql({ query: updateNoteMutation, variables: { input: updatedNoteData }});*/
+      notes1[index].id = note.id;
+      console.log("note to be updated", notes1[index]);
+      setNotes( notes1 )
+      
+      await API.graphql({ query: updateNoteMutation, variables: { input:  notes1[index] }});
+      alert("Anotações salvas");
     } catch (err) {
       console.log("ERROR: updating notes", err);
+      alert("Houve um problem editando esta note. Por favor comunique ao administrador.")
       if(err.errors){
        if(err.errors[0]){
           console.log("ERROR: updating notes", err.errors[0]);
@@ -266,7 +246,9 @@ function Home() {
         console.log("ERROR: updating notes", err);
         setErrors(err);
       }
-    }
+    } finally { 
+        handleClose(); 
+      }
   }
 
   function ShowSaveNoteButton(){
@@ -297,9 +279,7 @@ function Home() {
                 let s = JSON.parse(sentiment_string);     
                 let sentimentObject = s.textInterpretation.sentiment; 
                 let sentimentObjectString = JSON.stringify(sentimentObject, null, 2);   
-                let sentiment_p = sentimentObject.predominant;   
-                console.log('sentiment_p',sentiment_p);                
-                console.log('sentiment_object',sentimentObjectString);
+                let sentiment_p = sentimentObject.predominant;                                  
                 setSentiment(sentiment_p);                
                 setSentimentObject(sentimentObjectString);          
                 setFormData({ ...formData, 'sentiment': sentimentObjectString});  
@@ -582,7 +562,7 @@ function Home() {
     return ( 
       <div className="outer">
         <div className="inner curve white">
-        <h3> <FaRegSun className="faregsun"/>  Manhã </h3>
+        <h3> <FaRegSun className="faregsun"/>Manhã </h3>
         <label htmlFor="manha_remedios_text">Remédios</label><br />
         <textarea id="manha_remedios_text" 
                   name="manha_remedios_text"
@@ -618,7 +598,8 @@ function Home() {
                   name="manha_humor_select" 
                   id="manha_humor_select"    
                   required="required"         
-                  onChange={e => handleChange(e)}             
+                  onChange={e => handleChange(e)}   
+                  value = {formData.manha_humor_select  }               
                   >               
                   {comportamentoType.map(({ label, value }) => (
                     <option key={value} value={value}>{label}</option>
@@ -669,7 +650,9 @@ function Home() {
                   name="tarde_humor_select" 
                   id="tarde_humor_select"
                   required="required"  
-                  onChange={e => handleChange(e)}>             
+                  onChange={e => handleChange(e)}
+                  value = {formData.tarde_humor_select  }      
+                  >             
                   {comportamentoType.map(({ label, value }) => (
                     <option key={value} value={value}>{label}</option>
                   ))}     
@@ -719,7 +702,8 @@ function Home() {
                   name="noite_humor_select" 
                   id="noite_humor_select"
                   required="required"  
-                  onChange={e => handleChange(e)}              
+                  onChange={e => handleChange(e)} 
+                  value = {formData.noite_humor_select  }                     
                   >               
                   {comportamentoType.map(({ label, value }) => (
                     <option key={value} value={value}>{label}</option>
@@ -735,32 +719,21 @@ function Home() {
 
     
 
-  function AssistantNames(){
+  function AssistantNames(){    
     return (
       <div className="outer">
         <div className="inner curve white">
         <h3> <FaUserAlt className="fauseralt"/>  Cuidadoras </h3>
-        <div className="form-group was-validated">
-        <div className="form-check form-check-inline">       
-          <input className="form-check-input"  
-                type="radio"  
-                name="cuidadora_do_dia" 
-                value="1"     
-                required="required"            
-                 onChange={e => handleChange(e)} 
-                />
-          <label  className="form-check-label" htmlFor="1"> Miriam</label>
-        </div>
-        <div className="form-check form-check-inline">       
-          <input className="form-check-input"  
-                type="radio"  
-                name="cuidadora_do_dia" 
-                value="2"
-                required="required"     
-                onChange={e => handleChange(e)} />
-          <label  className="form-check-label" htmlFor="2"> Samira</label>
-        </div>
-        </div>
+      
+          <fieldset required="required" className="form-group was-validated form-check form-check-inline" value={formData.cuidadora_do_dia} onChange={e => handleChange(e)}>
+            <label htmlFor="1"  className="form-check-label" />
+            <input type="radio" required="required"  className="form-check-input" name="cuidadora_do_dia" value="1" id="Miriam" />Miriam
+   
+            <label htmlFor="2"  className="form-check-label" />
+            <input type="radio" required="required"  className="form-check-input" name="cuidadora_do_dia" value="2" id="Samira" />Samira
+          </fieldset>
+
+
       </div>
       </div>
     )
@@ -824,7 +797,7 @@ function Home() {
                       name="sentiment"                      
                       id="sentiment"   />         
               </div>         
-              <ShowSaveNoteButton />
+              <ShowSaveNoteButton editing={editing} />
         </form>
     );
   }
@@ -841,14 +814,19 @@ function Home() {
           </div>
           <div className="col-lg-7">
             <Login />
-            <div> {DataForm()} </div>             
+            <div> {DataForm()} </div>
+            {/* <Form 
+                  createNote={createNote}
+                  comportamentoType={comportamentoType}
+                  loading={loading}
+                   />                    */}
           </div>
         </div>
      
           <Notes
             notes={notes}
             deleteNote={deleteNote}
-            updateNote={selectNote}
+            selectNote={selectNote}
           />
       </div>
     </div>
