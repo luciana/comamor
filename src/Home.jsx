@@ -715,25 +715,43 @@ function Home() {
       </div>
     );
   }
+ 
+     /*<fieldset required="required" className="" value={formData.cuidadora_do_dia} onChange={e => handleChange(e)}>
+      checked={(formData.cuidadora_do_dia === 2)&&(editing)}   
+     */
+         
+   function AssistantNames(){
 
-
-    
-
-  function AssistantNames(){    
     return (
       <div className="outer">
         <div className="inner curve white">
         <h3> <FaUserAlt className="fauseralt"/>  Cuidadoras </h3>
-      
-          <fieldset required="required" className="form-group was-validated form-check form-check-inline" value={formData.cuidadora_do_dia} onChange={e => handleChange(e)}>
-            <label htmlFor="1"  className="form-check-label" />
-            <input type="radio" required="required"  className="form-check-input" name="cuidadora_do_dia" value="1" id="Miriam" />Miriam
-   
-            <label htmlFor="2"  className="form-check-label" />
-            <input type="radio" required="required"  className="form-check-input" name="cuidadora_do_dia" value="2" id="Samira" />Samira
-          </fieldset>
-
-
+        <div className="form-group was-validated">
+        <fieldset  >
+        <div className="form-check form-check-inline">       
+          <input className="form-check-input"  
+                type="radio"  
+                name="cuidadora_do_dia" 
+                value="1"     
+                required="required"      
+                checked = {(formData.cuidadora_do_dia === 1) || null}                
+                onChange={e => handleChange(e)}                    
+                />
+          <label  className="form-check-label" htmlFor="1"> Miriam</label>
+        </div>
+        <div className="form-check form-check-inline">       
+          <input className="form-check-input"  
+                type="radio"  
+                name="cuidadora_do_dia" 
+                value="2"
+                required="required"     
+                checked = {(formData.cuidadora_do_dia === 2) || null}   
+                onChange={e => handleChange(e)}  
+                />
+          <label  className="form-check-label" htmlFor="2"> Samira</label>
+        </div>
+        </fieldset>
+        </div>
       </div>
       </div>
     )
