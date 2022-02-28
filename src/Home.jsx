@@ -15,6 +15,7 @@ import { FaMicrophone, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 
 import { listNotes } from './graphql/queries';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, updateNote as updateNoteMutation } from './graphql/mutations';
 import Notes from './components/Notes'
+import PWAPrompt from 'react-ios-pwa-prompt'
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -101,7 +102,7 @@ function Home() {
       console.log("handleSubmit");
       if (e.target.checkValidity()) {
           e.preventDefault()
-          console.log("form data from form submit", formData);     
+          console.log("form data from form submit", formData);               
           if(!editing){
             console.log("CREATE NOTE");
             createNote();
@@ -171,13 +172,22 @@ function Home() {
       }
   }
 
+  function settingEditingMode(note){
+    if (notes.findIndex(i => i.id === note.id) ){
+      setEditing(true);    
+    }else{
+      setEditing(false);
+    }
+    console.log("is editing mode", editing);
+
+  }
 
   async function selectNote(note){
       const id = note.id;
 
       if(id){      
         window.scrollTo(0, 0);
-        setEditing(true);
+        settingEditingMode(note);
         const index = notes.findIndex(i => i.id === note.id)
         const notes1 = [...notes]     
         delete  notes1[index].patient;
@@ -220,6 +230,7 @@ function Home() {
     console.log("note from updateNote", note  );
    
     try{      
+      settingEditingMode(note);
       const index = notes.findIndex(i => i.id === note.id)
       const notes1 = [...notes]
       notes1[index] = formData;
@@ -832,6 +843,7 @@ function Home() {
           </div>
           <div className="col-lg-7">
             <Login />
+            <PWAPrompt promptOnVisit={1} timesToShow={3} copyClosePrompt="Close" permanentlyHideOnDismiss={false}/>
             <div> {DataForm()} </div>
             {/* <Form 
                   createNote={createNote}

@@ -17,6 +17,7 @@
     "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
+    "react-ios-pwa-prompt": "^1.8.4",
     "react-native-microphone-stream": "github:chadsmith/react-native-microphone-stream",
     "react-router-dom": "^6.2.1",
     "react-scripts": "4.0.3",
