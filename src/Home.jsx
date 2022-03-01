@@ -289,6 +289,9 @@ function Home() {
       }
   }
 
+
+  
+ 
   function ShowSaveNoteButton(){
     function interpretFromPredictions(event) {
           event.preventDefault();
@@ -543,8 +546,12 @@ function Home() {
 
 
   function formValidation(){
+
       if (!formData.cuidadora_do_dia ) {setErrors("Por favor, selecione uma cuidadora");return; }
       if (!formData.pressao ) {setErrors("Por favor, anote a pressão arterial do paciente");return; }
+      // eslint-disable-next-line 
+      const regex = new RegExp('^[0-9]{1,3}\/[0-9]{1,3}$');    
+      if (!regex.test(formData.pressao)) {setErrors("Por favor, anote a pressão arterial do paciente no seguinte formato nnn/nn - 3 números / 2 números");return; }
       if (!formData.saturacao ) {setErrors("Por favor, anote a saturação de oxigênio do paciente");return; }
       if (isNaN(formData.saturacao)) {setErrors("Por favor, digite um número para registrar a saturação de oxigênio do paciente");return; }
       if (!formData.temperatura ) {setErrors("Por favor, anote a temperatura corporal do paciente");return; }
@@ -860,6 +867,7 @@ function Home() {
         </form>
     );
   }
+
   return (
     <div className="home">
       <div className="container">
@@ -874,15 +882,9 @@ function Home() {
           <div className="col-lg-7">
             <Login />
             <PWAPrompt promptOnVisit={1} timesToShow={3} copyClosePrompt="Close" permanentlyHideOnDismiss={false}/>
-            <div> {DataForm()} </div>
-            {/* <Form 
-                  createNote={createNote}
-                  comportamentoType={comportamentoType}
-                  loading={loading}
-                   />                    */}
+            <div> {DataForm()} </div>            
           </div>
         </div>
-     
           <Notes
             notes={notes}
             deleteNote={deleteNote}

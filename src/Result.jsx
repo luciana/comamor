@@ -8,7 +8,6 @@ const lineData = [
         negativo: 0.1,
         mixed: 0.0,
         neutro: 0.1
-
     },
     {
         name: '19/02/2022',
@@ -88,6 +87,14 @@ const barData = [
   {name: 'tranquilo', comportamento: 120}  
 ];
 
+
+
+ const stackedBarData = [
+        { name: 'Jan 22', x: 12, y: 23 },
+        { name: 'Feb 22', x: 22, y: 3 },
+        { name: 'Mar 22', x: 13, y: 15 },       
+    ];
+
 function Result() {
  
   return (
@@ -148,13 +155,40 @@ function Result() {
           <div className="col-lg-5">            
             <p>
                 Esse grafico usa Inteligencia Articifical para relatar os comportamentos durante um periodo determinado.
-            </p>
-           
+            </p>           
           </div>
         </div>
       </div>
+      <div className="container">
+        <div className="row align-items-center my-5">
+          <div className="col-lg-7">                      
+            <h1 className="text-heading">
+              Cuidadoras
+            </h1>
+            <ResponsiveContainer width="100%" aspect={2}>               
+            <BarChart width={500} height={500} data={stackedBarData} >
+                <CartesianGrid />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Bar dataKey="x" stackId="a" fill="#8884d8" />
+                <Bar dataKey="y" stackId="a" fill="#82ca9d" />
+                <Bar dataKey="z" stackId="a" fill="#8674d8" />
+            </BarChart>    
+            </ResponsiveContainer>
+          </div>
+          <div className="col-lg-5">            
+            <p>
+                Esse grafico mostra quantidade de vezes ao mes cade cuidadora cuidou do papai.
+            </p>           
+          </div>
+        </div>
+      </div>
+   
+
     </div>
   );
 }
+
+
 
 export default Result;

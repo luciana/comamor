@@ -3,6 +3,7 @@ import './../App.css';
 
 class Notes extends Component {
 
+    
     parseSentimentData = (sentiment_string) => {
         if (!sentiment_string) return;
         try{
@@ -14,9 +15,11 @@ class Notes extends Component {
         return;
         }      
     }
+    updateFilter = filter => this.setState({ filter })
 
-  render() {
-    return (
+    render() { 
+      return (
+        
         <div className="my-5 container outer">
             <h2> Histórico de Anotações </h2>              
             <div className="row inner curve white" >
@@ -40,10 +43,9 @@ class Notes extends Component {
                   <div className="col-sm text">{note.temperatura} &deg;C</div>
                   <div className="col-sm text"><button onClick={() => this.props.deleteNote(note)}>Deletar nota</button>  </div>                 
                   <div className="col-sm text"><button onClick={() => this.props.selectNote(note)}>Editar nota</button>  </div>
-                  </div>
-                            
+                  </div>                            
                 ))}
-            </div>
+            </div>           
         </div>
     )
   }
