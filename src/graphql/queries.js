@@ -31,6 +31,7 @@ export const getPatient = /* GraphQL */ `
           noite_humor_select
           sentiment
           acontecimentos
+          author
           patientID
           createdAt
           updatedAt
@@ -88,6 +89,7 @@ export const getNote = /* GraphQL */ `
       noite_humor_select
       sentiment
       acontecimentos
+      author
       patientID
       patient {
         id
@@ -144,6 +146,7 @@ export const listNotes = /* GraphQL */ `
         noite_humor_select
         sentiment
         acontecimentos
+        author
         patientID
         patient {
           id
@@ -190,6 +193,7 @@ export const getComment = /* GraphQL */ `
         noite_humor_select
         sentiment
         acontecimentos
+        author
         patientID
         patient {
           id
@@ -243,6 +247,7 @@ export const listComments = /* GraphQL */ `
           noite_humor_select
           sentiment
           acontecimentos
+          author
           patientID
           createdAt
           updatedAt

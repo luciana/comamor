@@ -26,10 +26,10 @@ class Notes extends Component {
                   <div className="row strong">                 
                   <div className="col-md-3 text font-weight-bold">Dia</div>
                   <div className="col-sm text font-weight-bold">Cuidadora</div>
-                  <div className="col-sm text font-weight-bold ">Em Geral</div>
+                  <div className="col-sm text font-weight-bold ">Em Conclusão</div>
                   <div className="col-sm text font-weight-bold">Pressão</div>
                   <div className="col-sm text font-weight-bold">Saturação</div>
-                  <div className="col-sm text font-weight-bold">Temperatura</div>  
+                  <div className="col-sm text font-weight-bold">Temperatura</div>                                       
                   <div className="col-sm text font-weight-bold"></div>  
                   <div className="col-sm text font-weight-bold"></div>  
             </div>        

@@ -2,7 +2,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import logo from './logo.svg';
 import {Modal, Button} from 'react-bootstrap';
-import { Amplify, API, I18n } from 'aws-amplify';
+import { Amplify, API, I18n, Auth } from 'aws-amplify';
 import AmplifyI18n from "amplify-i18n"
 import { withAuthenticator, Authenticator } from '@aws-amplify/ui-react';
 import { Header } from "./components/auth/Header";
@@ -68,7 +68,8 @@ const initialFormState = { title: new Date().toLocaleString(),
                           noite_atividade_text: '',
                           noite_humor_select: '',
                           acontecimentos:'',                         
-                          sentiment: ''}
+                          sentiment: '',
+                          author: ''}
 function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
   const [notes, setNotes] = useState([]);
@@ -85,6 +86,7 @@ function Home() {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const acontecimentoField = useRef(null)
+  const [author, setAuthor] = useState(null);
   function handleFocus(){ acontecimentoField.current.focus()}
   
   useEffect(()=>{
@@ -98,6 +100,8 @@ function Home() {
 
     /* Get Notes information from GraphQL db ( AWS AppSync )*/
     fetchNotes();
+
+    fetchUserData();
 
     /* Get ComportamentoType from an URL ( future )*/  
     async function getcomportamentoType() {
@@ -152,6 +156,19 @@ function Home() {
     if ( !!errors ) { setErrors([]);}
   };
 
+async function fetchUserData(){
+      
+      try {
+          const data = await Auth.currentAuthenticatedUser()
+          if (data) {
+            console.log("INFO: Fetch User data", data);
+            setAuthor(data.attributes.email);           
+          }
+      } catch (err) {
+        console.log("ERROR: Getting User Data ")
+        setErrors(err );
+      }
+    }
 
   async function fetchNotes() {
     try{
@@ -316,6 +333,7 @@ function Home() {
               type: "ALL"
             }
           }).then(result => {
+                console.log("INFO: Sentiment Result", result);
                 const sentiment_string = JSON.stringify(result, null, 2);
                 let s = JSON.parse(sentiment_string);     
                 let sentimentObject = s.textInterpretation.sentiment; 
@@ -337,7 +355,7 @@ function Home() {
     function ShowSentimentInReview(props) {
         const sentiment = props.sentiment;
         if (sentiment) {
-          return <p className="text-dark"> Em geral, o paciente teve um dia <span>{sentiment} </span></p> ;
+          return <p className="text-dark"> Em conclusão, o paciente teve um dia <span>{sentiment} </span></p> ;
         }
         return;
     }
@@ -387,12 +405,14 @@ function Home() {
                 <span>{formData.acontecimentos}</span> 
               </div>
 
+              <div> De autoria de <span className="text-dark"> {formData.author} </span></div>
+
 
               <ShowSentimentInReview sentiment={sentiment} />                       
 
               </div>
                <div className="modal-footer">
-                <Button variant="secondary" onClick={handleClose}>Fechar</Button>
+                <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
                 <Button variant="success" onClick={handleSubmit}>Salvar Anotações do dia</Button>
                </div>
            
@@ -415,18 +435,18 @@ function Home() {
 
   function Login(){
 
-    function displayGreetingName ( name ) {
+    function displayGreetingName ( name ) {       
       if (!name) return
       return name.replace(/(\w{3})[\w.-]+@([\w.]+\w)/, "$1***@$2")
     }
-
-   
+    
+    
     
     return (
 
      <Authenticator>
-          {({ signOut, user }) => (          
-            <div className="container">
+          {({ signOut, user }) => (       
+            <div className="container">             
               <span className="text"> Olá {displayGreetingName(user.attributes.email)}, seja bem vinda(o)!</span> 
               <button onClick={signOut} type="button" className="btn btn-link">Sair</button>
             </div>
@@ -555,8 +575,8 @@ function Home() {
       if (!formData.saturacao ) {setErrors("Por favor, anote a saturação de oxigênio do paciente");return; }
       if (isNaN(formData.saturacao)) {setErrors("Por favor, digite um número para registrar a saturação de oxigênio do paciente");return; }
       if (!formData.temperatura ) {setErrors("Por favor, anote a temperatura corporal do paciente");return; }
-       if (isNaN(formData.temperatura)) {setErrors("Por favor, digite um número para registrar a temperatura do paciente");return; }     
-      if (!formData.manha_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a manhã?");return; }
+      if (isNaN(formData.temperatura)) {setErrors("Por favor, digite um número para registrar a temperatura do paciente");return; }     
+      /* if (!formData.manha_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a manhã?");return; }
       if (!formData.tarde_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a tarde?");return; }
       if (!formData.noite_humor_select ) {setErrors("Por favor, selecione como o paciente se comportou durante a noite?");return; }
       if (!formData.manha_atividade_text && 
@@ -570,7 +590,7 @@ function Home() {
       if (!formData.noite_atividade_text && 
             !formData.noite_higiene_text && 
             !formData.noite_remedios_text &&
-            !formData.noite_refeicao_text ) {setErrors("Precisamos de mais informação no turno da noite");return; }
+            !formData.noite_refeicao_text ) {setErrors("Precisamos de mais informação no turno da noite");return; }*/
       return 0;
   }
   
@@ -639,13 +659,12 @@ function Home() {
                   defaultValue={formData.manha_atividade_text}
                   onChange={e => handleChange(e)} 
                   ></textarea> <br />
-        <div className="form-group was-validated">
+        <div className="form-group">
           <label htmlFor="manha_humor_select">Qual o comportamento?</label>
           <select disabled={loading}
                   className="form-control" 
                   name="manha_humor_select" 
-                  id="manha_humor_select"    
-                  required="required"         
+                  id="manha_humor_select"                           
                   onChange={e => handleChange(e)}   
                   value = {formData.manha_humor_select  }               
                   >               
@@ -692,12 +711,11 @@ function Home() {
                   defaultValue={formData.tarde_atividade_text}
                   onChange={e => handleChange(e)} 
                  ></textarea> <br />
-        <div className="form-group was-validated">
+        <div className="form-group">
           <label htmlFor="tarde_humor_select">Qual o comportamento?</label>
           <select className="form-control" 
                   name="tarde_humor_select" 
-                  id="tarde_humor_select"
-                  required="required"  
+                  id="tarde_humor_select"                 
                   onChange={e => handleChange(e)}
                   value = {formData.tarde_humor_select  }      
                   >             
@@ -744,12 +762,11 @@ function Home() {
                   defaultValue={formData.noite_atividade_text}
                   onChange={e => handleChange(e)} 
                   ></textarea> <br />
-        <div className="form-group was-validated">
+        <div className="form-group ">
           <label htmlFor="noite_humor_select">Qual o comportamento?</label>
           <select className="form-control" 
                   name="noite_humor_select" 
-                  id="noite_humor_select"
-                  required="required"  
+                  id="noite_humor_select"                 
                   onChange={e => handleChange(e)} 
                   value = {formData.noite_humor_select  }                     
                   >               
@@ -844,10 +861,13 @@ function Home() {
   }
 
   function DataForm(){
+
+    console.log("USER", author);
     return (
       <form className="form" name="formEntry" id="formEntry" alt="the form fields">     
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
         <input type="hidden"  value={new Date().toLocaleString()} name="title" id="title" readOnly  />
+        <input type="hidden" value={author || ""} name="author" id="author" readOnly />  
                 <div> {AssistantNames()} </div> 
                 <div> {VitalCollection()} </div>          
                 <div> {RelatorioDoDia()} </div>

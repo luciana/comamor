@@ -31,6 +31,7 @@ export const onCreatePatient = /* GraphQL */ `
           noite_humor_select
           sentiment
           acontecimentos
+          author
           patientID
           createdAt
           updatedAt
@@ -72,6 +73,7 @@ export const onUpdatePatient = /* GraphQL */ `
           noite_humor_select
           sentiment
           acontecimentos
+          author
           patientID
           createdAt
           updatedAt
@@ -113,6 +115,7 @@ export const onDeletePatient = /* GraphQL */ `
           noite_humor_select
           sentiment
           acontecimentos
+          author
           patientID
           createdAt
           updatedAt
@@ -150,6 +153,7 @@ export const onCreateNote = /* GraphQL */ `
       noite_humor_select
       sentiment
       acontecimentos
+      author
       patientID
       patient {
         id
@@ -201,6 +205,7 @@ export const onUpdateNote = /* GraphQL */ `
       noite_humor_select
       sentiment
       acontecimentos
+      author
       patientID
       patient {
         id
@@ -252,6 +257,7 @@ export const onDeleteNote = /* GraphQL */ `
       noite_humor_select
       sentiment
       acontecimentos
+      author
       patientID
       patient {
         id
@@ -306,6 +312,7 @@ export const onCreateComment = /* GraphQL */ `
         noite_humor_select
         sentiment
         acontecimentos
+        author
         patientID
         patient {
           id
@@ -354,6 +361,7 @@ export const onUpdateComment = /* GraphQL */ `
         noite_humor_select
         sentiment
         acontecimentos
+        author
         patientID
         patient {
           id
@@ -402,6 +410,7 @@ export const onDeleteComment = /* GraphQL */ `
         noite_humor_select
         sentiment
         acontecimentos
+        author
         patientID
         patient {
           id
