@@ -22,6 +22,8 @@ class Notes extends Component {
       if ( id === 2 ) return 'Samira';
     }
 
+
+
     render() { 
 
    
@@ -66,9 +68,9 @@ class Notes extends Component {
                   <th scope="col" className="text font-weight-bold">Saturação</th>
                   <th scope="col" className="text font-weight-bold">Temperatura</th>
                   <th scope="col" className="text font-weight-bold ">Humor Manha</th>
-                  <th scope="col" className="text font-weight-bold">Humor da Tarde</th>
-                  <th scope="col" className="text font-weight-bold">Humor da Noite</th>
-                  <th scope="col" className="text font-weight-bold">Observacoes</th>                                          
+                  <th scope="col" className="text font-weight-bold">Humor Tarde</th>
+                  <th scope="col" className="text font-weight-bold">Humor Noite</th>
+                  <th scope="col" className="text font-weight-bold">Observações</th>                                          
                   <th scope="col" className="text font-weight-bold"></th>  
                   <th scope="col" className="text font-weight-bold"></th> 
                   <th scope="col" className="text font-weight-bold"></th> 
@@ -77,7 +79,7 @@ class Notes extends Component {
            <tbody>
               {this.props.notes.map(note => (                  
                 <tr key={note.id || note.title}>                
-                  <th scope="row"><small>{note.title}</small></th>
+                  <th scope="row"><small>{note.title.split(',')[0]}</small></th>
                   <td className="text"><small>{this.nomeDaCuidadora(note.cuidadora_do_dia)}</small></td>
                   <td className="text"><small>{this.parseSentimentData(note.sentiment)}</small></td>
                   <td className="text"><small>{note.pressao} mmHg</small></td>
@@ -87,9 +89,9 @@ class Notes extends Component {
                   <td className="text"><small>{note.tarde_humor_select}</small></td>   
                   <td className="text"><small>{note.noite_humor_select}</small></td>   
                   <td className="text"><small>{note.acontecimentos}</small></td>   
-                  <td className="text"><small><button onClick={() => this.props.deleteNote(note)}>Deletar nota</button> </small> </td>                 
-                  <td className="text"><small><button onClick={() => this.props.selectNote(note)}>Editar nota</button> </small> </td>
-                  <td className="text"><small><button onClick={() => this.props.selectNote(note)}>Abrir nota</button> </small> </td>
+                  <td className="text"><small><button className="btn btn-success" onClick={() => this.props.deleteNote(note)}>Deletar</button> </small> </td>                 
+                  <td className="text"><small><button className="btn btn-success" onClick={() => this.props.selectNote(note)}>Editar</button> </small> </td>
+                  <td className="text"></td>
                 </tr>                            
                 ))}            
            </tbody>

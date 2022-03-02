@@ -82,8 +82,11 @@ function Home() {
   const [sentimentObject, setSentimentObject] = useState("")
   const [errors, setErrors] = useState([]);
   const [show, setShow] = useState("");
+  const [showNote, setShowNote] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const handleShowNote = () => setShowNote(true); 
+  const handleCloseNote = () => setShowNote(false);
   const acontecimentoField = useRef(null)
   const [author, setAuthor] = useState(null);
   const [noteID, setNoteID] = useState(null);
@@ -131,6 +134,11 @@ function Home() {
 
   function isEditing(){
     return notes.findIndex(i => i.id === noteID) > 0
+  }
+
+  function nomeDaCuidadora(id){
+      if ( id === '1' ) return 'Mirian';
+      if ( id === '2' ) return 'Samira';
   }
 
    function handleSubmit(e) {  
@@ -228,6 +236,69 @@ async function fetchUserData(){
       }
   }
 
+  async function openNote(note){
+    
+    console.log("open this note", note);
+    console.log("show modal", showNote);
+    handleShowNote();
+
+    return(
+       <div>          
+          <Modal show={showNote} 
+                onHide={handleClose} 
+                animation={false}
+                size="lg"
+                aria-labelledby="contained-modal-title-vcenter"
+                centered>
+              <h3 className="modal-header text-dark">Resumo de Anotações</h3>
+              <div className="modal-body">
+              
+              <p className="text-dark text-bold"> Cuidadora do dia: {nomeDaCuidadora(note.cuidadora_do_dia)}</p>
+              <h4 className="text-dark">Sinais Vitais</h4>
+              <p className="text-dark"> Pressão Arterial: {note.pressao} mmHg</p>   
+              <p className="text-dark"> Saturação: {note.temperatura} SpO2%</p>   
+              <p className="text-dark"> Temperatura: {note.temperatura} &deg;C </p>   
+
+              <h4 className="text-dark">Pela Manhã</h4>
+              <p className="text-dark"> Remedios: {note.manha_remedios_text}</p>   
+              <p className="text-dark"> Refeição: {note.manha_refeicao_text}</p>   
+              <p className="text-dark"> Higiene: {note.manha_higiene_text} </p>  
+              <p className="text-dark"> Atividade: {note.manha_atividade_text}</p> 
+              <p className="text-dark"> Comportamento: {note.manha_humor_select}</p> 
+
+              <h4 className="text-dark">A Tarde</h4>
+              <p className="text-dark"> Remedios: {note.tarde_remedios_text}</p>   
+              <p className="text-dark"> Refeição: {note.tarde_refeicao_text}</p>   
+              <p className="text-dark"> Higiene: {note.tarde_higiene_text} </p>  
+              <p className="text-dark"> Atividade: {note.tarde_atividade_text}</p> 
+              <p className="text-dark"> Comportamento: {note.tarde_humor_select}</p> 
+
+              <h4 className="text-dark">A Noite</h4>
+              <p className="text-dark"> Remedios: {note.noite_remedios_text}</p>   
+              <p className="text-dark"> Refeição: {note.noite_refeicao_text}</p>   
+              <p className="text-dark"> Higiene: {note.noite_higiene_text} </p>  
+              <p className="text-dark"> Atividade: {note.noite_atividade_text}</p> 
+              <p className="text-dark"> Comportamento: {note.noite_humor_select}</p> 
+
+              <div className="text-dark"> 
+                <span className="text-bold"> Outras observações: </span> 
+                <span>{note.acontecimentos}</span> 
+              </div>
+
+              <p className="text-dark"> Em conclusão, o paciente teve um dia <span>{sentiment} </span></p>                      
+
+              <div className="py-2 text-dark"> De autoria de <span className="text-dark"> {author} </span></div>
+
+              </div>
+               <div className="modal-footer">
+                <Button variant="secondary" onClick={handleCloseNote}>Cancelar</Button>            
+               </div>
+           
+          </Modal>
+        </div>
+
+    );
+  }
   async function selectNote(note){
       const id = note.id;
 
@@ -327,7 +398,9 @@ async function fetchUserData(){
                                 formData.noite_humor_select + ' ' +
                                 formData.acontecimentos;
           console.log("Data to analyze sentiment ", dataToSentiment);
-          Predictions.interpret({
+          setFormData({ ...formData, 'sentiment': null});  
+          handleShow();
+          /*Predictions.interpret({
             text: {
               source: {
                 text: dataToSentiment,
@@ -344,14 +417,14 @@ async function fetchUserData(){
                 setSentiment(sentiment_p);                
                 setSentimentObject(sentimentObjectString);          
                 setFormData({ ...formData, 'sentiment': sentimentObjectString});  
-                handleShow();
+               
                               
           }).catch(err => 
               { 
                 console.log("ERROR: Houve um problema. tente novamente connectando com AWS. logging sentiment error", JSON.stringify(err, null, 2));               
                 setFormData({ ...formData, 'sentiment': null});  
                 handleShow();
-              })
+              })*/
     }
 
     function ShowSentimentInReview(props) {
@@ -362,10 +435,7 @@ async function fetchUserData(){
         return;
     }
 
-    function nomeDaCuidadora(id){
-      if ( id === '1' ) return 'Mirian';
-      if ( id === '2' ) return 'Samira';
-    }
+   
 
     return(
       <div className="py-1">
@@ -412,7 +482,7 @@ async function fetchUserData(){
                 <span>{formData.acontecimentos}</span> 
               </div>
 
-              <ShowSentimentInReview sentiment={sentiment} />                       
+            
 
               <div className="py-2 text-dark"> De autoria de <span className="text-dark"> {author} </span></div>
 
@@ -834,7 +904,7 @@ async function fetchUserData(){
           <label htmlFor="pressao" className="block">Pressão Arterial ( mmHg )</label>
           <input className="form-control" 
                   id="pressao"                 
-                  placeholder="120/80"    
+                  placeholder="12/8"    
                   required="required"            
                   defaultValue={formData.pressao}                                
                   name="pressao" maxLength="10" size="6"
@@ -908,7 +978,8 @@ async function fetchUserData(){
           <Notes
             notes={notes}
             deleteNote={deleteNote}
-            selectNote={selectNote}
+            selectNote={selectNote}   
+            openNote={openNote}         
           />
       </div>
     </div>
