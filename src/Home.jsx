@@ -46,7 +46,8 @@ I18n.putVocabulariesForLanguage("pt-BR", {
   [Translations.EMAIL_PLACEHOLDER]:'Seu endereço de email'
 });
 
-const initialFormState = { title: new Date().toLocaleString(), 
+const initialFormState = { 
+                          title: new Date().toLocaleString(), 
                           patientID: '1',           
                           cuidadora_do_dia: null,
                           pressao:'',
@@ -77,8 +78,6 @@ function Home() {
   console.log('form initial state', formData);
   const [comportamentoType, setComportamentoType] = useState([{ label: "Loading ...", value: "" }]);
   const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(false);
-  const [selectedNote, setselectedNote] = useState({});
   const [sentiment, setSentiment] = useState("")
   const [sentimentObject, setSentimentObject] = useState("")
   const [errors, setErrors] = useState([]);
@@ -87,6 +86,7 @@ function Home() {
   const handleShow = () => setShow(true);
   const acontecimentoField = useRef(null)
   const [author, setAuthor] = useState(null);
+  const [noteID, setNoteID] = useState(null);
   function handleFocus(){ acontecimentoField.current.focus()}
   
   useEffect(()=>{
@@ -129,17 +129,25 @@ function Home() {
   },[]);
 
 
+  function isEditing(){
+    return notes.findIndex(i => i.id === noteID) > 0
+  }
+
    function handleSubmit(e) {  
       console.log("handleSubmit");
       if (e.target.checkValidity()) {
           e.preventDefault()
           console.log("form data from form submit", formData);               
-          if(!editing){
+          if(!isEditing()){
             console.log("CREATE NOTE");
             createNote();
           }else{
             console.log("UPDATE NOTE");
-            updateNote(selectedNote);            
+            const noteSelected = notes[notes.findIndex(i => i.id === noteID)]
+            console.log('note to be updated' , noteSelected);
+            if (noteSelected){
+                updateNote(noteSelected);  
+            }
           }
           
         } else {
@@ -182,10 +190,14 @@ async function fetchUserData(){
 
    async function createNote() {
       if (formValidation() !== 0 ) { return; }
-      console.log("create note", formData);
+      console.log("create note with this form data", formData);
       try{
-        await API.graphql({ query: createNoteMutation, variables: { input: formData } });
-        setNotes([ ...notes, formData ]);       
+        const createdNote = await API.graphql({ query: createNoteMutation, variables: { input: formData } });
+       /* console.log("created new note", createdNote.data.createNote);*/
+        setNotes([ ...notes, createdNote.data.createNote ]);             
+        /*console.log("NOTE ID after creation" , createdNote.data.createNote.id);*/
+        setNoteID(createdNote.data.createNote.id);
+      
       }catch (err) {
         console.log("ERROR: creating notes", err);
         if(err.errors){
@@ -216,22 +228,11 @@ async function fetchUserData(){
       }
   }
 
-  function settingEditingMode(note){
-    if (notes.findIndex(i => i.id === note.id) ){
-      setEditing(true);    
-    }else{
-      setEditing(false);
-    }
-    console.log("is editing mode", editing);
-
-  }
-
   async function selectNote(note){
       const id = note.id;
 
-      if(id){      
+      if(id){    
         window.scrollTo(0, 0);
-        settingEditingMode(note);
         const index = notes.findIndex(i => i.id === note.id)
         const notes1 = [...notes]     
         delete  notes1[index].patient;
@@ -239,9 +240,10 @@ async function fetchUserData(){
         delete notes1[index].createdAt;
         delete notes1[index].updatedAt
         console.log(" notes1", notes1);
-        setNotes( notes1 )
-        const thenote= notes1[index];
-        setselectedNote(thenote);
+        setNotes( notes1 )  
+        console.log('selected note', notes1);    
+        const thenote= notes1[index];     
+        setNoteID(thenote.id);
         setTextToInterpret(thenote.acontecimentos);
         setFormData({ title: thenote.title, 
                         patientID: 1,
@@ -273,17 +275,17 @@ async function fetchUserData(){
    async function updateNote( note ) {
     console.log("note from updateNote", note  );
    
-    try{      
-      settingEditingMode(note);
+    try{
       const index = notes.findIndex(i => i.id === note.id)
+      console.log("index of note to be updatd", index);
       const notes1 = [...notes]
-      notes1[index] = formData;
+      console.log("all notes to be updatd", notes1);
       delete  notes1[index].patient;
       delete  notes1[index].comments;
       delete notes1[index].createdAt;
       delete notes1[index].updatedAt;
       setFormData(notes1[index]);
-      notes1[index].id = note.id;
+    
       console.log("note to be updated", notes1[index]);
       setNotes( notes1 )
       
@@ -362,7 +364,7 @@ async function fetchUserData(){
 
     return(
       <div className="py-1">
-        <div> <button type="button" className="btn btn-warning" onClick={interpretFromPredictions}> Prevê Anotações</button>  </div>
+        <div> <button type="button" className="btn btn-warning" onClick={interpretFromPredictions}> Prevê e Salvar Anotações</button>  </div>
         <div>          
           <Modal show={show} 
                 onHide={handleClose} 
@@ -405,10 +407,9 @@ async function fetchUserData(){
                 <span>{formData.acontecimentos}</span> 
               </div>
 
-              <div> De autoria de <span className="text-dark"> {formData.author} </span></div>
-
-
               <ShowSentimentInReview sentiment={sentiment} />                       
+
+              <div className="py-2 text-dark"> De autoria de <span className="text-dark"> {author} </span></div>
 
               </div>
                <div className="modal-footer">
@@ -780,11 +781,7 @@ async function fetchUserData(){
       </div>
     );
   }
- 
-     /*<fieldset required="required" className="" value={formData.cuidadora_do_dia} onChange={e => handleChange(e)}>
-      checked={(formData.cuidadora_do_dia === 2)&&(editing)}   
-     */
-         
+
    function AssistantNames(){
 
     return (
@@ -861,8 +858,6 @@ async function fetchUserData(){
   }
 
   function DataForm(){
-
-    console.log("USER", author);
     return (
       <form className="form" name="formEntry" id="formEntry" alt="the form fields">     
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
@@ -883,7 +878,7 @@ async function fetchUserData(){
                       name="sentiment"                      
                       id="sentiment"   />         
               </div>         
-              <ShowSaveNoteButton editing={editing} />
+              <ShowSaveNoteButton />
         </form>
     );
   }
