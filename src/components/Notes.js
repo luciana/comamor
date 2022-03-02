@@ -17,10 +17,17 @@ class Notes extends Component {
     }
     updateFilter = filter => this.setState({ filter })
 
+    nomeDaCuidadora  = (id) => {
+      if ( id === 1 ) return 'Mirian';
+      if ( id === 2 ) return 'Samira';
+    }
+
     render() { 
+
+   
       return (
-        
-        <div className="my-5 container outer">
+      <div>
+        {/* <div className="my-5 container outer">
             <h2> Histórico de Anotações </h2>              
             <div className="row inner curve white" >
                   <div className="row strong">                 
@@ -46,7 +53,49 @@ class Notes extends Component {
                   </div>                            
                 ))}
             </div>           
+        </div> */}
+
+        <div className="table-responsive">
+        <table className="table table-light table-striped table-hover table-borderless table-sm align-middle">
+           <thead className="table-success">
+           <tr>                          
+                  <th scope="col" className="text font-weight-bold">Dia</th>
+                  <th scope="col" className="text font-weight-bold">Cuidadora</th>
+                  <th scope="col" className="text font-weight-bold ">Em Conclusão</th>
+                  <th scope="col" className="text font-weight-bold">Pressão</th>
+                  <th scope="col" className="text font-weight-bold">Saturação</th>
+                  <th scope="col" className="text font-weight-bold">Temperatura</th>
+                  <th scope="col" className="text font-weight-bold ">Humor Manha</th>
+                  <th scope="col" className="text font-weight-bold">Humor da Tarde</th>
+                  <th scope="col" className="text font-weight-bold">Humor da Noite</th>
+                  <th scope="col" className="text font-weight-bold">Observacoes</th>                                          
+                  <th scope="col" className="text font-weight-bold"></th>  
+                  <th scope="col" className="text font-weight-bold"></th> 
+                  <th scope="col" className="text font-weight-bold"></th> 
+            </tr>       
+           </thead>
+           <tbody>
+              {this.props.notes.map(note => (                  
+                <tr key={note.id || note.title}>                
+                  <th scope="row"><small>{note.title}</small></th>
+                  <td className="text"><small>{this.nomeDaCuidadora(note.cuidadora_do_dia)}</small></td>
+                  <td className="text"><small>{this.parseSentimentData(note.sentiment)}</small></td>
+                  <td className="text"><small>{note.pressao} mmHg</small></td>
+                  <td className="text"><small>{note.saturacao} SpO<span className="tiny">2%</span></small></td>
+                  <td className="text"><small>{note.temperatura} &deg;C</small></td>
+                  <td className="text"><small>{note.manha_humor_select}</small></td>   
+                  <td className="text"><small>{note.tarde_humor_select}</small></td>   
+                  <td className="text"><small>{note.noite_humor_select}</small></td>   
+                  <td className="text"><small>{note.acontecimentos}</small></td>   
+                  <td className="text"><small><button onClick={() => this.props.deleteNote(note)}>Deletar nota</button> </small> </td>                 
+                  <td className="text"><small><button onClick={() => this.props.selectNote(note)}>Editar nota</button> </small> </td>
+                  <td className="text"><small><button onClick={() => this.props.selectNote(note)}>Abrir nota</button> </small> </td>
+                </tr>                            
+                ))}            
+           </tbody>
+        </table>
         </div>
+      </div>
     )
   }
 }

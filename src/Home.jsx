@@ -362,6 +362,11 @@ async function fetchUserData(){
         return;
     }
 
+    function nomeDaCuidadora(id){
+      if ( id === '1' ) return 'Mirian';
+      if ( id === '2' ) return 'Samira';
+    }
+
     return(
       <div className="py-1">
         <div> <button type="button" className="btn btn-warning" onClick={interpretFromPredictions}> Prevê e Salvar Anotações</button>  </div>
@@ -375,7 +380,7 @@ async function fetchUserData(){
               <h3 className="modal-header text-dark">Resumo de Anotações</h3>
               <div className="modal-body">
               
-              <p className="text-dark text-bold"> Cuidadora do dia: {formData.cuidadora_do_dia}</p>
+              <p className="text-dark text-bold"> Cuidadora do dia: {nomeDaCuidadora(formData.cuidadora_do_dia)}</p>
               <h4 className="text-dark">Sinais Vitais</h4>
               <p className="text-dark"> Pressão Arterial: {formData.pressao} mmHg</p>   
               <p className="text-dark"> Saturação: {formData.temperatura} SpO2%</p>   
