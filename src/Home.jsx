@@ -13,13 +13,14 @@ import Predictions, { AmazonAIPredictionsProvider } from '@aws-amplify/predictio
 import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
-import Cookies from 'universal-cookie';
+//import Cookies from 'universal-cookie';
 import { FaMicrophone, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
 import { listNotes } from './graphql/queries';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, updateNote as updateNoteMutation } from './graphql/mutations';
 import Notes from './components/Notes'
 import PWAPrompt from 'react-ios-pwa-prompt'
 import { Translations } from "@aws-amplify/ui-components";
+import Notification from './Notification'
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -75,7 +76,7 @@ function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
   const [notes, setNotes] = useState([]);
   const [formData, setFormData] = useState(initialFormState);
-  console.log('form initial state', formData);
+  /* console.log('form initial state', formData); */
   const [comportamentoType, setComportamentoType] = useState([{ label: "Loading ...", value: "" }]);
   const [loading, setLoading] = useState(true);
   const [sentiment, setSentiment] = useState("")
@@ -96,10 +97,10 @@ function Home() {
     let unmounted = false;
 
     /* Save cookie data */
-    const cookiestored = new Cookies();
+    /* const cookiestored = new Cookies();
     console.log(`stored cookie ${cookiestored.get('comamor_cookie_data')}`);
     const cookie = new Cookies();
-    cookie.set('comamor_cookie_data','cookie data',{path: '/'});    
+    cookie.set('comamor_cookie_data','cookie data',{path: '/'});    */
 
     /* Get Notes information from GraphQL db ( AWS AppSync )*/
     fetchNotes();
@@ -177,7 +178,7 @@ async function fetchUserData(){
       try {
           const data = await Auth.currentAuthenticatedUser()
           if (data) {
-            console.log("INFO: Fetch User data", data);
+            /*console.log("INFO: Fetch User data", data);*/
             setAuthor(data.attributes.email);           
           }
       } catch (err) {
@@ -288,6 +289,8 @@ async function fetchUserData(){
               <p className="text-dark"> Em conclusão, o paciente teve um dia <span>{sentiment} </span></p>                      
 
               <div className="py-2 text-dark"> De autoria de <span className="text-dark"> {author} </span></div>
+
+             
 
               </div>
                <div className="modal-footer">
@@ -400,7 +403,7 @@ async function fetchUserData(){
           console.log("Data to analyze sentiment ", dataToSentiment);
           setFormData({ ...formData, 'sentiment': null});  
           handleShow();
-          /*Predictions.interpret({
+          Predictions.interpret({
             text: {
               source: {
                 text: dataToSentiment,
@@ -424,7 +427,7 @@ async function fetchUserData(){
                 console.log("ERROR: Houve um problema. tente novamente connectando com AWS. logging sentiment error", JSON.stringify(err, null, 2));               
                 setFormData({ ...formData, 'sentiment': null});  
                 handleShow();
-              })*/
+              })
     }
 
     function ShowSentimentInReview(props) {
@@ -482,7 +485,7 @@ async function fetchUserData(){
                 <span>{formData.acontecimentos}</span> 
               </div>
 
-            
+              <ShowSentimentInReview sentiment={sentiment} />        
 
               <div className="py-2 text-dark"> De autoria de <span className="text-dark"> {author} </span></div>
 
@@ -958,6 +961,7 @@ async function fetchUserData(){
     );
   }
 
+  
   return (
     <div className="home">
       <div className="container">
@@ -971,6 +975,7 @@ async function fetchUserData(){
           </div>
           <div className="col-lg-7">
             <Login />
+            <Notification />
             <PWAPrompt promptOnVisit={1} timesToShow={3} copyClosePrompt="Close" permanentlyHideOnDismiss={false}/>
             <div> {DataForm()} </div>            
           </div>
