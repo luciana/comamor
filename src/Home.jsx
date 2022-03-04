@@ -21,12 +21,8 @@ import Notes from './components/Notes'
 import PWAPrompt from 'react-ios-pwa-prompt'
 import { Translations } from "@aws-amplify/ui-components";
 //import Notification from './Notification'
-import { requestForToken, onMessageListener } from './firebase';
-requestForToken();
 
-onMessageListener().then(message => {
-  console.log('message listener');
-}).catch(err => console.log('failed: ', err));
+
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -99,6 +95,7 @@ function Home() {
   const [noteID, setNoteID] = useState(null);
   function handleFocus(){ acontecimentoField.current.focus()}
   
+
   useEffect(()=>{
     let unmounted = false;
 
