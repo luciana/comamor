@@ -4,6 +4,7 @@ import { requestForToken, onMessageListener } from './firebase';
 
 const Notification = () => {
   const [notification, setNotification] = useState({title: '', body: ''});
+
   const notify = () =>  toast(<ToastDisplay/>); 
   function ToastDisplay() {
     return (
@@ -15,7 +16,9 @@ const Notification = () => {
   };
 
   useEffect(() => {
+    console.log(notification);
     if (notification?.title ){
+      console.log("Notification notify");
      notify()
     }
   }, [notification])
@@ -24,9 +27,10 @@ const Notification = () => {
 
   onMessageListener()
     .then((payload) => {
+      console.log(payload);
       setNotification({title: payload?.notification?.title, body: payload?.notification?.body});     
     })
-    .catch((err) => console.log('failed: ', err));
+    .catch((err) => console.log('ERROR: Notification listener failed: ', err));
 
   return (
      <Toaster/>

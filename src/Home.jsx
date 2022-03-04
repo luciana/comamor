@@ -20,7 +20,13 @@ import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, upd
 import Notes from './components/Notes'
 import PWAPrompt from 'react-ios-pwa-prompt'
 import { Translations } from "@aws-amplify/ui-components";
-import Notification from './Notification'
+//import Notification from './Notification'
+import { requestForToken, onMessageListener } from './firebase';
+requestForToken();
+
+onMessageListener().then(message => {
+  console.log('message listener');
+}).catch(err => console.log('failed: ', err));
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -964,6 +970,7 @@ async function fetchUserData(){
   
   return (
     <div className="home">
+
       <div className="container">
         <div className="row my-5">
           <div className="col-lg-5">
@@ -975,7 +982,7 @@ async function fetchUserData(){
           </div>
           <div className="col-lg-7">
             <Login />
-            <Notification />
+           
             <PWAPrompt promptOnVisit={1} timesToShow={3} copyClosePrompt="Close" permanentlyHideOnDismiss={false}/>
             <div> {DataForm()} </div>            
           </div>
