@@ -18,14 +18,12 @@ messaging.onBackgroundMessage(function(payload) {
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    data: {
-      url: "/"
-    }
+    icon: "/android-chrome-192x192.png",
   };
 
   console.log(notificationTitle);
   console.log(notificationOptions);
-  self.registration.showNotification('test',
+  return self.registration.showNotification('test',
     notificationOptions);
 
 });

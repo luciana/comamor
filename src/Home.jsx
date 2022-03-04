@@ -20,9 +20,9 @@ import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, upd
 import Notes from './components/Notes'
 import PWAPrompt from 'react-ios-pwa-prompt'
 import { Translations } from "@aws-amplify/ui-components";
-//import Notification from './Notification'
-
-
+import Notifications from './Notifications'
+import ReactNotificationComponent from ".//ReactNotification";
+import { onMessageListener } from "./firebase";
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -94,6 +94,23 @@ function Home() {
   const [author, setAuthor] = useState(null);
   const [noteID, setNoteID] = useState(null);
   function handleFocus(){ acontecimentoField.current.focus()}
+  const [showNotification, setShowNotification] = useState(false);
+  const [notification, setNotification] = useState({ title: "", body: "" });
+
+  console.log(show, notification);
+
+  onMessageListener()
+    .then((payload) => {
+      setShowNotification(true);
+      setNotification({
+        title: payload.notification.title,
+        body: payload.notification.body,
+      });
+      console.log(payload);
+    })
+    .catch((err) => console.log("ERROR: failed: ", err));
+ 
+
   
 
   useEffect(()=>{
@@ -967,7 +984,16 @@ async function fetchUserData(){
   
   return (
     <div className="home">
-
+    {showNotification ? (
+        <ReactNotificationComponent
+          title={notification.title}
+          body={notification.body}
+        />
+      ) : (
+        <></>
+      )}
+      <Notifications />
+    
       <div className="container">
         <div className="row my-5">
           <div className="col-lg-5">
@@ -978,8 +1004,7 @@ async function fetchUserData(){
             </div>
           </div>
           <div className="col-lg-7">
-            <Login />
-           
+            <Login />           
             <PWAPrompt promptOnVisit={1} timesToShow={3} copyClosePrompt="Close" permanentlyHideOnDismiss={false}/>
             <div> {DataForm()} </div>            
           </div>

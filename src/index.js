@@ -5,7 +5,6 @@ import './App.css';
 import './index.css';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
-import { initializeFirebase, askForPermissioToReceiveNotifications} from './firebase';
 import {Buffer} from 'buffer';
 Buffer.from('anything','base64');
 
@@ -40,9 +39,6 @@ ReactDOM.render(
 //   </React.StrictMode>,
 //   document.getElementById('root')
 // );
-
-initializeFirebase();
-askForPermissioToReceiveNotifications();
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -4,8 +4,7 @@
 	"icons": [{
 			"src": "favicon.ico",
 			"sizes": "48x48",
-			"type": "image/x-icon",
-			"purpose": "any maskable"
+			"type": "image/x-icon"
 		},
 		{
 			"src": "android-chrome-maskable-96x96.png",
