@@ -19,11 +19,14 @@ messaging.onBackgroundMessage(function(payload) {
   const notificationOptions = {
     body: payload.notification.body,
     icon: "/android-chrome-192x192.png",
+    data: {
+      url: "https://main.d32uvie3c9lfuo.amplifyapp.com/"
+    }
   };
 
   console.log(notificationTitle);
   console.log(notificationOptions);
-  return self.registration.showNotification('test',
+  return self.registration.showNotification(notificationTitle,
     notificationOptions);
 
 });

@@ -23,6 +23,17 @@ import { Translations } from "@aws-amplify/ui-components";
 import Notifications from './Notifications'
 import ReactNotificationComponent from ".//ReactNotification";
 import { onMessageListener } from "./firebase";
+import ReactGA from 'react-ga';
+import { createBrowserHistory } from 'history';
+const history = createBrowserHistory();
+const trackingId = "UA-305888781"; 
+ReactGA.initialize(trackingId);
+
+// Initialize google analytics page view tracking
+history.listen(location => {
+  ReactGA.set({ page: location.pathname }); // Update the user's current page
+  ReactGA.pageview(location.pathname); // Record a pageview for the given page
+});
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -74,6 +85,8 @@ const initialFormState = {
                           acontecimentos:'',                         
                           sentiment: '',
                           author: ''}
+
+
 function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
   const [notes, setNotes] = useState([]);
@@ -97,7 +110,8 @@ function Home() {
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({ title: "", body: "" });
 
-  console.log(show, notification);
+  
+  
 
   onMessageListener()
     .then((payload) => {
@@ -198,7 +212,10 @@ async function fetchUserData(){
       try {
           const data = await Auth.currentAuthenticatedUser()
           if (data) {
-            /*console.log("INFO: Fetch User data", data);*/
+            console.log("INFO: Fetch User data", data);
+            ReactGA.set({
+              userId: data.username,
+            })
             setAuthor(data.attributes.email);           
           }
       } catch (err) {
