@@ -469,7 +469,8 @@ async function fetchUserData(){
 
     function ShowSentimentInReview(props) {
         const sentiment = props.sentiment;
-        if (sentiment) {
+        console.log('sentiment returned' , props.sentiment);
+        if (sentiment || sentiment !== '' || sentiment != null) {
           return <p className="text-dark"> Em conclusão, o paciente teve um dia <span>{sentiment} </span></p> ;
         }
         return;
