@@ -977,7 +977,7 @@ async function fetchUserData(){
     return (
       <form className="form" name="formEntry" id="formEntry" alt="the form fields">     
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
-        <input type="hidden"  value={new Date().toLocaleString()} name="title" id="title" readOnly  />
+        <input type="hidden"  value={new Date().toLocaleString('pt-BR')} name="title" id="title" readOnly />
         <input type="hidden" value={author || ""} name="author" id="author" readOnly />  
                 <div> {AssistantNames()} </div> 
                 <div> {VitalCollection()} </div>          
