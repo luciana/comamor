@@ -305,7 +305,7 @@ async function fetchUserData(){
               <p className="text-dark text-bold"> Cuidadora do dia: {nomeDaCuidadora(note.cuidadora_do_dia)}</p>
               <h4 className="text-dark">Sinais Vitais</h4>
               <p className="text-dark"> Pressão Arterial: {note.pressao} mmHg</p>   
-              <p className="text-dark"> Saturação: {note.temperatura} SpO2%</p>   
+              <p className="text-dark"> Saturação: {note.saturacao} SpO2%</p>   
               <p className="text-dark"> Temperatura: {note.temperatura} &deg;C </p>   
 
               <h4 className="text-dark">Pela Manhã</h4>
@@ -974,7 +974,8 @@ async function fetchUserData(){
           <input className="form-control" 
                   id="temperatura"                 
                   placeholder="37" 
-                  required="required"  
+                  required="required" 
+                  step="any" 
                   type='number' inputMode='numeric' pattern="[0-9]*"    
                   name="temperatura" maxLength="10" size="6"  
                   defaultValue={formData.temperatura}

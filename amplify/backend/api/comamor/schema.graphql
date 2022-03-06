@@ -8,9 +8,9 @@ type Note @model @key(name: "byPatient", fields: ["patientID"]) {
   id: ID!
   title: String!
   cuidadora_do_dia: Int!
-  pressao: String,
-  saturacao: Int,
-  temperatura: Int,
+  pressao: String!,
+  saturacao: Int!,
+  temperatura: Float!,
   manha_remedios_text: String,
   manha_refeicao_text: String,
   manha_higiene_text: String,
