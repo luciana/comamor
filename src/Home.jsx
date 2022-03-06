@@ -14,7 +14,7 @@ import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
 //import Cookies from 'universal-cookie';
-import { FaMicrophone, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
+import { FaMicrophone, FaCalendarAlt, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
 import { listNotes } from './graphql/queries';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, updateNote as updateNoteMutation } from './graphql/mutations';
 import Notes from './components/Notes'
@@ -25,6 +25,8 @@ import ReactNotificationComponent from ".//ReactNotification";
 import { onMessageListener } from "./firebase";
 import ReactGA from 'react-ga';
 import { createBrowserHistory } from 'history';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const history = createBrowserHistory();
 const trackingId = "UA-305888781"; 
 ReactGA.initialize(trackingId);
@@ -91,7 +93,7 @@ function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
   const [notes, setNotes] = useState([]);
   const [formData, setFormData] = useState(initialFormState);
-  /* console.log('form initial state', formData); */
+  console.log('form initial state', formData);
   const [comportamentoType, setComportamentoType] = useState([{ label: "Loading ...", value: "" }]);
   const [loading, setLoading] = useState(true);
   const [sentiment, setSentiment] = useState("")
@@ -109,6 +111,7 @@ function Home() {
   function handleFocus(){ acontecimentoField.current.focus()}
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({ title: "", body: "" });
+  const [startDate, setStartDate] = useState(new Date());
 
   
   
@@ -172,11 +175,11 @@ function Home() {
   }
 
   function nomeDaCuidadora(id){
-      if ( id === '1' ) return 'Mirian';
-      if ( id === '2' ) return 'Samira';
+      if ( id === '1' || id === 1 ) return 'Mirian';
+      if ( id === '2' || id === 2) return 'Samira';
   }
 
-   function handleSubmit(e) {  
+  function handleSubmit(e) {  
       console.log("handleSubmit");
       if (e.target.checkValidity()) {
           e.preventDefault()
@@ -206,6 +209,14 @@ function Home() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
     if ( !!errors ) { setErrors([]);}
   };
+
+  function handleDateChange(date){
+    console.log('date', date.toLocaleString());
+    setStartDate(date);
+    setFormData({ ...formData, 'title': date.toLocaleString() });
+    if ( !!errors ) { setErrors([]);}
+   
+  }
 
 async function fetchUserData(){
       
@@ -356,6 +367,7 @@ async function fetchUserData(){
         const thenote= notes1[index];     
         setNoteID(thenote.id);
         setTextToInterpret(thenote.acontecimentos);
+        setStartDate(Date.parse(thenote.title))
         setFormData({ title: thenote.title, 
                         patientID: 1,
                         cuidadora_do_dia: thenote.cuidadora_do_dia,
@@ -390,17 +402,17 @@ async function fetchUserData(){
       const index = notes.findIndex(i => i.id === note.id)
       console.log("index of note to be updatd", index);
       const notes1 = [...notes]
-      console.log("all notes to be updatd", notes1);
-      delete  notes1[index].patient;
-      delete  notes1[index].comments;
-      delete notes1[index].createdAt;
-      delete notes1[index].updatedAt;
-      setFormData(notes1[index]);
+      // delete  notes1[index].patient;
+      // delete  notes1[index].comments;
+      // delete notes1[index].createdAt;
+      // delete notes1[index].updatedAt;
+      console.log("retrieved note to be updated", notes1[index]);
+      let noteToBeUpdated = formData;
+      noteToBeUpdated.id = notes1[index].id;
+      setFormData(noteToBeUpdated);
     
-      console.log("note to be updated", notes1[index]);
-      setNotes( notes1 )
-      
-      await API.graphql({ query: updateNoteMutation, variables: { input:  notes1[index] }});
+      console.log("note to be updated", noteToBeUpdated);  
+      await API.graphql({ query: updateNoteMutation, variables: { input:  noteToBeUpdated }});
       alert("Anotações salvas");
     } catch (err) {
       console.log("ERROR: updating notes", err);
@@ -490,7 +502,7 @@ async function fetchUserData(){
                 centered>
               <h3 className="modal-header text-dark">Resumo de Anotações</h3>
               <div className="modal-body">
-              
+              <p className="text-dark text-bold"> Dia: {formData.title}</p>
               <p className="text-dark text-bold"> Cuidadora do dia: {nomeDaCuidadora(formData.cuidadora_do_dia)}</p>
               <h4 className="text-dark">Sinais Vitais</h4>
               <p className="text-dark"> Pressão Arterial: {formData.pressao} mmHg</p>   
@@ -738,7 +750,7 @@ async function fetchUserData(){
   function DateDisplay(){
       return (
         <div className="date">
-          <span> Hoje: {new Date().toLocaleString()}</span>      
+          <span> Hoje: {new Date().toLocaleString("pt-BR")}</span>      
         </div>
       );
   }
@@ -973,12 +985,35 @@ async function fetchUserData(){
     )
   }
 
+
+  function DateStarted(){
+    return (
+      <div className="outer">
+        <div className="inner curve white">
+        <h3> <FaCalendarAlt className="facalendaralt"/>  Anotações do dia </h3>
+        <div className="form-group was-validated">       
+          <div className="form-check form-check-inline">       
+              <DatePicker className="form-check-input" 
+                          required="required"      
+                          selected={startDate}                          
+                          onChange={(date:Date) => handleDateChange(date)} 
+                          dateFormat="dd/MM/yyyy"                                                  
+                          name="startDatePicker"
+              />             
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   function DataForm(){
     return (
-      <form className="form" name="formEntry" id="formEntry" alt="the form fields">     
+      <form className="form" name="formEntry" id="formEntry" alt="the form fields"> 
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
-        <input type="hidden"  value={new Date().toLocaleString('pt-BR')} name="title" id="title" readOnly />
+        <input type="hidden"  value={startDate} name="title" id="title"  onChange={e => handleChange(e)}  readOnly />
         <input type="hidden" value={author || ""} name="author" id="author" readOnly />  
+                <div> {DateStarted()} </div>
                 <div> {AssistantNames()} </div> 
                 <div> {VitalCollection()} </div>          
                 <div> {RelatorioDoDia()} </div>
