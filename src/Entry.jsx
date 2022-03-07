@@ -2,10 +2,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import logo from './logo.svg';
 import {Modal, Button} from 'react-bootstrap';
-import { Amplify, API, I18n, Auth } from 'aws-amplify';
+import { Amplify, API, I18n } from 'aws-amplify';
 import AmplifyI18n from "amplify-i18n"
-import { withAuthenticator, Authenticator } from '@aws-amplify/ui-react';
-import { Header } from "./components/auth/Header";
 import '@aws-amplify/ui-react/styles.css';
 import './App.css';
 import './styles/authenticate.css';
@@ -13,35 +11,15 @@ import Predictions, { AmazonAIPredictionsProvider } from '@aws-amplify/predictio
 import awsconfig from './aws-exports';
 import getUserMedia from 'get-user-media-promise';
 import MicrophoneStream from 'microphone-stream';
-//import Cookies from 'universal-cookie';
 import { FaMicrophone, FaCalendarAlt, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
 import { listNotes } from './graphql/queries';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, updateNote as updateNoteMutation } from './graphql/mutations';
-import Notes from './components/Notes'
-import PWAPrompt from 'react-ios-pwa-prompt'
 import { Translations } from "@aws-amplify/ui-components";
-import Notifications from './Notifications'
-import ReactNotificationComponent from ".//ReactNotification";
-import { onMessageListener } from "./firebase";
-import ReactGA from 'react-ga';
-import { createBrowserHistory } from 'history';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import Entries from './components/Entries';
-  
-
-const history = createBrowserHistory();
-const trackingId = "UA-305888781"; 
-ReactGA.initialize(trackingId);
-
-// Initialize google analytics page view tracking
-history.listen(location => {
-  ReactGA.set({ page: location.pathname }); // Update the user's current page
-  ReactGA.pageview(location.pathname); // Record a pageview for the given page
-});
 
 Amplify.configure(awsconfig);
-Amplify.addPluggable(new AmazonAIPredictionsProvider());
+//Amplify.addPluggable(new AmazonAIPredictionsProvider());
 const locales = ["en", "pt-BR"]
 AmplifyI18n.configure(locales)
 I18n.setLanguage('pt-BR');
@@ -92,7 +70,7 @@ const initialFormState = {
                           author: ''}
 
 
-function Home() {
+function Entry() {
   const [textToInterpret, setTextToInterpret] = useState("");
   const [notes, setNotes] = useState([]);
   const [formData, setFormData] = useState(initialFormState);
@@ -112,41 +90,13 @@ function Home() {
   const [author, setAuthor] = useState(null);
   const [noteID, setNoteID] = useState(null);
   function handleFocus(){ acontecimentoField.current.focus()}
-  const [showNotification, setShowNotification] = useState(false);
-  const [notification, setNotification] = useState({ title: "", body: "" });
   const [startDate, setStartDate] = useState(new Date());
-  const refDataForm = useRef(null)
-  const scrollToDataForm = () => refDataForm.current.scrollIntoView();
-
-
-
-  onMessageListener()
-    .then((payload) => {
-      setShowNotification(true);
-      setNotification({
-        title: payload.notification.title,
-        body: payload.notification.body,
-      });
-      console.log(payload);
-    })
-    .catch((err) => console.log("ERROR: failed: ", err));
- 
-
-  
 
   useEffect(()=>{
     let unmounted = false;
 
-    /* Save cookie data */
-    /* const cookiestored = new Cookies();
-    console.log(`stored cookie ${cookiestored.get('comamor_cookie_data')}`);
-    const cookie = new Cookies();
-    cookie.set('comamor_cookie_data','cookie data',{path: '/'});    */
-
     /* Get Notes information from GraphQL db ( AWS AppSync )*/
     fetchNotes();
-
-    fetchUserData();
 
     /* Get ComportamentoType from an URL ( future )*/  
     async function getcomportamentoType() {
@@ -222,22 +172,6 @@ function Home() {
    
   }
 
-async function fetchUserData(){
-      
-      try {
-          const data = await Auth.currentAuthenticatedUser()
-          if (data) {
-            console.log("INFO: Fetch User data", data);
-            ReactGA.set({
-              userId: data.username,
-            })
-            setAuthor(data.attributes.email);           
-          }
-      } catch (err) {
-        console.log("ERROR: Getting User Data ")
-        setErrors(err );
-      }
-    }
 
   async function fetchNotes() {
     try{
@@ -356,7 +290,9 @@ async function fetchUserData(){
   }
   async function selectNote(note){
       const id = note.id;
-      if(id){          
+
+      if(id){    
+        window.scrollTo(0, 0);
         const index = notes.findIndex(i => i.id === note.id)
         const notes1 = [...notes]     
         delete  notes1[index].patient;
@@ -564,27 +500,7 @@ async function fetchUserData(){
   }
 
 
-  function Login(){
-
-    function displayGreetingName ( name ) {       
-      if (!name) return
-      return name.replace(/(\w{3})[\w.-]+@([\w.]+\w)/, "$1***@$2")
-    }
-    
-    
-    
-    return (
-
-     <Authenticator>
-          {({ signOut, user }) => (       
-            <div className="container">             
-              <span className="text"> Olá {displayGreetingName(user.attributes.email)}, seja bem vinda(o)!</span> 
-              <button onClick={signOut} type="button" className="btn btn-link">Sair</button>
-            </div>
-          )}
-      </Authenticator>
-    );
-  }
+ 
 
   function SpeechToText(props) {
     
@@ -1012,7 +928,7 @@ async function fetchUserData(){
 
   function DataForm(){
     return (
-      <form   ref={refDataForm} className="form" name="formEntry" id="formEntry" alt="the form fields"> 
+      <form className="form" name="formEntry" id="formEntry" alt="the form fields"> 
         <input type="hidden" value='1' name="patientID" id="patientID" readOnly />   
         <input type="hidden"  value={startDate} name="title" id="title"  onChange={e => handleChange(e)}  readOnly />
         <input type="hidden" value={author || ""} name="author" id="author" readOnly />  
@@ -1041,31 +957,7 @@ async function fetchUserData(){
 
   
   return (
-    <div className="home container">
-    {showNotification ? (
-        <ReactNotificationComponent
-          title={notification.title}
-          body={notification.body}
-        />
-      ) : (
-        <></>
-      )}
-      <Notifications />
-      <Login />           
-      <PWAPrompt promptOnVisit={1} timesToShow={3} copyClosePrompt="Close" permanentlyHideOnDismiss={false}/>  
-      <Entries
-      notes={notes}
-      deleteNote={deleteNote}
-      selectNote={selectNote}   
-      openNote={openNote} 
-      scrollToDataForm={scrollToDataForm}        
-      />  
-      {/* <Notes
-        notes={notes}
-        deleteNote={deleteNote}
-        selectNote={selectNote}   
-        openNote={openNote}         
-      /> */}
+      <div className="entry container">
         <div className="row my-5">
           <div className="col-lg-5">
             <div className="App-header">        
@@ -1074,16 +966,12 @@ async function fetchUserData(){
                  <DateDisplay />
             </div>
           </div>
-          <div className="col-lg-7">
-                  
+          <div className="col-lg-7">                  
             <div> {DataForm()} </div>            
           </div>
-        </div>
-    </div>
+        </div>         
+      </div>
   );
 }
 
-export default withAuthenticator(Home,
-                                { components: { 
-                                  Header                                 
-                                   } });
+export default Entry;

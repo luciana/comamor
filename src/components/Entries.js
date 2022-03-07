@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import './../App.css';
 import { FaRegTrashAlt } from 'react-icons/fa';
+import './../App.css';
 
-class Notes extends Component {
+class Entries extends Component {
 
     
     parseSentimentData = (sentiment_string) => {
@@ -23,50 +23,43 @@ class Notes extends Component {
       if ( id === 2 ) return 'Samira';
     }
 
-
-
     render() { 
-
-   
-      return (
+      return ( 
       <div>
-       
-
+        <div className="container py-4">
+              <button className="btn btn-primary" onClick={this.props.scrollToDataForm} >Nova Anotação do dia</button>
+        </div>
         <div className="table-responsive">
         <table className="table table-light table-striped table-hover table-borderless table-sm align-middle">
            <thead className="table-success">
            <tr>                          
                   <th scope="col" className="text font-weight-bold">Dia</th>
-                  <th scope="col" className="text font-weight-bold">Cuidadora</th>
-                  <th scope="col" className="text font-weight-bold ">Em Conclusão</th>
+                  <th scope="col" className="text font-weight-bold">Cuidadora</th>                 
                   <th scope="col" className="text font-weight-bold">Pressão</th>
                   <th scope="col" className="text font-weight-bold">Saturação</th>
                   <th scope="col" className="text font-weight-bold">Temperatura</th>
-                  <th scope="col" className="text font-weight-bold ">Humor Manha</th>
-                  <th scope="col" className="text font-weight-bold">Humor Tarde</th>
-                  <th scope="col" className="text font-weight-bold">Humor Noite</th>
-                  <th scope="col" className="text font-weight-bold">Observações</th>                                          
-                  <th scope="col" className="text font-weight-bold"></th>  
-                  <th scope="col" className="text font-weight-bold"></th> 
-                  <th scope="col" className="text font-weight-bold"></th> 
+                  <th scope="col" className="text font-weight-bold ">Manha</th>
+                  <th scope="col" className="text font-weight-bold"> Tarde</th>
+                  <th scope="col" className="text font-weight-bold"> Noite</th>
+                  <th scope="col" className="text font-weight-bold">Observações</th>  
+                  <th scope="col" className="text font-weight-bold ">Em Conclusão</th>                                        
+                  <th scope="col" className="text font-weight-bold"></th>                   
             </tr>       
            </thead>
            <tbody>
               {this.props.notes.map(note => (                  
                 <tr key={note.id || note.title}>                
                   <th scope="row"><small>{new Date(note.title).toLocaleString().split(',')[0]}</small></th>
-                  <td className="text"><small>{this.nomeDaCuidadora(note.cuidadora_do_dia)}</small></td>
-                  <td className="text"><small>{this.parseSentimentData(note.sentiment)}</small></td>
+                  <td className="text"><small>{this.nomeDaCuidadora(note.cuidadora_do_dia)}</small></td>                
                   <td className="text"><small>{note.pressao} mmHg</small></td>
                   <td className="text"><small>{note.saturacao} SpO<span className="tiny">2%</span></small></td>
                   <td className="text"><small>{note.temperatura} &deg;C</small></td>
-                  <td className="text"><small>{note.manha_humor_select}</small></td>   
-                  <td className="text"><small>{note.tarde_humor_select}</small></td>   
-                  <td className="text"><small>{note.noite_humor_select}</small></td>   
+                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataForm();}}>Anotacoes da manha</button> </small></td>   
+                  <td className="text"><small><button className="btn btn-success" onClick={() => this.props.selectNote(note)}>Anotacoes da tarde</button> </small> </td>   
+                  <td className="text"><small><button className="btn btn-success" onClick={() => this.props.selectNote(note)}>Anotacoes da noite</button> </small> </td>   
                   <td className="text"><small>{note.acontecimentos}</small></td>   
+                  <td className="text"><small>{this.parseSentimentData(note.sentiment)}</small></td>
                   <td className="text"><button className="btn btn-danger" onClick={() => this.props.deleteNote(note)}><FaRegTrashAlt /></button></td>                 
-                  <td className="text"><small><button className="btn btn-success" onClick={() => this.props.selectNote(note)}>Editar</button> </small> </td>
-                  <td className="text"></td>
                 </tr>                            
                 ))}            
            </tbody>
@@ -77,4 +70,4 @@ class Notes extends Component {
   }
 }
 
-export default Notes
+export default Entries

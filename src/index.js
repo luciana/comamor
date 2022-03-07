@@ -12,11 +12,13 @@ export { default as Navigation } from "./Navigation";
 export { default as Footer } from "./Footer";
 export { default as Home } from "./Home";
 export { default as Result } from "./Result";
+export { default as Entry } from "./Entry";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import {
   Navigation,
   Footer,
   Home,
+  Entry,
   Result
 } from "./";
 
@@ -25,6 +27,7 @@ ReactDOM.render(
     <Navigation />
     <Routes>
       <Route path="/" element={<Home />} />
+      <Route path="/entry" element={<Entry />} /> 
       <Route path="/result" element={<Result />} />      
     </Routes>
     <Footer />
