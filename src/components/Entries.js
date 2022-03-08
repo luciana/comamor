@@ -27,7 +27,7 @@ class Entries extends Component {
       return ( 
       <div>
         <div className="container py-4">
-              <button className="btn btn-primary" onClick={this.props.scrollToDataForm} >Nova Anotação do dia</button>
+              <button className="btn btn-primary" onClick={() =>{this.props.clearForm(); this.props.scrollToDataForm()}} >Nova Anotação do dia</button>
         </div>
         <div className="table-responsive">
         <table className="table table-light table-striped table-hover table-borderless table-sm align-middle">
@@ -51,12 +51,12 @@ class Entries extends Component {
                 <tr key={note.id || note.title}>                
                   <th scope="row"><small>{new Date(note.title).toLocaleString().split(',')[0]}</small></th>
                   <td className="text"><small>{this.nomeDaCuidadora(note.cuidadora_do_dia)}</small></td>                
-                  <td className="text"><small>{note.pressao} mmHg</small></td>
+                  <td className="text"><small>{note.id} mmHg</small></td>
                   <td className="text"><small>{note.saturacao} SpO<span className="tiny">2%</span></small></td>
                   <td className="text"><small>{note.temperatura} &deg;C</small></td>
-                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataForm();}}>Anotacoes da manha</button> </small></td>   
-                  <td className="text"><small><button className="btn btn-success" onClick={() => this.props.selectNote(note)}>Anotacoes da tarde</button> </small> </td>   
-                  <td className="text"><small><button className="btn btn-success" onClick={() => this.props.selectNote(note)}>Anotacoes da noite</button> </small> </td>   
+                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormManha();}}>Anotacoes da manha</button> </small></td>   
+                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormTarde();}}>Anotacoes da tarde</button> </small> </td>   
+                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormNoite();}}>Anotacoes da noite</button> </small> </td>   
                   <td className="text"><small>{note.acontecimentos}</small></td>   
                   <td className="text"><small>{this.parseSentimentData(note.sentiment)}</small></td>
                   <td className="text"><button className="btn btn-danger" onClick={() => this.props.deleteNote(note)}><FaRegTrashAlt /></button></td>                 

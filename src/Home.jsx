@@ -1,6 +1,5 @@
 /* eslint-disable import/first */
 import React, { useEffect, useState, useRef } from 'react';
-import logo from './logo.svg';
 import {Modal, Button} from 'react-bootstrap';
 import { Amplify, API, I18n, Auth } from 'aws-amplify';
 import AmplifyI18n from "amplify-i18n"
@@ -116,7 +115,13 @@ function Home() {
   const [notification, setNotification] = useState({ title: "", body: "" });
   const [startDate, setStartDate] = useState(new Date());
   const refDataForm = useRef(null)
+  const refDataFormManha = useRef(null)
+  const refDataFormTarde = useRef(null)
+  const refDataFormNoite = useRef(null)
   const scrollToDataForm = () => refDataForm.current.scrollIntoView();
+  const scrollToDataFormManha = () => refDataFormManha.current.scrollIntoView();
+  const scrollToDataFormTarde = () => refDataFormTarde.current.scrollIntoView();
+  const scrollToDataFormNoite = () => refDataFormNoite.current.scrollIntoView();
 
 
 
@@ -175,7 +180,10 @@ function Home() {
 
 
   function isEditing(){
-    return notes.findIndex(i => i.id === noteID) > 0
+    console.log('notes', notes);
+    console.log('note id', noteID);
+    console.log('found note' , notes.findIndex(i => i.id === noteID));
+    return notes.findIndex(i => i.id === noteID) === 0
   }
 
   function nomeDaCuidadora(id){
@@ -183,6 +191,9 @@ function Home() {
       if ( id === '2' || id === 2) return 'Samira';
   }
 
+  function clearForm(){
+    setFormData(initialFormState);
+  }
   function handleSubmit(e) {  
       console.log("handleSubmit");
       if (e.target.checkValidity()) {
@@ -196,7 +207,7 @@ function Home() {
             const noteSelected = notes[notes.findIndex(i => i.id === noteID)]
             console.log('note to be updated' , noteSelected);
             if (noteSelected){
-                updateNote(noteSelected);  
+                updateNote(noteSelected);
             }
           }
           
@@ -364,9 +375,9 @@ async function fetchUserData(){
         delete notes1[index].createdAt;
         delete notes1[index].updatedAt
         console.log(" notes1", notes1);
-        setNotes( notes1 )  
-        console.log('selected note', notes1);    
-        const thenote= notes1[index];     
+        setNotes( notes1 )           
+        const thenote= notes1[index];    
+        console.log('selected note', notes1[index]);   
         setNoteID(thenote.id);
         setTextToInterpret(thenote.acontecimentos);
         setStartDate(Date.parse(thenote.title))
@@ -414,7 +425,8 @@ async function fetchUserData(){
       setFormData(noteToBeUpdated);
     
       console.log("note to be updated", noteToBeUpdated);  
-      await API.graphql({ query: updateNoteMutation, variables: { input:  noteToBeUpdated }});
+      const updateResponse = await API.graphql({ query: updateNoteMutation, variables: { input:  noteToBeUpdated }});
+      console.log('updateResponse', updateResponse);
       alert("Anotações salvas");
     } catch (err) {
       console.log("ERROR: updating notes", err);
@@ -749,13 +761,7 @@ async function fetchUserData(){
     );
   }
 
-  function DateDisplay(){
-      return (
-        <div className="date">
-          <span> Hoje: {new Date().toLocaleString("pt-BR")}</span>      
-        </div>
-      );
-  }
+ 
 
   function RelatorioDoDia(){
     return ( 
@@ -1019,9 +1025,9 @@ async function fetchUserData(){
                 <div> {DateStarted()} </div>
                 <div> {AssistantNames()} </div> 
                 <div> {VitalCollection()} </div>          
-                <div> {RelatorioDoDia()} </div>
-                <div> {RelatorioDaTarde()} </div>
-                <div> {RelatorioDaNoite()} </div>
+                <div  ref={refDataFormManha}> {RelatorioDoDia()} </div>
+                <div ref={refDataFormTarde}> {RelatorioDaTarde()} </div>
+                <div ref={refDataFormNoite}> {RelatorioDaNoite()} </div>
               <div>
                 <div className="aligned"> {TextInterpretation()} </div> 
                 <div className="aligned"> <SpeechToText />  </div>
@@ -1042,6 +1048,7 @@ async function fetchUserData(){
   
   return (
     <div className="home container">
+
     {showNotification ? (
         <ReactNotificationComponent
           title={notification.title}
@@ -1057,8 +1064,13 @@ async function fetchUserData(){
       notes={notes}
       deleteNote={deleteNote}
       selectNote={selectNote}   
-      openNote={openNote} 
-      scrollToDataForm={scrollToDataForm}        
+      openNote={openNote}
+      clearForm={clearForm}
+      scrollToDataForm={scrollToDataForm}
+      scrollToDataFormManha={scrollToDataFormManha}  
+      scrollToDataFormTarde={scrollToDataFormTarde}  
+      scrollToDataFormNoite={scrollToDataFormNoite}  
+     
       />  
       {/* <Notes
         notes={notes}
@@ -1066,19 +1078,8 @@ async function fetchUserData(){
         selectNote={selectNote}   
         openNote={openNote}         
       /> */}
-        <div className="row my-5">
-          <div className="col-lg-5">
-            <div className="App-header">        
-                <img src={logo} className="App-logo" alt="logo" /> 
-                <h1> Diario do Papai </h1>
-                 <DateDisplay />
-            </div>
-          </div>
-          <div className="col-lg-7">
-                  
-            <div> {DataForm()} </div>            
-          </div>
-        </div>
+
+      <div> {DataForm()} </div>         
     </div>
   );
 }
