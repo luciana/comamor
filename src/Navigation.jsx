@@ -31,11 +31,6 @@ function Navigation() {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <NavLink className="nav-link" to="/entry">
-                  Entrar Notas
-                </NavLink>
-              </li>
-              <li className="nav-item">
                 <NavLink className="nav-link" to="/result">
                   Análise
                 </NavLink>

@@ -16,7 +16,7 @@ import MicrophoneStream from 'microphone-stream';
 import { FaMicrophone, FaCalendarAlt, FaRegSun, FaNotesMedical, FaSun, FaUserAlt, FaStar} from 'react-icons/fa';
 import { listNotes } from './graphql/queries';
 import { createNote as createNoteMutation, deleteNote as deleteNoteMutation, updateNote as updateNoteMutation } from './graphql/mutations';
-import Notes from './components/Notes'
+/*import Notes from './components/Notes'*/
 import PWAPrompt from 'react-ios-pwa-prompt'
 import { Translations } from "@aws-amplify/ui-components";
 import Notifications from './Notifications'
@@ -31,7 +31,13 @@ import Entries from './components/Entries';
 
 const history = createBrowserHistory();
 const trackingId = "UA-305888781"; 
-ReactGA.initialize(trackingId);
+ReactGA.initialize(trackingId,  {
+  debug: true,
+  titleCase: false,
+  gaOptions: {
+    userId: 123
+  }
+});
 
 // Initialize google analytics page view tracking
 history.listen(location => {
@@ -269,6 +275,10 @@ async function fetchUserData(){
         setNotes([ ...notes, createdNote.data.createNote ]);             
         /*console.log("NOTE ID after creation" , createdNote.data.createNote.id);*/
         setNoteID(createdNote.data.createNote.id);
+        ReactGA.event({
+          category: 'Note',
+          action: 'Created new note'
+        });
       
       }catch (err) {
         console.log("ERROR: creating notes", err);
@@ -291,6 +301,10 @@ async function fetchUserData(){
       const newNotesArray = notes.filter(note => note.id !== id);
       setNotes(newNotesArray);
       await API.graphql({ query: deleteNoteMutation, variables: { input: { id } }});
+      ReactGA.event({
+        category: 'Note',
+        action: 'Delete existing note'
+      });
     } catch (err) {
       console.log("ERROR: deleting notes", err);
        if(err.errors[0]){
@@ -381,6 +395,7 @@ async function fetchUserData(){
         setNoteID(thenote.id);
         setTextToInterpret(thenote.acontecimentos);
         setStartDate(Date.parse(thenote.title))
+        
         setFormData({ title: thenote.title, 
                         patientID: 1,
                         cuidadora_do_dia: thenote.cuidadora_do_dia,
@@ -405,6 +420,10 @@ async function fetchUserData(){
                         acontecimentos:thenote.acontecimentos,                         
                         sentiment: thenote.sentimen
                        } );
+        ReactGA.event({
+          category: 'Note',
+          action: 'Select existing note'
+        });
       }
   }
 
@@ -428,6 +447,11 @@ async function fetchUserData(){
       const updateResponse = await API.graphql({ query: updateNoteMutation, variables: { input:  noteToBeUpdated }});
       console.log('updateResponse', updateResponse);
       alert("Anotações salvas");
+
+      ReactGA.event({
+        category: 'Note',
+        action: 'Updated existing note'
+      });
     } catch (err) {
       console.log("ERROR: updating notes", err);
       alert("Houve um problem editando esta note. Por favor comunique ao administrador.")
@@ -483,7 +507,10 @@ async function fetchUserData(){
                 setSentiment(sentiment_p);                
                 setSentimentObject(sentimentObjectString);          
                 setFormData({ ...formData, 'sentiment': sentimentObjectString});  
-               
+                ReactGA.event({
+                  category: 'Sentiment',
+                  action: 'Collected sentiment data'
+                });
                               
           }).catch(err => 
               { 
