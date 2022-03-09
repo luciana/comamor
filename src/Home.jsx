@@ -32,7 +32,7 @@ import Entries from './components/Entries';
 const history = createBrowserHistory();
 const trackingId = "UA-222061258-1"; 
 ReactGA.initialize(trackingId,  {
-  debug: true,
+  debug: false,
   titleCase: false,
   gaOptions: {
     userId: 123
@@ -199,6 +199,8 @@ function Home() {
 
   function clearForm(){
     setFormData(initialFormState);
+    setTextToInterpret('');
+    setStartDate(new Date());
   }
   function handleSubmit(e) {  
       console.log("handleSubmit");
@@ -239,7 +241,7 @@ function Home() {
    
   }
 
-async function fetchUserData(){
+  async function fetchUserData(){
       
       try {
           const data = await Auth.currentAuthenticatedUser()
@@ -259,7 +261,17 @@ async function fetchUserData(){
   async function fetchNotes() {
     try{
       const apiData = await API.graphql({ query: listNotes });
-      setNotes(apiData.data.listNotes.items);
+      const items = apiData.data.listNotes.items;
+    
+      items.sort(function(a, b) {
+        var c = new Date(a.title);
+        var d = new Date(b.title);
+        return c-d;
+      });
+      setNotes(items);
+      console.log(' SORTED NOTES ', items);
+      
+     
      } catch (err) {
        console.log("ERROR: Fetching Notes")
        setErrors(err.errors[0].message );
@@ -389,7 +401,8 @@ async function fetchUserData(){
         delete notes1[index].createdAt;
         delete notes1[index].updatedAt
         console.log(" notes1", notes1);
-        setNotes( notes1 )           
+        setNotes( notes1 ) 
+                
         const thenote= notes1[index];    
         console.log('selected note', notes1[index]);   
         setNoteID(thenote.id);
@@ -418,7 +431,7 @@ async function fetchUserData(){
                         noite_atividade_text: thenote.noite_atividade_text,
                         noite_humor_select: thenote.noite_humor_select,
                         acontecimentos:thenote.acontecimentos,                         
-                        sentiment: thenote.sentimen
+                        sentiment: thenote.sentiment
                        } );
         ReactGA.event({
           category: 'Note',
@@ -993,7 +1006,7 @@ async function fetchUserData(){
           <input className="form-control" 
                   id="pressao"                 
                   placeholder="12/8"    
-                  required="required"            
+                  /*required="required" */
                   defaultValue={formData.pressao}                                
                   name="pressao" maxLength="10" size="6"
                    onChange={e => handleChange(e)}  />
@@ -1002,14 +1015,14 @@ async function fetchUserData(){
                   id="saturacao"                 
                   placeholder="95" name="saturacao" maxLength="10" size="6"
                   defaultValue={formData.saturacao}                 
-                  required="required"    
+                 /* required="required"    */
                   type='number' inputMode='numeric' pattern="[0-9]*"  
                    onChange={e => handleChange(e)} />
           <label className="block" htmlFor="name">Temperatura (&deg;C)</label>
           <input className="form-control" 
                   id="temperatura"                 
                   placeholder="37" 
-                  required="required" 
+                  /*required="required" */
                   step="any" 
                   type='number' inputMode='numeric' pattern="[0-9]*"    
                   name="temperatura" maxLength="10" size="6"  
