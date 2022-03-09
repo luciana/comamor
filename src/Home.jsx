@@ -30,7 +30,7 @@ import Entries from './components/Entries';
   
 
 const history = createBrowserHistory();
-const trackingId = "UA-305888781"; 
+const trackingId = "UA-222061258-1"; 
 ReactGA.initialize(trackingId,  {
   debug: true,
   titleCase: false,
