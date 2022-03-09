@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FaRegTrashAlt } from 'react-icons/fa';
+import { FaRegTrashAlt, FaPenAlt } from 'react-icons/fa';
 import './../App.css';
 
 class Entries extends Component {
@@ -39,9 +39,9 @@ class Entries extends Component {
                   <th scope="col" className="text font-weight-bold">Saturação</th>
                   <th scope="col" className="text font-weight-bold">Temperatura</th>
                   <th scope="col" className="text font-weight-bold ">Em Conclusão</th>    
-                  <th scope="col" className="text font-weight-bold "></th>
-                  <th scope="col" className="text font-weight-bold"> </th>
-                  <th scope="col" className="text font-weight-bold"> </th>
+                  <th scope="col" className="text font-weight-bold ">Manhã</th>
+                  <th scope="col" className="text font-weight-bold">Tarde </th>
+                  <th scope="col" className="text font-weight-bold">Noite</th>
                   
                                                      
                   <th scope="col" className="text font-weight-bold"></th>                   
@@ -56,9 +56,9 @@ class Entries extends Component {
                   <td className="text"><small>{note.saturacao} SpO<span className="tiny">2%</span></small></td>
                   <td className="text"><small>{note.temperatura} &deg;C</small></td>
                   <td className="text"><small>{this.parseSentimentData(note.sentiment)}</small></td>
-                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormManha();}}>Anotação da manha</button> </small></td>   
-                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormTarde();}}>Anotação da tarde</button> </small> </td>   
-                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormNoite();}}>Anotação da noite</button> </small> </td>   
+                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormManha();}}><FaPenAlt /></button> </small></td>   
+                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormTarde();}}><FaPenAlt /></button> </small> </td>   
+                  <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormNoite();}}><FaPenAlt /></button> </small> </td>   
                  
                   
                   <td className="text"><button className="btn btn-danger" onClick={() => this.props.deleteNote(note)}><FaRegTrashAlt /></button></td>                 
