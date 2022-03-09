@@ -189,7 +189,7 @@ function Home() {
     console.log('notes', notes);
     console.log('note id', noteID);
     console.log('found note' , notes.findIndex(i => i.id === noteID));
-    return notes.findIndex(i => i.id === noteID) === 0
+    return notes.findIndex(i => i.id === noteID)  >= 0
   }
 
   function nomeDaCuidadora(id){
@@ -1006,7 +1006,7 @@ function Home() {
           <input className="form-control" 
                   id="pressao"                 
                   placeholder="12/8"    
-                  /*required="required" */
+                  required="required"
                   defaultValue={formData.pressao}                                
                   name="pressao" maxLength="10" size="6"
                    onChange={e => handleChange(e)}  />
@@ -1015,14 +1015,14 @@ function Home() {
                   id="saturacao"                 
                   placeholder="95" name="saturacao" maxLength="10" size="6"
                   defaultValue={formData.saturacao}                 
-                 /* required="required"    */
+                  required="required" 
                   type='number' inputMode='numeric' pattern="[0-9]*"  
                    onChange={e => handleChange(e)} />
           <label className="block" htmlFor="name">Temperatura (&deg;C)</label>
           <input className="form-control" 
                   id="temperatura"                 
                   placeholder="37" 
-                  /*required="required" */
+                  required="required"
                   step="any" 
                   type='number' inputMode='numeric' pattern="[0-9]*"    
                   name="temperatura" maxLength="10" size="6"  
