@@ -51,7 +51,7 @@ class Entries extends Component {
                 <tr key={note.id || note.title}>                
                   <th scope="row"><small>{new Date(note.title).toLocaleString().split(',')[0]}</small></th>
                   <td className="text"><small>{this.nomeDaCuidadora(note.cuidadora_do_dia)}</small></td>                
-                  <td className="text"><small>{note.id} mmHg</small></td>
+                  <td className="text"><small>{note.pressao} mmHg</small></td>
                   <td className="text"><small>{note.saturacao} SpO<span className="tiny">2%</span></small></td>
                   <td className="text"><small>{note.temperatura} &deg;C</small></td>
                   <td className="text"><small><button className="btn btn-success" onClick={() => {this.props.selectNote(note); this.props.scrollToDataFormManha();}}>Anotacoes da manha</button> </small></td>   

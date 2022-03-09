@@ -279,7 +279,7 @@ async function fetchUserData(){
           category: 'Note',
           action: 'Created new note'
         });
-      
+        alert("Anotações criadas");
       }catch (err) {
         console.log("ERROR: creating notes", err);
         if(err.errors){
@@ -532,7 +532,7 @@ async function fetchUserData(){
    
 
     return(
-      <div className="py-1">
+      <div className="my-5">
         <div> <button type="button" className="btn btn-warning" onClick={interpretFromPredictions}> Prevê e Salvar Anotações</button>  </div>
         <div>          
           <Modal show={show} 
