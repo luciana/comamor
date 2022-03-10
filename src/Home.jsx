@@ -32,7 +32,7 @@ import Entries from './components/Entries';
 const history = createBrowserHistory();
 const trackingId = "UA-222061258-1"; 
 ReactGA.initialize(trackingId,  {
-  debug: false,
+  debug: true,
   titleCase: false,
   gaOptions: {
     userId: 123
@@ -166,10 +166,11 @@ function Home() {
       const body = [  { name: '' },
                       { name: "Aborrecido"},
                       { name: "Agitado" },
-                      { name: "Agressivo" },
-                      { name: "Concentrado"},
+                      { name: "Agressivo" },    
+                      { name: "Concentrado" },                 
                       { name: "Disperso" },
                       { name: "Feliz"},
+                      { name: "Nervoso"},
                       { name: "Sonolento" },
                       { name: "Tranquilo" }];
       if (!unmounted) {
@@ -268,6 +269,7 @@ function Home() {
         var d = new Date(b.title);
         return c-d;
       });
+      items.reverse();
       setNotes(items);
       console.log(' SORTED NOTES ', items);
       
