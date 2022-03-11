@@ -29,21 +29,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import Entries from './components/Entries';
   
 
-const history = createBrowserHistory();
-const trackingId = "UA-222061258-1"; 
-ReactGA.initialize(trackingId,  {
-  debug: true,
-  titleCase: false,
-  gaOptions: {
-    userId: 123
-  }
-});
 
-// Initialize google analytics page view tracking
-history.listen(location => {
-  ReactGA.set({ page: location.pathname }); // Update the user's current page
-  ReactGA.pageview(location.pathname); // Record a pageview for the given page
-});
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -128,6 +114,8 @@ function Home() {
   const scrollToDataFormManha = () => refDataFormManha.current.scrollIntoView();
   const scrollToDataFormTarde = () => refDataFormTarde.current.scrollIntoView();
   const scrollToDataFormNoite = () => refDataFormNoite.current.scrollIntoView();
+  const history = createBrowserHistory();
+  const trackingId = "UA-222061258-1"; 
 
 
 
@@ -185,6 +173,22 @@ function Home() {
     };
   },[]);
 
+
+  
+  ReactGA.initialize(trackingId,  {
+    debug: false,
+    titleCase: false
+  });
+
+  // Initialize google analytics page view tracking
+  history.listen(location => {
+    ReactGA.ga((tracker) => {
+      ReactGA.set({ dimension14: 'Sports' });
+      ReactGA.set({ page: location.pathname }); // Update the user's current page
+      ReactGA.pageview(location.pathname); // Record a pageview for the given page
+    });
+    
+  });
 
   function isEditing(){
     console.log('notes', notes);
