@@ -27,9 +27,6 @@ import { createBrowserHistory } from 'history';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Entries from './components/Entries';
-  
-
-
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
@@ -1118,13 +1115,6 @@ function Home() {
       scrollToDataFormNoite={scrollToDataFormNoite}  
      
       />  
-      {/* <Notes
-        notes={notes}
-        deleteNote={deleteNote}
-        selectNote={selectNote}   
-        openNote={openNote}         
-      /> */}
-
       <div> {DataForm()} </div>         
     </div>
   );

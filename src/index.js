@@ -3,7 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './App.css';
 import './index.css';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+//import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import ServiceWorkerWrapper from './ServiceWorkerWrapper';
 import reportWebVitals from './reportWebVitals';
 import {Buffer} from 'buffer';
 Buffer.from('anything','base64');
@@ -23,11 +24,13 @@ import {
 ReactDOM.render(
   <Router>
     <Navigation />
+    <ServiceWorkerWrapper />
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/result" element={<Result />} />      
     </Routes>
     <Footer />
+
   </Router>,
    
   document.getElementById("root")
@@ -43,7 +46,7 @@ ReactDOM.render(
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://cra.link/PWA
-serviceWorkerRegistration.register();
+//serviceWorkerRegistration.register();
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
