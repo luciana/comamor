@@ -50,7 +50,7 @@ class Entries extends Component {
            <tbody>
               {this.props.notes.map(note => (                  
                 <tr key={note.id || note.title}>                
-                  <th scope="row"><small>{new Date(note.title).toLocaleDateString('pt-br', { weekday:"long", year:"numeric", month:"short", day:"numeric"}) }</small></th>
+                  <th scope="row"><small>{new Date(note.title).toLocaleDateString('pt-br', { weekday:"short", year:"numeric", month:"short", day:"numeric"}) }</small></th>
                   <td className="text"><small>{this.nomeDaCuidadora(note.cuidadora_do_dia)}</small></td>                
                   <td className="text"><small>{note.pressao} mmHg</small></td>
                   <td className="text"><small>{note.saturacao} SpO<span className="tiny">2%</span></small></td>
