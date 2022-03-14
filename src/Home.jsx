@@ -174,11 +174,8 @@ function Home() {
 
   
   ReactGA.initialize(trackingId,  {
-    debug: true,
-    titleCase: false,
-    gaOptions: {
-      userId: 123
-    }
+    debug: false,
+    titleCase: false   
   });
 
   // Initialize google analytics page view tracking
