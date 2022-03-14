@@ -28,6 +28,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Entries from './components/Entries';
 
+
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
 const locales = ["en", "pt-BR"]
@@ -173,14 +174,16 @@ function Home() {
 
   
   ReactGA.initialize(trackingId,  {
-    debug: false,
-    titleCase: false
+    debug: true,
+    titleCase: false,
+    gaOptions: {
+      userId: 123
+    }
   });
 
   // Initialize google analytics page view tracking
   history.listen(location => {
-    ReactGA.ga((tracker) => {
-      ReactGA.set({ dimension14: 'Sports' });
+    ReactGA.ga((tracker) => {    
       ReactGA.set({ page: location.pathname }); // Update the user's current page
       ReactGA.pageview(location.pathname); // Record a pageview for the given page
     });
