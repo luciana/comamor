@@ -5,6 +5,8 @@ import HumorBarChart from './components/charts/humorBarChart';
 import SentimentLineChart from './components/charts/sentimentLineChart';
 import CuidadoraPieChart from './components/charts/cuidadoraPieChart';
 import VitalsComposedChart from './components/charts/vitalsComposedChart';
+import SaturationLineChart from './components/charts/saturationLineChart';
+import TemperatureLineChart from './components/charts/temperatureLineChart';
 
 function Result() {
  
@@ -13,9 +15,9 @@ function Result() {
   const [barChartHumorData, setBarChartHumorData] = useState({});
   const [pieChartCuidadoraData, setPieChartCuidadoraData] = useState([]);
   const [composedChartVitalsData, setComposedChartVitalsData] = useState([]);
-  
-  
-  
+  const [saturationChartVitalsData, setSaturationChartVitalsData] = useState([]);
+  const [temperatureChartVitalsData, setTemperatureChartVitalsData] = useState([]);
+    
   useEffect(()=>{
     fetchNotes();
   },[]);
@@ -127,31 +129,35 @@ function Result() {
   function getVitalsChartData(){
 
     let composedChartVitalDataLocal = [];
-    // {
-    //   name: "Day A",
-    //   systolic: 120,
-    //   diastolic: 80,
-    //   saturation: 92,
-    //   temperature: 36.5
-    // },
-
+    let saturationLineChartVitalDataLocal = [];
+    let tempLineChartVitalDataLocal = [];
+  
     if ( notes ){      
       notes.forEach(item => {                
           let object = {};       
+          let object_sat= {};
+          let object_temp= {};
           if( item.saturacao !== 999) { 
             let systolic = item.pressao.split('/')[0];
             let diastolic = item.pressao.split('/')[1];
             object.name = item.title.split(',')[0];
-            object.systolic = systolic*10;
-            object.diastolic = diastolic*10;
-            object.saturation = item.saturacao;
-            object.temperature = item.temperatura;        
-            composedChartVitalDataLocal.push(object);       
+            object.systolic = systolic;
+            object.diastolic = diastolic;
+            object_sat.name = item.title.split(',')[0];
+            object_sat.saturation = item.saturacao;
+            object_temp.name = item.title.split(',')[0];
+            object_temp.temperature = item.temperatura;        
+            composedChartVitalDataLocal.push(object);     
+            saturationLineChartVitalDataLocal.push(object_sat);  
+            tempLineChartVitalDataLocal.push(object_temp);  
           }; 
       });     
     }
     setComposedChartVitalsData(composedChartVitalDataLocal);
+    setSaturationChartVitalsData(saturationLineChartVitalDataLocal);
+    setTemperatureChartVitalsData(tempLineChartVitalDataLocal);
    // console.log("vitals chart Data", composedChartVitalsData);
+    console.log("vitals chart Data - saturacao", saturationChartVitalsData);
 
   }
 
@@ -178,7 +184,7 @@ function Result() {
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                                             
             <h1 className="text-heading">
-              Analysis de Sinais Vitais
+              Analysis de Pressão Arterial 
             </h1>
             { composedChartVitalsData.length > 0 &&
              <VitalsComposedChart value={composedChartVitalsData} />
@@ -187,6 +193,34 @@ function Result() {
           </div>
         </div>
       </div>
+      <div className="container">
+        <div className="row align-items-center my-5">
+          <div className="col-lg-12">                                             
+            <h1 className="text-heading">
+              Analysis de Saturação de Oxigênio ( SpO2% )
+            </h1>
+            { saturationChartVitalsData.length > 0 &&
+             <SaturationLineChart value={saturationChartVitalsData} />
+            }
+                  
+          </div>
+        </div>
+      </div>
+      <div className="container">
+        <div className="row align-items-center my-5">
+          <div className="col-lg-12">                                             
+            <h1 className="text-heading">
+              Analysis de Temperatura Corporal ( &deg;C )
+            </h1>
+            { temperatureChartVitalsData.length > 0 &&
+             <TemperatureLineChart value={temperatureChartVitalsData} />
+            }
+                  
+          </div>
+        </div>
+      </div>
+      
+
       <div className="container">
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                      
