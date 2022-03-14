@@ -20,8 +20,7 @@ function Result() {
     fetchNotes();
   },[]);
  
-  useEffect(()=>{
-    console.log('notes has been set', notes);
+  useEffect(()=>{   
     getSentimentChartData();
     getHumorChartData();  
     getCuidadoraChartData();   
@@ -41,7 +40,7 @@ function Result() {
       });
       items.reverse();
       setNotes(items);
-      console.log(' SORTED NOTES FROM RESULTS ', items);
+      //console.log(' SORTED NOTES FROM RESULTS ', items);
        
       } catch (err) {
         console.log("ERROR: Fetching Notes from results")      
@@ -52,7 +51,6 @@ function Result() {
 
   function getSentimentChartData(){
     let lineChartDataLocal = [];
-    console.log('notes', notes);
     if ( notes ){
       
       notes.forEach(item => {   
@@ -72,7 +70,7 @@ function Result() {
       });     
     }  
     setLineChartSentimentData(lineChartDataLocal); 
-    console.log("lineChartDataLocal", lineChartSentimenttData);
+    //console.log("lineChartDataLocal", lineChartSentimenttData);
   }
 
   function getHumorChartData(){
@@ -98,7 +96,7 @@ function Result() {
     };
     barChartDataLocalObject.data = barChartDataLocal;
     setBarChartHumorData(barChartDataLocalObject); 
-    console.log("BarChartHumorData", barChartHumorData);
+    //console.log("BarChartHumorData", barChartHumorData);
   }
 
   function nomeDaCuidadora(id){
@@ -122,7 +120,7 @@ function Result() {
     };
 
     setPieChartCuidadoraData(pieChartDataLocal); 
-    console.log("pieChartData", pieChartCuidadoraData);
+    //console.log("pieChartData", pieChartCuidadoraData);
   }
 
 
@@ -140,10 +138,7 @@ function Result() {
     if ( notes ){      
       notes.forEach(item => {                
           let object = {};       
-          if( item.saturacao !== 999) {
-
-         
-            console.log('adfafa', item.saturacao);      
+          if( item.saturacao !== 999) { 
             let systolic = item.pressao.split('/')[0];
             let diastolic = item.pressao.split('/')[1];
             object.name = item.title.split(',')[0];
@@ -156,7 +151,7 @@ function Result() {
       });     
     }
     setComposedChartVitalsData(composedChartVitalDataLocal);
-    console.log("vitals chart Data", composedChartVitalsData);
+   // console.log("vitals chart Data", composedChartVitalsData);
 
   }
 

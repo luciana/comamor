@@ -24,12 +24,12 @@ export const requestForToken = async (setTokenFound) => {
         } else {
           // Show permission request UI
           setTokenFound(false);
-          console.log('No registration token available. Request permission to generate one.');
+          console.log('ERROR: No registration token available. Request permission to generate one.');
         }
       })
       .catch((err) => {
         setTokenFound(false);
-        console.log('An error occurred while retrieving token. ', err);
+        console.log('ERROR: An error occurred while retrieving token. ', err);
       });
 };
 
