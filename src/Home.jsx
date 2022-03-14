@@ -276,7 +276,7 @@ function Home() {
       
      
      } catch (err) {
-       console.log("ERROR: Fetching Notes")
+       console.log("ERROR: Fetching Notes", err)
        setErrors(err.errors[0].message );
        }
   }
