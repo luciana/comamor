@@ -9,6 +9,28 @@ class TimelineChart extends Component {
     <thead>
       <tr key='{med.name}-date'>
         <th scope="col"></th>
+        <th scope="col"><FaRegSun /> Manhã</th>
+        <th scope="row"><FaSun /> Tarde</th>
+        <th scope="row"><FaStar /> Noite</th>
+        
+      </tr>      
+    </thead>
+    <tbody>
+    {this.props.value.map(med => (    
+      <tr key={med.name}>    
+        <th  scope="row"><small>{med.name}</small></th>
+        <td><small>{(med.manha).join('\r\n')}</small></td>
+        <td><small>{(med.tarde).join('\r\n')}</small></td>
+        <td><small>{(med.noite).join('\r\n')}</small></td>
+      </tr>   
+      ))}  
+    </tbody>
+  </table>
+
+  /*  <table className="table">
+    <thead>
+      <tr key='{med.name}-date'>
+        <th scope="col"></th>
         {this.props.value.map((med, index) => ( <th scope="col"> {med.name} </th> ))};
       </tr>      
     </thead>
@@ -27,7 +49,7 @@ class TimelineChart extends Component {
         {this.props.value.map(med => (<td>{med.noite}</td>))};
       </tr>
     </tbody>
-  </table>
+  </table>*/
   );
   }
 }

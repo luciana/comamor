@@ -291,34 +291,20 @@ function Result() {
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                      
             <h1 className="text-heading">
-              Analysis de Humor
+              Análise de Humor
             </h1>
             {lineChartSentimenttData.length > 0 && 
              <SentimentLineChart value={lineChartSentimenttData}/>
             }
           </div>          
         </div>
-      </div>   
-
-
-      
+      </div>  
 
       <div className="container">
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                                             
             <h1 className="text-heading">
-              Crono de Medicacao
-            </h1>           
-                                           
-          </div>
-        </div>
-      </div>
-
-      <div className="container">
-        <div className="row align-items-center my-5">
-          <div className="col-lg-12">                                             
-            <h1 className="text-heading">
-              Analysis de Pressão Arterial 
+              Análise de Pressão Arterial 
             </h1>
             { composedChartVitalsData.length > 0 &&
              <VitalsComposedChart value={composedChartVitalsData} />
@@ -331,7 +317,7 @@ function Result() {
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                                             
             <h1 className="text-heading">
-              Analysis de Saturação de Oxigênio ( SpO2% )
+              Análise de Saturação de Oxigênio ( SpO2% )
             </h1>
             { saturationChartVitalsData.length > 0 &&
              <SaturationLineChart value={saturationChartVitalsData} />
@@ -344,7 +330,7 @@ function Result() {
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                                             
             <h1 className="text-heading">
-              Analysis de Temperatura Corporal ( &deg;C )
+              Análise de Temperatura Corporal ( &deg;C )
             </h1>
             { temperatureChartVitalsData.length > 0 &&
              <TemperatureLineChart value={temperatureChartVitalsData} />
@@ -359,7 +345,7 @@ function Result() {
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                      
             <h1 className="text-heading">
-              Analysis de Comportamento
+              Análise de Comportamento
             </h1>
             {typeof barChartHumorData != "undefined"  &&  barChartHumorData.data && barChartHumorData.data.length > 0 &&
              <HumorBarChart value={barChartHumorData} />
