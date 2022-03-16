@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { API } from 'aws-amplify';
 import { listNotes } from './graphql/queries';
 import HumorBarChart from './components/charts/humorBarChart';
+import HumorPieChart from './components/charts/humorPieChart';
 import SentimentLineChart from './components/charts/sentimentLineChart';
 import CuidadoraPieChart from './components/charts/cuidadoraPieChart';
 import VitalsComposedChart from './components/charts/vitalsComposedChart';
@@ -30,7 +31,7 @@ function Result() {
     getCuidadoraChartData();   
     getVitalsChartData();
     getMedicationChartData();
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[notes]);
 
   async function fetchNotes() {
@@ -86,8 +87,7 @@ function Result() {
     if ( notes ){
       for( const item of notes ){
         let object_remedio ={}
-        let remedioTardeTimeLinetDataLocal = [];
-        let remedioManhaTimeLinetDataLocal1 =[];
+        let remedioTardeTimeLinetDataLocal = [];       
         let remedioManhaTimeLinetDataLocal =[];
         let remedioNoiteTimeLinetDataLocal = [];
 
@@ -343,14 +343,19 @@ function Result() {
 
       <div className="container">
         <div className="row align-items-center my-5">
-          <div className="col-lg-12">                      
+          <div className="col-lg-6">                      
             <h1 className="text-heading">
               Análise de Comportamento
             </h1>
             {typeof barChartHumorData != "undefined"  &&  barChartHumorData.data && barChartHumorData.data.length > 0 &&
-             <HumorBarChart value={barChartHumorData} />
+             <HumorBarChart value={barChartHumorData} />             
             }
-          </div>         
+          </div>   
+          <div className="col-lg-6">                                 
+            {typeof barChartHumorData != "undefined"  &&  barChartHumorData.data && barChartHumorData.data.length > 0 &&            
+             <HumorPieChart value={barChartHumorData.data} />             
+            }
+          </div>       
         </div>
       </div>
       <div className="container">

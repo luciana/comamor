@@ -68,21 +68,3 @@ self.addEventListener('message', (event) => {
     self.skipWaiting();
   }
 });
-
-// Any other custom service worker logic can go here.
-// export const registerServiceWorker = () => {
-//   if ('serviceWorker' in navigator) {
-//     console.log (" In service worker navigator");
-//     navigator.serviceWorker
-//       .register('firebase-messaging-sw.js')
-//       .then(function (registration) {
-//         // eslint-disable-next-line no-console
-//         console.log('[SW]: SCOPE: ', registration.scope);
-//         return registration.scope;
-//       })
-//       .catch(function (err) {
-//         console.log('ERROR: [SW]: SCOPE: ', err);
-//         return err;
-//       });
-//   }
-// };

@@ -12,7 +12,7 @@ export default class HumorBarChart extends Component {
 
   render() {
     console.log('INFO: Humor Bar Chart data', this.props.value);
-    const { activeIndex, data } = this.props.value;
+    const { data } = this.props.value;
 
 
     const activeItem = data[this.state.activeIndex];
@@ -20,7 +20,7 @@ export default class HumorBarChart extends Component {
     return (
       <div style={{ width: '100%' }}>
         <ResponsiveContainer width="100%" height={100}>
-          <BarChart width={150} height={40} data={data}>
+          <BarChart data={data}>
             <Bar dataKey="comportamento" onClick={this.handleClick}>
               {data.map((entry, index) => (
                 <Cell cursor="pointer" fill={index === this.state.activeIndex ? '#82ca9d' : '#8884d8'} key={`cell-${index}`} />
