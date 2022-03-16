@@ -81,6 +81,7 @@ const initialFormState = {
                           author: ''}
 
 
+
 function Home() {
   const [textToInterpret, setTextToInterpret] = useState("");
   const [notes, setNotes] = useState([]);

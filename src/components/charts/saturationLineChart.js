@@ -35,7 +35,7 @@ export default class SaturationLineChart extends PureComponent {
     console.log('INFO: Saturation Line Chart data', this.props.value);
 
     return (
-      <ResponsiveContainer width="100%" aspect={2}>
+      <ResponsiveContainer width="100%" aspect={3}>
         <LineChart    
           data={this.props.value}
           margin={{

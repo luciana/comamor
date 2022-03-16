@@ -7,6 +7,7 @@ import CuidadoraPieChart from './components/charts/cuidadoraPieChart';
 import VitalsComposedChart from './components/charts/vitalsComposedChart';
 import SaturationLineChart from './components/charts/saturationLineChart';
 import TemperatureLineChart from './components/charts/temperatureLineChart';
+import TimelineChart from './components/Timeline';
 
 function Result() {
  
@@ -17,6 +18,7 @@ function Result() {
   const [composedChartVitalsData, setComposedChartVitalsData] = useState([]);
   const [saturationChartVitalsData, setSaturationChartVitalsData] = useState([]);
   const [temperatureChartVitalsData, setTemperatureChartVitalsData] = useState([]);
+  const [medicationTimeline, setMedicationTimeline] = useState([]);
     
   useEffect(()=>{
     fetchNotes();
@@ -27,6 +29,7 @@ function Result() {
     getHumorChartData();  
     getCuidadoraChartData();   
     getVitalsChartData();
+    getMedicationChartData();
 
   },[notes]);
 
@@ -49,16 +52,132 @@ function Result() {
       }
   }
 
+  function uniq(a) {
+    var seen = {};
+    var out = [];
+    var len = a.length;
+    var j = 0;
+    for(var i = 0; i < len; i++) {
+         var item = a[i];
+         if(seen[item] !== 1) {
+               seen[item] = 1;
+               out[j++] = item;
+         }
+    }
+    return out;
+}
  
+  function getMedicationChartData(){
+    let remedioTimeLinetDataLocal = [];
+    const medications = [
+                      {name: "Ass", variations: ["Ass", "ass"]},
+                      {name: "Benicar", variations: ["Benicar", "Benicard"]},
+                      {name: "Canabidiol", variations: ["Canabidiol", "Tetra", "Carmem"]},  
+                      {name: "Cocichimil", variations: ["Cocichimil"]},                                     
+                      {name: "Donila Duo 10/20", variations: ["Donila Duo 10/20", "Donila Duo", "DonilaDuo", "Doniladua", "Donila dua"]}, 
+                      {name: "Esc", variations: ["Esc 10 mg", "Esc", "Esc 20 mg"]},
+                      {name: "Luftal", variations: ["Luftal"]},  
+                      {name: "Rivotril", variations: ["Rivotril"]},
+                      {name: "Risperidona", variations: ["Risperidona", "Resperidona"]},
+                      {name: "Rosuvastatina", variations: ["Rosuvastatina"]}
+                     ];    
+            
+
+    if ( notes ){
+      for( const item of notes ){
+        let object_remedio ={}
+        let remedioTardeTimeLinetDataLocal = [];
+        let remedioManhaTimeLinetDataLocal1 =[];
+        let remedioManhaTimeLinetDataLocal =[];
+        let remedioNoiteTimeLinetDataLocal = [];
+
+        if ( item.manha_remedios_text.length > 0 ){            
+          object_remedio.name = item.title.split(',')[0];  
+
+          for ( const medication of medications){
+
+            let med = medication.name;
+            let a_variations = medication.variations;
+            //console.log('med for' , med);
+            //console.log(' in ', item.manha_remedios_text);
+
+            for ( const index in a_variations ){
+              //console.log('looking for variation' , a_variations[index] );
+              if (item.manha_remedios_text.includes(a_variations[index])) {
+                //console.log('found variation' , a_variations[index] );
+                remedioManhaTimeLinetDataLocal.push(med);
+              }
+            }           
+          }                
+        }
+        object_remedio.manha = uniq(remedioManhaTimeLinetDataLocal);
+       
+
+        if ( item.tarde_remedios_text.length > 0 ){            
+          object_remedio.name = item.title.split(',')[0];  
+
+          for ( const medication of medications){
+
+            let med = medication.name;
+            let a_variations = medication.variations;
+            //console.log('med for' , med);
+            //console.log(' in ', item.tarde_remedios_text);
+
+            for ( const index in a_variations ){
+              //console.log('looking for variation' , a_variations[index] );
+              if (item.tarde_remedios_text.includes(a_variations[index])) {
+                //console.log('found variation' , a_variations[index] );
+                remedioTardeTimeLinetDataLocal.push(med);
+              }
+            }           
+          }                
+        }
+        object_remedio.tarde = uniq(remedioTardeTimeLinetDataLocal);
+
+        if ( item.noite_remedios_text.length > 0 ){            
+          object_remedio.name = item.title.split(',')[0];  
+
+          for ( const medication of medications){
+
+            let med = medication.name;
+            let a_variations = medication.variations;
+            //console.log('med for' , med);
+            //console.log(' in ', item.noite_remedios_text);
+
+            for ( const index in a_variations ){
+              //console.log('looking for variation' , a_variations[index] );
+              if (item.noite_remedios_text.includes(a_variations[index])) {
+                //console.log('found variation' , a_variations[index] );
+                remedioNoiteTimeLinetDataLocal.push(med);
+              }
+            }           
+          }                
+        }
+        object_remedio.noite = uniq(remedioNoiteTimeLinetDataLocal);
+        remedioTimeLinetDataLocal.push(object_remedio);
+        
+      }
+
+      // data = [
+      //   {
+      //     manha: ['Benicar', 'Cocichimil', 'Donila Duo 10/20', 'Esc']
+      //     name: "3/12/2022"
+      //     noite: ['Cocichimil']
+      //     tarde: ['Ass']]
+    //        }
+      // ]
+      setMedicationTimeline(remedioTimeLinetDataLocal);
+      //console.log("remedio manha data", medicationTimeline);
+    }
+  }
 
   function getSentimentChartData(){
     let lineChartDataLocal = [];
     if ( notes ){
       
-      notes.forEach(item => {   
-       
+      notes.forEach(item => {
         if (item.sentiment){          
-          let object = {};    
+          let object = {};              
           let sentiment = JSON.parse(item.sentiment);
           object.name = item.title.split(',')[0];
           object.positivo = sentiment.positive;
@@ -180,6 +299,21 @@ function Result() {
           </div>          
         </div>
       </div>   
+
+
+      
+
+      <div className="container">
+        <div className="row align-items-center my-5">
+          <div className="col-lg-12">                                             
+            <h1 className="text-heading">
+              Crono de Medicacao
+            </h1>           
+                                           
+          </div>
+        </div>
+      </div>
+
       <div className="container">
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                                             
@@ -245,9 +379,21 @@ function Result() {
           </div>
           <div className="col-lg-5">            
             <p>
-                Esse grafico mostra quantidade de vezes ao mes cade cuidadora cuidou do papai.
+                Esse grafico mostra quantidade de vezes cada cuidadora cuidou do papai.
             </p>           
           </div>
+        </div>
+      </div>
+      <div className="container">
+        <div className="row align-items-center my-5">
+          <div className="col-lg-12">                      
+            <h1 className="text-heading">
+            Cronograma de Medicamentos
+            </h1>
+            { medicationTimeline.length > 0 &&
+             <TimelineChart value={medicationTimeline} />
+            }
+          </div>         
         </div>
       </div>
    
