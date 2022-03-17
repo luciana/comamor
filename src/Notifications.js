@@ -3,7 +3,9 @@ import React, { useState, useEffect } from "react";
 import { requestForToken } from "./firebase.js";
 
 const Notifications = (props) => {
-  const [ setTokenFound] = useState(false);
+  const [isTokenFound, setTokenFound] = useState(false);
+
+  console.log("Token found", isTokenFound);
 
   // To load once
   useEffect(() => {

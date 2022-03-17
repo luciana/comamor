@@ -35,7 +35,7 @@ export default class TemperatureLineChart extends PureComponent {
     console.log('INFO: Temperature Line Chart data', this.props.value);
 
     return (
-      <ResponsiveContainer width="100%" aspect={3}>
+      <ResponsiveContainer width="100%" aspect={1}>
         <LineChart    
           data={this.props.value}
           margin={{
@@ -45,12 +45,12 @@ export default class TemperatureLineChart extends PureComponent {
             bottom: 10,
           }}
         >
-          <CartesianGrid strokeDasharray="9 9" />
-          <XAxis dataKey="name" height={60} tick={<CustomizedAxisTick />} />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name"  tick={<CustomizedAxisTick />} />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="temperature" stroke="#aaccd8" label={<CustomizedLabel />} />       
+          <Line type="monotone" dataKey="temperature" stroke="#aaccd8"  />       
         </LineChart>
       </ResponsiveContainer>
     );

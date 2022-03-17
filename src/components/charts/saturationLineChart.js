@@ -35,7 +35,7 @@ export default class SaturationLineChart extends PureComponent {
     console.log('INFO: Saturation Line Chart data', this.props.value);
 
     return (
-      <ResponsiveContainer width="100%" aspect={3}>
+      <ResponsiveContainer width="100%" aspect={1}>
         <LineChart    
           data={this.props.value}
           margin={{
@@ -50,7 +50,7 @@ export default class SaturationLineChart extends PureComponent {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="saturation" stroke="#8884d8" label={<CustomizedLabel />} />       
+          <Line type="monotone" dataKey="saturation" stroke="#8884d8" />       
         </LineChart>
       </ResponsiveContainer>
     );
