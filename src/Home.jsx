@@ -24,8 +24,10 @@ import ReactNotificationComponent from ".//ReactNotification";
 import { onMessageListener } from "./firebase";
 import ReactGA from 'react-ga';
 import { createBrowserHistory } from 'history';
-import DatePicker from "react-datepicker";
+import DatePicker , { registerLocale } from "react-datepicker";
+import ptBR from 'date-fns/locale/pt-BR';
 import "react-datepicker/dist/react-datepicker.css";
+registerLocale('ptBR', ptBR);
 import Entries from './components/Entries';
 
 
@@ -735,7 +737,7 @@ function Home() {
           source: {
             bytes
           },
-          language: "pt-BR", //other options are "en-GB", "fr-FR", "fr-CA", "es-US"
+          language: "pt-BR",
         },
       }).then(({ transcription: { fullText } }) => setTextToInterpret(fullText))
         .catch(err => {
@@ -1047,7 +1049,8 @@ function Home() {
         <div className="form-group was-validated">       
           <div className="form-check form-check-inline">       
               <DatePicker className="form-check-input" 
-                          required="required"      
+                          required="required"  
+                          locale = "ptBR"    
                           selected={startDate}                          
                           onChange={(date:Date) => handleDateChange(date)} 
                           dateFormat="dd/MM/yyyy"                                                  
