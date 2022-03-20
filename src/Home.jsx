@@ -207,10 +207,9 @@ function Home() {
     setTextToInterpret('');
     setStartDate(new Date());
   }
-  function handleSubmit(e) {  
-      console.log("handleSubmit");
+  function handleSubmit(e) {        
       if (e.target.checkValidity()) {
-          e.preventDefault()
+         // e.preventDefault()
           console.log("form data from form submit", formData);               
           if(!isEditing()){
             console.log("CREATE NOTE");
@@ -223,7 +222,8 @@ function Home() {
                 updateNote(noteSelected);
             }
           }
-          
+          fetchNotes();
+         
         } else {
           console.log("form data not valid", formData);
           setErrors(formData);
@@ -298,6 +298,7 @@ function Home() {
           action: 'Created new note'
         });
         alert("Anotações criadas");
+        window.scrollTo(0, 0);
       }catch (err) {
         console.log("ERROR: creating notes", err);
         if(err.errors){
@@ -466,7 +467,7 @@ function Home() {
       const updateResponse = await API.graphql({ query: updateNoteMutation, variables: { input:  noteToBeUpdated }});
       console.log('updateResponse', updateResponse);
       alert("Anotações salvas");
-
+      window.scrollTo(0, 0);
       ReactGA.event({
         category: 'Note',
         action: 'Updated existing note'
@@ -493,7 +494,7 @@ function Home() {
  
   function ShowSaveNoteButton(){
     function interpretFromPredictions(event) {
-          event.preventDefault();
+          //event.preventDefault();
           if (formValidation() !== 0 ) { return; }
           let dataToSentiment = formData.manha_atividade_text + ' ' +                                                       
                                 formData.manha_higiene_text + ' ' +
