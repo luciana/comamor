@@ -19,7 +19,7 @@ export default class HumorBarChart extends Component {
    
     return (
       <div style={{ width: '100%' }}>
-        <ResponsiveContainer width="100%" height={100}>
+        <ResponsiveContainer width="100%" height={200}>
           <BarChart data={data}>
             <Bar dataKey="comportamento" onClick={this.handleClick}>
               {data.map((entry, index) => (

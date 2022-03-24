@@ -15,6 +15,8 @@ function Result() {
   const [notes, setNotes] = useState([]);
   const [lineChartSentimenttData, setLineChartSentimentData] = useState([]);
   const [barChartHumorData, setBarChartHumorData] = useState({});
+  const [barChartHumorManhaData, setBarChartHumorManhaData] = useState({});
+  const [barChartHumorTardeData, setBarChartHumorTardeData] = useState({});
   const [pieChartCuidadoraData, setPieChartCuidadoraData] = useState([]);
   const [composedChartVitalsData, setComposedChartVitalsData] = useState([]);
   const [saturationChartVitalsData, setSaturationChartVitalsData] = useState([]);
@@ -196,15 +198,18 @@ function Result() {
 
   function getHumorChartData(){
     let barChartDataLocal = [];
+    let barChartManhaDataLocal = [];
+    let barChartTardeDataLocal = [];
     let barChartDataLocalObject = { data:[], activeIndex: 0}
     var res = {};
+    var res_manha = {};
+    var res_tarde = {};
+
     notes.forEach(function(v) {
       res[v.manha_humor_select] = (res[v.manha_humor_select] || 0) + 1;
-    });
-    notes.forEach(function(v) {
+      res_manha[v.manha_humor_select] = ( res_manha[v.manha_humor_select] || 0) + 1;
       res[v.tarde_humor_select] = (res[v.tarde_humor_select] || 0) + 1;
-    });
-    notes.forEach(function(v) {
+      res_tarde[v.tarde_humor_select] = ( res_tarde[v.tarde_humor_select] || 0) + 1;
       res[v.noite_humor_select] = (res[v.noite_humor_select] || 0) + 1;
     });
 
@@ -215,8 +220,24 @@ function Result() {
       object.comportamento = res[k];      
       barChartDataLocal.push(object);}
     };
+    for (var k in res_manha){     
+      if ( k ){
+      var object = {};     
+      object.name = k;
+      object.comportamento = res_manha[k];      
+      barChartManhaDataLocal.push(object);}
+    };
+    for (var k in res_tarde){     
+      if ( k ){
+      var object = {};     
+      object.name = k;
+      object.comportamento = res_tarde[k];      
+      barChartTardeDataLocal.push(object);}
+    };
     barChartDataLocalObject.data = barChartDataLocal;
     setBarChartHumorData(barChartDataLocalObject); 
+    setBarChartHumorManhaData(barChartManhaDataLocal); 
+    setBarChartHumorTardeData(barChartTardeDataLocal); 
     //console.log("BarChartHumorData", barChartHumorData);
   }
 
@@ -342,10 +363,10 @@ function Result() {
       
 
       <div className="container">
-        <div className="row align-items-center my-5">
+        <div className="row align-items-center py-5 my-5">
           <div className="col-lg-6">                      
             <h1 className="text-heading">
-              Análise de Comportamento
+              Análise de Comportamento do dia inteiro
             </h1>
             {typeof barChartHumorData != "undefined"  &&  barChartHumorData.data && barChartHumorData.data.length > 0 &&
              <HumorBarChart value={barChartHumorData} />             
@@ -357,7 +378,28 @@ function Result() {
             }
           </div>       
         </div>
+        <div className="row align-items-center py-5 my-5">
+          <div className="col-lg-6">               
+            <h1 className="text-heading">
+              Análise de Comportamento da Manhã
+            </h1>                   
+            {barChartHumorManhaData.length > 0 &&
+             <HumorPieChart value={barChartHumorManhaData} />             
+            }
+          </div>   
+          <div className="col-lg-6">
+            <h1 className="text-heading">
+              Análise de Comportamento da Tarde
+            </h1>                                  
+            {barChartHumorTardeData.length > 0 &&            
+             <HumorPieChart value={barChartHumorTardeData} />             
+            }
+          </div>       
+        </div>
       </div>
+
+      
+
       <div className="container">
         <div className="row align-items-center my-5">
           <div className="col-lg-7">                      
