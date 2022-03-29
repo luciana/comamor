@@ -33,8 +33,8 @@ import Entries from './components/Entries';
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
-// const locales = ["en", "pt-BR"]
-// AmplifyI18n.configure(locales)
+const locales = ["en", "pt-BR"]
+AmplifyI18n.configure(locales)
 I18n.setLanguage('pt-BR');
 
 /*https://github.com/aws-amplify/amplify-js/blob/main/packages/amplify-ui-components/src/common/Translations.ts*/
@@ -299,7 +299,8 @@ function Home() {
           action: 'Created new note'
         });
         alert("Anotações criadas");
-        window.scrollTo(0, 0);
+
+        window.location.reload(true);
       }catch (err) {
         console.log("ERROR: creating notes", err);
         if(err.errors){
@@ -468,7 +469,7 @@ function Home() {
       const updateResponse = await API.graphql({ query: updateNoteMutation, variables: { input:  noteToBeUpdated }});
       console.log('updateResponse', updateResponse);
       alert("Anotações salvas");
-      window.scrollTo(0, 0);
+      window.location.reload(true);
       ReactGA.event({
         category: 'Note',
         action: 'Updated existing note'

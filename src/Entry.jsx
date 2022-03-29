@@ -291,8 +291,7 @@ function Entry() {
   async function selectNote(note){
       const id = note.id;
 
-      if(id){    
-        window.scrollTo(0, 0);
+      if(id){           
         const index = notes.findIndex(i => i.id === note.id)
         const notes1 = [...notes]     
         delete  notes1[index].patient;
@@ -595,7 +594,7 @@ function Entry() {
           source: {
             bytes
           },
-          language: "pt-BR", 
+          language: "pt-BR", //other options are "en-GB", "fr-FR", "fr-CA", "es-US"
         },
       }).then(({ transcription: { fullText } }) => setTextToInterpret(fullText))
         .catch(err => {
