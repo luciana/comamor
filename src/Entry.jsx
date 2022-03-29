@@ -595,7 +595,7 @@ function Entry() {
           source: {
             bytes
           },
-          language: "pt-BR", //other options are "en-GB", "fr-FR", "fr-CA", "es-US"
+          language: "pt-BR", 
         },
       }).then(({ transcription: { fullText } }) => setTextToInterpret(fullText))
         .catch(err => {

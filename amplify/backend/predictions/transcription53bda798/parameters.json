@@ -8,6 +8,6 @@
         "Ref": "UnauthRoleName"
     },
     "convertType": "transcription",
-    "language": "en-US",
+    "language": "pt-BR",
     "access": "authAndGuest"
 }
