@@ -33,8 +33,8 @@ import Entries from './components/Entries';
 
 Amplify.configure(awsconfig);
 Amplify.addPluggable(new AmazonAIPredictionsProvider());
-const locales = ["en", "pt-BR"]
-AmplifyI18n.configure(locales)
+// const locales = ["en", "pt-BR"]
+// AmplifyI18n.configure(locales)
 I18n.setLanguage('pt-BR');
 
 /*https://github.com/aws-amplify/amplify-js/blob/main/packages/amplify-ui-components/src/common/Translations.ts*/
@@ -288,6 +288,7 @@ function Home() {
       if (formValidation() !== 0 ) { return; }
       console.log("create note with this form data", formData);
       try{
+
         const createdNote = await API.graphql({ query: createNoteMutation, variables: { input: formData } });
        /* console.log("created new note", createdNote.data.createNote);*/
         setNotes([ ...notes, createdNote.data.createNote ]);             
@@ -1054,7 +1055,7 @@ function Home() {
                           locale = "ptBR"    
                           selected={startDate}                          
                           onChange={(date:Date) => handleDateChange(date)} 
-                          dateFormat="dd/MM/yyyy"                                                  
+                          dateFormat="MM/dd/yyyy"                                                  
                           name="startDatePicker"
               />             
             </div>
