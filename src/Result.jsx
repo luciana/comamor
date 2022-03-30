@@ -227,12 +227,12 @@ function Result() {
       object.comportamento = res_manha[k];      
       barChartManhaDataLocal.push(object);}
     };
-    for (var k in res_tarde){     
-      if ( k ){
-      var object = {};     
-      object.name = k;
-      object.comportamento = res_tarde[k];      
-      barChartTardeDataLocal.push(object);}
+    for (var k1 in res_tarde){     
+      if ( k1 ){
+      var obj = {};     
+      obj.name = k1;
+      obj.comportamento = res_tarde[k1];      
+      barChartTardeDataLocal.push(obj);}
     };
     barChartDataLocalObject.data = barChartDataLocal;
     setBarChartHumorData(barChartDataLocalObject); 
