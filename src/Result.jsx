@@ -77,7 +77,7 @@ function Result() {
                       {name: "Benicar", variations: ["Benicar Anlo 20mg", "Benicar", "Benicard"]},
                       {name: "Canabidiol", variations: ["Canabidiol", "Tetra", "Carmem"]},  
                       {name: "Cocichimil", variations: ["Cocichimil"]},                                     
-                      {name: "Donila Duo 10/20", variations: ["Donila Duo 10/20", "Donila Duo 10/20mg", "Donila Duo.", "Donilla Duo", "Donila Duo", "DonilaDuo", "Doniladua", "Donila dua"]}, 
+                      {name: "Donila Duo 10/20", variations: ["donila dua", "Donila Duo 10/20", "Donila Duo 10/20mg", "Donila Duo.", "Donilla Duo", "Donila Duo", "DonilaDuo", "Doniladua", "Donila dua"]}, 
                       {name: "Esc", variations: ["Esc 10 mg", "esc 20mg", "Esc", "Esc 20 mg"]},
                       {name: "Luftal", variations: ["Luftal"]},  
                       {name: "Rivotril", variations: ["Rivotril"]},

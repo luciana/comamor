@@ -239,9 +239,9 @@ function Home() {
   };
 
   function handleDateChange(date){
-    console.log('date', date.toLocaleString());
+    console.log('date', date.toString());
     setStartDate(date);
-    setFormData({ ...formData, 'title': date.toLocaleString() });
+    setFormData({ ...formData, 'title': date.toString() });
     if ( !!errors ) { setErrors([]);}
    
   }
@@ -1054,7 +1054,7 @@ function Home() {
               <DatePicker className="form-check-input" 
                           required="required"  
                           locale = "ptBR"    
-                          selected={startDate}                          
+                          selected=""                          
                           onChange={(date:Date) => handleDateChange(date)} 
                           dateFormat="MM/dd/yyyy"                                                  
                           name="startDatePicker"
