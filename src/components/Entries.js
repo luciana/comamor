@@ -21,6 +21,7 @@ class Entries extends Component {
     nomeDaCuidadora  = (id) => {
       if ( id === 1 ) return 'Mirian';
       if ( id === 2 ) return 'Samira';
+      if ( id === 3 ) return 'Cíntia';
     }
 
     render() { 

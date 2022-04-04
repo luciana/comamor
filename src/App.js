@@ -179,7 +179,7 @@ function AssistantNames(){
       <button className="button curve user">
             <div>
               <FaUserAlt className="fauser"/>
-              <span>Miriam Sobrenome</span>
+              <span>Miriam</span>
             </div>
       </button> 
     </div>
@@ -187,7 +187,15 @@ function AssistantNames(){
       <button className="button curve user">
             <div>
               <FaUserAlt className="fauser"/>
-              <span>Samira Sobrenome</span>
+              <span>Samira </span>
+            </div>
+      </button> 
+      </div> 
+      <div className="inner">
+      <button className="button curve user">
+            <div>
+              <FaUserAlt className="fauser"/>
+              <span>Cíntia </span>
             </div>
       </button> 
       </div> 

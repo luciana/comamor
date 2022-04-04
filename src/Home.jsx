@@ -200,6 +200,8 @@ function Home() {
   function nomeDaCuidadora(id){
       if ( id === '1' || id === 1 ) return 'Mirian';
       if ( id === '2' || id === 2) return 'Samira';
+      if ( id === '3' || id === 3) return 'Cíntia';
+      
   }
 
   function clearForm(){
@@ -997,6 +999,18 @@ function Home() {
                 />
           <label  className="form-check-label" htmlFor="2"> Samira</label>
         </div>
+        <div className="form-check form-check-inline">       
+          <input className="form-check-input"  
+                type="radio"  
+                name="cuidadora_do_dia" 
+                value="3"
+                required="required"     
+                checked = {(formData.cuidadora_do_dia === 3) || null}   
+                onChange={e => handleChange(e)}  
+                />
+          <label  className="form-check-label" htmlFor="3"> Cíntia</label>
+        </div>
+        
         </fieldset>
         </div>
       </div>

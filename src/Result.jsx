@@ -244,6 +244,7 @@ function Result() {
   function nomeDaCuidadora(id){
     if ( id === '1' || id === 1 ) return 'Mirian';
     if ( id === '2' || id === 2) return 'Samira';
+    if ( id === '3' || id === 3) return 'Cíntia';
   }
 
   function getCuidadoraChartData(){
