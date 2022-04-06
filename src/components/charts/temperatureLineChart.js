@@ -4,17 +4,17 @@ import React, { PureComponent } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 
-class CustomizedLabel extends PureComponent {
-  render() {
-    const { x, y, stroke, value } = this.props;
+// class CustomizedLabel extends PureComponent {
+//   render() {
+//     const { x, y, stroke, value } = this.props;
 
-    return (
-      <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">
-        {value}
-      </text>
-    );
-  }
-}
+//     return (
+//       <text x={x} y={y} dy={-4} fill={stroke} fontSize={10} textAnchor="middle">
+//         {value}
+//       </text>
+//     );
+//   }
+// }
 
 class CustomizedAxisTick extends PureComponent {
   render() {

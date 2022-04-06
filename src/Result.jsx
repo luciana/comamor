@@ -22,10 +22,18 @@ function Result() {
   const [saturationChartVitalsData, setSaturationChartVitalsData] = useState([]);
   const [temperatureChartVitalsData, setTemperatureChartVitalsData] = useState([]);
   const [medicationTimeline, setMedicationTimeline] = useState([]);
+
+
+    // Selected Month  filter
+    const [selectedMonth, setSelectedMonth] = useState("");
+
+
     
   useEffect(()=>{
-    fetchNotes();
-  },[]);
+    fetchNotes();  
+    var filteredData = filterByMonth(notes);
+    setNotes(filteredData);
+  },[selectedMonth]);
  
   useEffect(()=>{   
     getSentimentChartData();
@@ -70,6 +78,32 @@ function Result() {
     return out;
 }
  
+const filterByMonth = (notes) => {
+  // Avoid filter for empty string
+  if (!selectedMonth) {
+    return notes;
+  }
+
+  console.log("selected Month", selectedMonth);
+  const filteredMonths = notes.filter(
+    (item) => new Date(item.name).getMonth() === selectedMonth  
+    
+  );
+  return filteredMonths;
+};
+
+const handleMonthChange = (event) => {
+  const inputMonth = Number(event.target.id);
+
+  console.log("inputMonth", inputMonth);
+  if (inputMonth === selectedMonth) {
+    setSelectedMonth("");
+  } 
+  else {
+    setSelectedMonth(inputMonth);
+  }
+};
+
   function getMedicationChartData(){
     let remedioTimeLinetDataLocal = [];
     const medications = [
@@ -193,7 +227,7 @@ function Result() {
       });     
     }  
     setLineChartSentimentData(lineChartDataLocal); 
-    //console.log("lineChartDataLocal", lineChartSentimenttData);
+   // console.log("lineChartDataLocal", lineChartSentimenttData);
   }
 
   function getHumorChartData(){
@@ -220,12 +254,12 @@ function Result() {
       object.comportamento = res[k];      
       barChartDataLocal.push(object);}
     };
-    for (var k in res_manha){     
-      if ( k ){
-      var object = {};     
-      object.name = k;
-      object.comportamento = res_manha[k];      
-      barChartManhaDataLocal.push(object);}
+    for (var j in res_manha){     
+      if ( j ){
+      var object1 = {};     
+      object1.name = j;
+      object1.comportamento = res_manha[j];      
+      barChartManhaDataLocal.push(object1);}
     };
     for (var k1 in res_tarde){     
       if ( k1 ){
@@ -298,7 +332,7 @@ function Result() {
     setSaturationChartVitalsData(saturationLineChartVitalDataLocal);
     setTemperatureChartVitalsData(tempLineChartVitalDataLocal);
    // console.log("vitals chart Data", composedChartVitalsData);
-    console.log("vitals chart Data - saturacao", saturationChartVitalsData);
+    //console.log("vitals chart Data - saturacao", saturationChartVitalsData);
 
   }
 
@@ -310,6 +344,30 @@ function Result() {
               Nosso pai tem demência frontal. Uma doença muito triste para ele e para a família.
               Por amor nós criamos esse sisterma para poder entender e adaptar as mudancas de humor e oscilações de comportamento.
         </p>
+        <div>
+           <div>Filter by Month</div>
+            <div id="Month-options" onClick={handleMonthChange}>
+              <div
+                className={selectedMonth === 2 ? "active-option" : "filter-option"}
+                id="2"
+              >
+                February, 2022
+              </div>
+              <div
+                className={selectedMonth === 3 ? "active-option" : "filter-option"}
+                id="3"
+              >
+                March, 2022
+              </div>
+              <div
+                className={selectedMonth === 4 ? "active-option" : "filter-option"}
+                id="4"
+              >
+                April, 2022
+              </div>
+            </div>
+
+        </div>
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                      
             <h1 className="text-heading">
