@@ -200,7 +200,7 @@ function Home() {
   function nomeDaCuidadora(id){
       if ( id === '1' || id === 1 ) return 'Mirian';
       if ( id === '2' || id === 2) return 'Samira';
-      if ( id === '3' || id === 3) return 'Cíntia';
+      if ( id === '3' || id === 3) return 'Sub';
       
   }
 
@@ -1008,7 +1008,7 @@ function Home() {
                 checked = {(formData.cuidadora_do_dia === 3) || null}   
                 onChange={e => handleChange(e)}  
                 />
-          <label  className="form-check-label" htmlFor="3"> Cíntia</label>
+          <label  className="form-check-label" htmlFor="3"> Sub</label>
         </div>
         
         </fieldset>
