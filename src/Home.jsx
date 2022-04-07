@@ -106,7 +106,7 @@ function Home() {
   function handleFocus(){ acontecimentoField.current.focus()}
   const [showNotification, setShowNotification] = useState(false);
   const [notification, setNotification] = useState({ title: "", body: "" });
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(null);
   const refDataForm = useRef(null)
   const refDataFormManha = useRef(null)
   const refDataFormTarde = useRef(null)
@@ -207,7 +207,7 @@ function Home() {
   function clearForm(){
     setFormData(initialFormState);
     setTextToInterpret('');
-    setStartDate(new Date());
+    setStartDate(null);
   }
   function handleSubmit(e) {        
       if (e.target.checkValidity()) {
@@ -567,7 +567,7 @@ function Home() {
                 centered>
               <h3 className="modal-header text-dark">Resumo de Anotações</h3>
               <div className="modal-body">
-              <p className="text-dark text-bold"> Dia: {formData.title}</p>
+              <p className="text-dark text-bold"> Dia: {new Date(formData.title).toLocaleDateString()}</p>
               <p className="text-dark text-bold"> Cuidadora do dia: {nomeDaCuidadora(formData.cuidadora_do_dia)}</p>
               <h4 className="text-dark">Sinais Vitais</h4>
               <p className="text-dark"> Pressão Arterial: {formData.pressao} mmHg</p>   
@@ -1068,7 +1068,7 @@ function Home() {
               <DatePicker className="form-check-input" 
                           required="required"  
                           locale = "ptBR"    
-                          selected=""                          
+                          selected={startDate}
                           onChange={(date:Date) => handleDateChange(date)} 
                           dateFormat="MM/dd/yyyy"                                                  
                           name="startDatePicker"

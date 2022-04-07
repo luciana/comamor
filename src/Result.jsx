@@ -115,6 +115,7 @@ const handleMonthChange = (event) => {
                       {name: "Esc", variations: ["Esc 10 mg", "esc 20mg", "Esc", "Esc 20 mg"]},
                       {name: "Luftal", variations: ["Luftal"]},  
                       {name: "Rivotril", variations: ["Rivotril"]},
+                      {name: "Vitamin D", variations: ["vitamina D"]},
                       {name: "Risperidona", variations: ["Risperidona", "Resperidona"]},
                       {name: "Rosuvastatina", variations: ["Rosuvastatina"]}
                      ];    
