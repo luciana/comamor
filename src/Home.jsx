@@ -240,10 +240,12 @@ function Home() {
     if ( !!errors ) { setErrors([]);}
   };
 
+  
+
   function handleDateChange(date){
     console.log('date', date.toString());
     setStartDate(date);
-    setFormData({ ...formData, 'title': date.toString() });
+    setFormData({ ...formData, 'title': date.toLocaleDateString() });
     if ( !!errors ) { setErrors([]);}
    
   }
@@ -1070,7 +1072,7 @@ function Home() {
                           locale = "ptBR"    
                           selected={startDate}
                           onChange={(date:Date) => handleDateChange(date)} 
-                          dateFormat="MM/dd/yyyy"                                                  
+                          dateFormat="dd/MM/yyyy"
                           name="startDatePicker"
               />             
             </div>

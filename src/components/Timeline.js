@@ -17,7 +17,7 @@ class TimelineChart extends Component {
     </thead>
     <tbody>
     {this.props.value.map((med, index) => (    
-      <tr key="{med.name}-{index}">      
+      <tr >      
         <th  scope="row"><small>{new Date(med.name).toLocaleDateString()}</small></th>
         <td><small>{(med.manha).join('\r\n')}</small></td>
         <td><small>{(med.tarde).join('\r\n')}</small></td>

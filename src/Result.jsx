@@ -32,6 +32,7 @@ function Result() {
   useEffect(()=>{
     fetchNotes();  
     var filteredData = filterByMonth(notes);
+    console.log('filtered data', filteredData);
     setNotes(filteredData);
   },[selectedMonth]);
  
@@ -86,9 +87,9 @@ const filterByMonth = (notes) => {
 
   console.log("selected Month", selectedMonth);
   const filteredMonths = notes.filter(
-    (item) => new Date(item.name).getMonth() === selectedMonth  
-    
-  );
+    (item) => (new Date(item.title).getMonth() -1 ) === selectedMonth
+  )
+  
   return filteredMonths;
 };
 
@@ -96,10 +97,12 @@ const handleMonthChange = (event) => {
   const inputMonth = Number(event.target.id);
 
   console.log("inputMonth", inputMonth);
+  console.log("selectedMonth", selectedMonth);
   if (inputMonth === selectedMonth) {
     setSelectedMonth("");
   } 
   else {
+    console.log("set select month" , inputMonth);
     setSelectedMonth(inputMonth);
   }
 };
@@ -115,6 +118,8 @@ const handleMonthChange = (event) => {
                       {name: "Esc", variations: ["Esc 10 mg", "esc 20mg", "Esc", "Esc 20 mg"]},
                       {name: "Luftal", variations: ["Luftal"]},  
                       {name: "Rivotril", variations: ["Rivotril"]},
+                      {name: "Resfenol", variations: ['Resfenol']},
+                      {name: "Razapina", variations: ["Razapina", "razapina"]},
                       {name: "Vitamin D", variations: ["vitamina D"]},
                       {name: "Risperidona", variations: ["Risperidona", "Resperidona"]},
                       {name: "Rosuvastatina", variations: ["Rosuvastatina"]}
@@ -172,7 +177,7 @@ const handleMonthChange = (event) => {
         object_remedio.tarde = uniq(remedioTardeTimeLinetDataLocal);
 
         if ( item.noite_remedios_text.length > 0 ){            
-          object_remedio.name = item.title.split(',')[0];  
+          object_remedio.name = item.title;
 
           for ( const medication of medications){
 
@@ -191,7 +196,11 @@ const handleMonthChange = (event) => {
           }                
         }
         object_remedio.noite = uniq(remedioNoiteTimeLinetDataLocal);
-        remedioTimeLinetDataLocal.push(object_remedio);
+
+        if (object_remedio.manha.length > 0 || object_remedio.tarde.length > 0 || object_remedio.noite.length > 0  ){
+          remedioTimeLinetDataLocal.push(object_remedio);
+        }
+        
         
       }
 
@@ -477,7 +486,7 @@ const handleMonthChange = (event) => {
           </div>
         </div>
       </div>
-      <div className="container">
+       <div className="container">
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                      
             <h1 className="text-heading">
@@ -488,7 +497,7 @@ const handleMonthChange = (event) => {
             }
           </div>         
         </div>
-      </div>
+      </div> 
    
 
     </div>
