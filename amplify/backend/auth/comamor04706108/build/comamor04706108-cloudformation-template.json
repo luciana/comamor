@@ -29,59 +29,20 @@
       "Type": "String",
       "Default": "functioncomamor04706108VerifyAuthChallengeResponseName"
     },
-    "authSelections": {
+    "identityPoolName": {
       "Type": "String"
     },
-    "requiredAttributes": {
-      "Type": "CommaDelimitedList"
-    },
-    "resourceName": {
+    "allowUnauthenticatedIdentities": {
       "Type": "String"
-    },
-    "serviceName": {
-      "Type": "String"
-    },
-    "useDefault": {
-      "Type": "String"
-    },
-    "userpoolClientReadAttributes": {
-      "Type": "CommaDelimitedList"
-    },
-    "userpoolClientWriteAttributes": {
-      "Type": "CommaDelimitedList"
     },
     "resourceNameTruncated": {
       "Type": "String"
     },
-    "sharedId": {
-      "Type": "String"
-    },
-    "userPoolGroupList": {
-      "Type": "CommaDelimitedList"
-    },
     "userPoolName": {
       "Type": "String"
     },
-    "usernameAttributes": {
+    "autoVerifiedAttributes": {
       "Type": "CommaDelimitedList"
-    },
-    "userpoolClientRefreshTokenValidity": {
-      "Type": "String"
-    },
-    "userpoolClientSetAttributes": {
-      "Type": "String"
-    },
-    "userpoolClientGenerateSecret": {
-      "Type": "String"
-    },
-    "userpoolClientLambdaRole": {
-      "Type": "String"
-    },
-    "passwordPolicyCharacters": {
-      "Type": "CommaDelimitedList"
-    },
-    "passwordPolicyMinLength": {
-      "Type": "String"
     },
     "mfaConfiguration": {
       "Type": "String"
@@ -92,23 +53,68 @@
     "smsAuthenticationMessage": {
       "Type": "String"
     },
-    "emailVerificationMessage": {
+    "smsVerificationMessage": {
       "Type": "String"
     },
     "emailVerificationSubject": {
       "Type": "String"
     },
-    "smsVerificationMessage": {
+    "emailVerificationMessage": {
       "Type": "String"
     },
-    "autoVerifiedAttributes": {
+    "defaultPasswordPolicy": {
+      "Type": "String"
+    },
+    "passwordPolicyMinLength": {
+      "Type": "String"
+    },
+    "passwordPolicyCharacters": {
       "Type": "CommaDelimitedList"
     },
-    "identityPoolName": {
+    "requiredAttributes": {
+      "Type": "CommaDelimitedList"
+    },
+    "aliasAttributes": {
+      "Type": "CommaDelimitedList"
+    },
+    "userpoolClientGenerateSecret": {
       "Type": "String"
     },
-    "allowUnauthenticatedIdentities": {
+    "userpoolClientRefreshTokenValidity": {
       "Type": "String"
+    },
+    "userpoolClientWriteAttributes": {
+      "Type": "CommaDelimitedList"
+    },
+    "userpoolClientReadAttributes": {
+      "Type": "CommaDelimitedList"
+    },
+    "userpoolClientLambdaRole": {
+      "Type": "String"
+    },
+    "userpoolClientSetAttributes": {
+      "Type": "String"
+    },
+    "authSelections": {
+      "Type": "String"
+    },
+    "resourceName": {
+      "Type": "String"
+    },
+    "serviceName": {
+      "Type": "String"
+    },
+    "useDefault": {
+      "Type": "String"
+    },
+    "sharedId": {
+      "Type": "String"
+    },
+    "userPoolGroupList": {
+      "Type": "CommaDelimitedList"
+    },
+    "usernameAttributes": {
+      "Type": "CommaDelimitedList"
     },
     "triggers": {
       "Type": "String"
@@ -133,6 +139,9 @@
     },
     "authTriggerConnections": {
       "Type": "CommaDelimitedList"
+    },
+    "parentStack": {
+      "Type": "String"
     }
   },
   "Conditions": {

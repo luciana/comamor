@@ -7,10 +7,11 @@
   "functionName": "comamor04706108CreateAuthChallenge",
   "resourceName": "comamor04706108CreateAuthChallenge",
   "parentStack": "auth",
-  "triggerEnvs": [],
-  "triggerDir": "/usr/local/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/triggers/CreateAuthChallenge",
+  "triggerEnvs": "[]",
+  "triggerDir": "/usr/local/lib/node_modules/@aws-amplify/cli/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/CreateAuthChallenge",
   "triggerTemplate": "CreateAuthChallenge.json.ejs",
   "roleName": "comamor04706108CreateAuthChallenge",
   "skipEdit": true,
-  "enableCors": false
+  "enableCors": false,
+  "triggerEventPath": "CreateAuthChallenge.event.json"
 }

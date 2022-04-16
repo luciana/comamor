@@ -6,7 +6,11 @@
     "gqlSchemaPath": "/Users/lucianabruscino/Development/comamor/amplify/backend/api/comamor/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
-      "expirationTime": 7
-    }
+      "expirationTime": 365,
+      "apiKeyExpirationDate": "2023-04-16T22:31:21.213Z",
+      "keyDescription": ""
+    },
+    "conflictResolution": {},
+    "additionalAuthTypes": []
   }
 }

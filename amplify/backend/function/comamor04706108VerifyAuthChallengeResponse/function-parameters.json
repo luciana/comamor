@@ -7,11 +7,12 @@
   "functionName": "comamor04706108VerifyAuthChallengeResponse",
   "resourceName": "comamor04706108VerifyAuthChallengeResponse",
   "parentStack": "auth",
-  "triggerEnvs": [],
-  "triggerDir": "/usr/local/lib/node_modules/@aws-amplify/cli/node_modules/amplify-category-auth/provider-utils/awscloudformation/triggers/VerifyAuthChallengeResponse",
+  "triggerEnvs": "[]",
+  "triggerDir": "/usr/local/lib/node_modules/@aws-amplify/cli/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/VerifyAuthChallengeResponse",
   "triggerTemplate": "VerifyAuthChallengeResponse.json.ejs",
   "roleName": "comamor04706108VerifyAuthChallengeResponse",
   "skipEdit": true,
   "RECAPTCHASECRET": "6Lfx8HseAAAAABB0-T8ciBpJnhmRyoqSoYFBBTVh",
-  "enableCors": false
+  "enableCors": false,
+  "triggerEventPath": "VerifyAuthChallengeResponse.event.json"
 }
