@@ -1072,7 +1072,7 @@ function Home() {
                           locale = "ptBR"    
                           selected={startDate}
                           onChange={(date:Date) => handleDateChange(date)} 
-                          dateFormat="dd/MM/yyyy"
+                          dateFormat="P" //https://date-fns.org/v2.0.0-beta.2/docs/format
                           name="startDatePicker"
               />             
             </div>
