@@ -9,6 +9,7 @@ import VitalsComposedChart from './components/charts/vitalsComposedChart';
 import SaturationLineChart from './components/charts/saturationLineChart';
 import TemperatureLineChart from './components/charts/temperatureLineChart';
 import TimelineChart from './components/Timeline';
+import { HashLink as Link } from 'react-router-hash-link';
 
 function Result() {
  
@@ -209,14 +210,6 @@ const handleMonthChange = (event) => {
         
       }
 
-      // data = [
-      //   {
-      //     manha: ['Benicar', 'Cocichimil', 'Donila Duo 10/20', 'Esc']
-      //     name: "3/12/2022"
-      //     noite: ['Cocichimil']
-      //     tarde: ['Ass']]
-    //        }
-      // ]
       setMedicationTimeline(remedioTimeLinetDataLocal);
       //console.log("remedio manha data", medicationTimeline);
     }
@@ -360,7 +353,17 @@ const handleMonthChange = (event) => {
               Por amor nós criamos esse sisterma para poder entender e adaptar as mudancas de humor e oscilações de comportamento.
         </p>
         <div>
-           <div>Filter by Month</div>
+          <div><strong>Reports</strong></div>
+          <div className="my-3">            
+            <Link to="/result#comporatmentoTag" className="link-primary">Análise de Comportamento</Link> ||  
+            <Link to="/result#humorTag" className="link-primary">Análise de Humor</Link> ||  
+            <Link to="/result#pressureTag" className="link-primary">Análise de Pressão Arterial</Link> ||  
+            <Link to="/result#saturationTag" className="link-primary">Análise de Saturação de Oxigênio</Link>    ||          
+            <Link to="/result#temperatureTag" className="link-primary">Análise de Temperatura Corporal</Link> ||  
+            <Link to="/result#medicationTag" className="link-primary">Cronograma de Medicamento</Link> ||  
+            <Link to="/result#cuidadorasTag" className="link-primary">Cuidadoras</Link>
+          </div>
+           <div><strong>Filtro</strong></div>
             <div id="Month-options" onClick={handleMonthChange}>
               <div
                 className={selectedMonth === 2 ? "active-option" : "filter-option"}
@@ -383,7 +386,7 @@ const handleMonthChange = (event) => {
             </div>
 
         </div>
-        <div className="row align-items-center my-5">
+        <div className="row align-items-center my-5" id= "humorTag">
           <div className="col-lg-12">                      
             <h1 className="text-heading">
               Análise de Humor
@@ -395,7 +398,7 @@ const handleMonthChange = (event) => {
         </div>
       </div>  
 
-      <div className="container">
+      <div className="container" id= "pressureTag">
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                                             
             <h1 className="text-heading">
@@ -408,7 +411,7 @@ const handleMonthChange = (event) => {
           </div>
         </div>
       </div>
-      <div className="container">
+      <div className="container" id= "saturationTag">
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                                             
             <h1 className="text-heading">
@@ -421,7 +424,7 @@ const handleMonthChange = (event) => {
           </div>
         </div>
       </div>
-      <div className="container">
+      <div className="container" id= "temperaturTag">
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                                             
             <h1 className="text-heading">
@@ -436,7 +439,7 @@ const handleMonthChange = (event) => {
       </div>
       
 
-      <div className="container">
+      <div className="container" id= "comporatmentoTag">
         <div className="row align-items-center py-5 my-5">
           <div className="col-lg-6">                      
             <h1 className="text-heading">
@@ -474,7 +477,7 @@ const handleMonthChange = (event) => {
 
       
 
-      <div className="container">
+      <div className="container" id= "cuidadorasTag">
         <div className="row align-items-center my-5">
           <div className="col-lg-7">                      
             <h1 className="text-heading">
@@ -491,7 +494,7 @@ const handleMonthChange = (event) => {
           </div>
         </div>
       </div>
-       <div className="container">
+       <div className="container" id= "medicationTag">
         <div className="row align-items-center my-5">
           <div className="col-lg-12">                      
             <h1 className="text-heading">
