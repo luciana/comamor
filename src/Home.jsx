@@ -57,7 +57,7 @@ I18n.putVocabulariesForLanguage("pt-BR", {
 });
 
 const initialFormState = { 
-                          title: new Date().toLocaleString(), 
+                          title: new Date().toDateString(), 
                           patientID: '1',           
                           cuidadora_do_dia: null,
                           pressao:'',
@@ -243,9 +243,9 @@ function Home() {
   
 
   function handleDateChange(date){
-    console.log('date', date.toString());
+    console.log('handleDateChange', date.toString());
     setStartDate(date);
-    setFormData({ ...formData, 'title': date.toLocaleDateString() });
+    setFormData({ ...formData, 'title': date.toDateString() });
     if ( !!errors ) { setErrors([]);}
    
   }

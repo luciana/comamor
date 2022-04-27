@@ -136,6 +136,11 @@ const handleMonthChange = (event) => {
         if ( item.manha_remedios_text.length > 0 ){            
           object_remedio.name = item.title.split(',')[0];  
 
+        
+          let sentimentObjectString = JSON.parse(item.sentiment, null, 2);           
+          let sentiment_p = sentimentObjectString.predominant;  
+          object_remedio.behavior = sentiment_p;  
+
           for ( const medication of medications){
 
             let med = medication.name;

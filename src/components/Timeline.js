@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FaRegSun, FaSun, FaStar} from 'react-icons/fa';
+import { FaRegSun, FaSun, FaStar, FaAward} from 'react-icons/fa';
 
 class TimelineChart extends Component {
   render () {
@@ -12,7 +12,7 @@ class TimelineChart extends Component {
         <th scope="col"><FaRegSun /> Manhã</th>
         <th scope="row"><FaSun /> Tarde</th>
         <th scope="row"><FaStar /> Noite</th>
-        
+        <th scope="row"><FaAward /> Comportamento</th>
       </tr>      
     </thead>
     <tbody>
@@ -22,6 +22,7 @@ class TimelineChart extends Component {
         <td><small>{(med.manha).join('\r\n')}</small></td>
         <td><small>{(med.tarde).join('\r\n')}</small></td>
         <td><small>{(med.noite).join('\r\n')}</small></td>
+        <td><small>{med.behavior}</small></td>
       </tr>   
       ))}  
     </tbody>
